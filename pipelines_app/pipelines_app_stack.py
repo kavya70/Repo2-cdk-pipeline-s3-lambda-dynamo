@@ -32,7 +32,7 @@ class PipelinesAppStack(core.Stack):
 
         table = dynamodb.Table.from_table_arn(self, "ImportedTable", "arn:aws:dynamodb:ap-south-1:402122568686:table/movieDetails")
         bucket.grant_read(handler)
-        bucket.add_event_notification(s3.EventType.OBJECT_CREATED,s3_notifications.LambdaDestination(handler))
+        bucket.add_event_notification(s3.EventType.OBJECT_CREATED,handler)
         table.grant_read_write_data(handler)
 
 

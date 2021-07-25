@@ -1,0 +1,7 @@
+README.md
+setup.py
+pipelines_app/pipelines_app.egg-info/PKG-INFO
+pipelines_app/pipelines_app.egg-info/SOURCES.txt
+pipelines_app/pipelines_app.egg-info/dependency_links.txt
+pipelines_app/pipelines_app.egg-info/requires.txt
+pipelines_app/pipelines_app.egg-info/top_level.txt

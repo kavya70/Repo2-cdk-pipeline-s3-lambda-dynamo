@@ -209,7 +209,7 @@
             "Arn"
           ]
         },
-        "Name": "WebinarPipeline-selfupdate"
+        "Name": "cdkPipeline-selfupdate"
       },
       "Metadata": {
         "aws:cdk:path": "PipelineStack/Pipeline/UpdatePipeline/SelfMutation/Resource"
@@ -777,7 +777,7 @@
           },
           "Type": "S3"
         },
-        "Name": "WebinarPipeline",
+        "Name": "cdkPipeline",
         "RestartExecutionOnUpdate": true
       },
       "DependsOn": [

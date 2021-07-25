@@ -250,7 +250,7 @@
                                 "Arn"
                               ]
                             },
-                            "name": "WebinarPipeline-selfupdate"
+                            "name": "cdkPipeline-selfupdate"
                           }
                         }
                       }
@@ -860,7 +860,7 @@
                             }
                           }
                         },
-                        "name": "WebinarPipeline",
+                        "name": "cdkPipeline",
                         "restartExecutionOnUpdate": true
                       }
                     }
