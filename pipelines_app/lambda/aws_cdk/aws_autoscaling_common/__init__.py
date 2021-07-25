@@ -1,12 +1,10 @@
-"""
-## AWS AutoScaling Common Library
+'''
+# AWS AutoScaling Common Library
 
 <!--BEGIN STABILITY BANNER-->---
 
 
-![cdk-constructs: Experimental](https://img.shields.io/badge/cdk--constructs-experimental-important.svg?style=for-the-badge)
-
-> The APIs of higher level constructs in this module are experimental and under active development. They are subject to non-backward compatible changes or removal in any future version. These are not subject to the [Semantic Versioning](https://semver.org/) model and breaking changes will be announced in the release notes. This means that while you may use them, you may need to update your source code when upgrading to a newer version of this package.
+![cdk-constructs: Stable](https://img.shields.io/badge/cdk--constructs-stable-success.svg?style=for-the-badge)
 
 ---
 <!--END STABILITY BANNER-->
@@ -16,7 +14,7 @@ This is a sister package to `@aws-cdk/aws-autoscaling` and
 details between them.
 
 It does not need to be used directly.
-"""
+'''
 import abc
 import builtins
 import datetime
@@ -24,8 +22,8 @@ import enum
 import typing
 
 import jsii
-import jsii.compat
 import publication
+import typing_extensions
 
 from ._jsii import *
 
@@ -45,14 +43,11 @@ class Alarms:
         lower_alarm_interval_index: typing.Optional[jsii.Number] = None,
         upper_alarm_interval_index: typing.Optional[jsii.Number] = None,
     ) -> None:
-        """
+        '''
         :param lower_alarm_interval_index: 
         :param upper_alarm_interval_index: 
-
-        stability
-        :stability: experimental
-        """
-        self._values = {}
+        '''
+        self._values: typing.Dict[str, typing.Any] = {}
         if lower_alarm_interval_index is not None:
             self._values["lower_alarm_interval_index"] = lower_alarm_interval_index
         if upper_alarm_interval_index is not None:
@@ -60,24 +55,18 @@ class Alarms:
 
     @builtins.property
     def lower_alarm_interval_index(self) -> typing.Optional[jsii.Number]:
-        """
-        stability
-        :stability: experimental
-        """
-        return self._values.get("lower_alarm_interval_index")
+        result = self._values.get("lower_alarm_interval_index")
+        return typing.cast(typing.Optional[jsii.Number], result)
 
     @builtins.property
     def upper_alarm_interval_index(self) -> typing.Optional[jsii.Number]:
-        """
-        stability
-        :stability: experimental
-        """
-        return self._values.get("upper_alarm_interval_index")
+        result = self._values.get("upper_alarm_interval_index")
+        return typing.cast(typing.Optional[jsii.Number], result)
 
-    def __eq__(self, rhs) -> bool:
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
@@ -93,40 +82,36 @@ class Alarms:
 )
 class ArbitraryIntervals:
     def __init__(
-        self, *, absolute: bool, intervals: typing.List["ScalingInterval"]
+        self,
+        *,
+        absolute: builtins.bool,
+        intervals: typing.Sequence["ScalingInterval"],
     ) -> None:
-        """
+        '''
         :param absolute: 
         :param intervals: 
-
-        stability
-        :stability: experimental
-        """
-        self._values = {
+        '''
+        self._values: typing.Dict[str, typing.Any] = {
             "absolute": absolute,
             "intervals": intervals,
         }
 
     @builtins.property
-    def absolute(self) -> bool:
-        """
-        stability
-        :stability: experimental
-        """
-        return self._values.get("absolute")
+    def absolute(self) -> builtins.bool:
+        result = self._values.get("absolute")
+        assert result is not None, "Required property 'absolute' is missing"
+        return typing.cast(builtins.bool, result)
 
     @builtins.property
     def intervals(self) -> typing.List["ScalingInterval"]:
-        """
-        stability
-        :stability: experimental
-        """
-        return self._values.get("intervals")
+        result = self._values.get("intervals")
+        assert result is not None, "Required property 'intervals' is missing"
+        return typing.cast(typing.List["ScalingInterval"], result)
 
-    def __eq__(self, rhs) -> bool:
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
@@ -148,15 +133,12 @@ class CompleteScalingInterval:
         upper: jsii.Number,
         change: typing.Optional[jsii.Number] = None,
     ) -> None:
-        """
+        '''
         :param lower: 
         :param upper: 
         :param change: 
-
-        stability
-        :stability: experimental
-        """
-        self._values = {
+        '''
+        self._values: typing.Dict[str, typing.Any] = {
             "lower": lower,
             "upper": upper,
         }
@@ -165,32 +147,25 @@ class CompleteScalingInterval:
 
     @builtins.property
     def lower(self) -> jsii.Number:
-        """
-        stability
-        :stability: experimental
-        """
-        return self._values.get("lower")
+        result = self._values.get("lower")
+        assert result is not None, "Required property 'lower' is missing"
+        return typing.cast(jsii.Number, result)
 
     @builtins.property
     def upper(self) -> jsii.Number:
-        """
-        stability
-        :stability: experimental
-        """
-        return self._values.get("upper")
+        result = self._values.get("upper")
+        assert result is not None, "Required property 'upper' is missing"
+        return typing.cast(jsii.Number, result)
 
     @builtins.property
     def change(self) -> typing.Optional[jsii.Number]:
-        """
-        stability
-        :stability: experimental
-        """
-        return self._values.get("change")
+        result = self._values.get("change")
+        return typing.cast(typing.Optional[jsii.Number], result)
 
-    def __eq__(self, rhs) -> bool:
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
@@ -200,62 +175,37 @@ class CompleteScalingInterval:
 
 
 @jsii.interface(jsii_type="@aws-cdk/aws-autoscaling-common.IRandomGenerator")
-class IRandomGenerator(jsii.compat.Protocol):
-    """
-    stability
-    :stability: experimental
-    """
-
-    @builtins.staticmethod
-    def __jsii_proxy_class__():
-        return _IRandomGeneratorProxy
-
+class IRandomGenerator(typing_extensions.Protocol):
     @jsii.member(jsii_name="nextBoolean")
-    def next_boolean(self) -> bool:
-        """
-        stability
-        :stability: experimental
-        """
+    def next_boolean(self) -> builtins.bool:
         ...
 
     @jsii.member(jsii_name="nextInt")
     def next_int(self, min: jsii.Number, max: jsii.Number) -> jsii.Number:
-        """
+        '''
         :param min: -
         :param max: -
-
-        stability
-        :stability: experimental
-        """
+        '''
         ...
 
 
 class _IRandomGeneratorProxy:
-    """
-    stability
-    :stability: experimental
-    """
-
-    __jsii_type__ = "@aws-cdk/aws-autoscaling-common.IRandomGenerator"
+    __jsii_type__: typing.ClassVar[str] = "@aws-cdk/aws-autoscaling-common.IRandomGenerator"
 
     @jsii.member(jsii_name="nextBoolean")
-    def next_boolean(self) -> bool:
-        """
-        stability
-        :stability: experimental
-        """
-        return jsii.invoke(self, "nextBoolean", [])
+    def next_boolean(self) -> builtins.bool:
+        return typing.cast(builtins.bool, jsii.invoke(self, "nextBoolean", []))
 
     @jsii.member(jsii_name="nextInt")
     def next_int(self, min: jsii.Number, max: jsii.Number) -> jsii.Number:
-        """
+        '''
         :param min: -
         :param max: -
+        '''
+        return typing.cast(jsii.Number, jsii.invoke(self, "nextInt", [min, max]))
 
-        stability
-        :stability: experimental
-        """
-        return jsii.invoke(self, "nextInt", [min, max])
+# Adding a "__jsii_proxy_class__(): typing.Type" function to the interface
+typing.cast(typing.Any, IRandomGenerator).__jsii_proxy_class__ = lambda : _IRandomGeneratorProxy
 
 
 @jsii.data_type(
@@ -271,16 +221,13 @@ class ScalingInterval:
         lower: typing.Optional[jsii.Number] = None,
         upper: typing.Optional[jsii.Number] = None,
     ) -> None:
-        """A range of metric values in which to apply a certain scaling operation.
+        '''A range of metric values in which to apply a certain scaling operation.
 
         :param change: The capacity adjustment to apply in this interval. The number is interpreted differently based on AdjustmentType: - ChangeInCapacity: add the adjustment to the current capacity. The number can be positive or negative. - PercentChangeInCapacity: add or remove the given percentage of the current capacity to itself. The number can be in the range [-100..100]. - ExactCapacity: set the capacity to this number. The number must be positive.
         :param lower: The lower bound of the interval. The scaling adjustment will be applied if the metric is higher than this value. Default: Threshold automatically derived from neighbouring intervals
         :param upper: The upper bound of the interval. The scaling adjustment will be applied if the metric is lower than this value. Default: Threshold automatically derived from neighbouring intervals
-
-        stability
-        :stability: experimental
-        """
-        self._values = {
+        '''
+        self._values: typing.Dict[str, typing.Any] = {
             "change": change,
         }
         if lower is not None:
@@ -290,7 +237,7 @@ class ScalingInterval:
 
     @builtins.property
     def change(self) -> jsii.Number:
-        """The capacity adjustment to apply in this interval.
+        '''The capacity adjustment to apply in this interval.
 
         The number is interpreted differently based on AdjustmentType:
 
@@ -300,44 +247,37 @@ class ScalingInterval:
           capacity to itself. The number can be in the range [-100..100].
         - ExactCapacity: set the capacity to this number. The number must
           be positive.
-
-        stability
-        :stability: experimental
-        """
-        return self._values.get("change")
+        '''
+        result = self._values.get("change")
+        assert result is not None, "Required property 'change' is missing"
+        return typing.cast(jsii.Number, result)
 
     @builtins.property
     def lower(self) -> typing.Optional[jsii.Number]:
-        """The lower bound of the interval.
+        '''The lower bound of the interval.
 
         The scaling adjustment will be applied if the metric is higher than this value.
 
-        default
         :default: Threshold automatically derived from neighbouring intervals
-
-        stability
-        :stability: experimental
-        """
-        return self._values.get("lower")
+        '''
+        result = self._values.get("lower")
+        return typing.cast(typing.Optional[jsii.Number], result)
 
     @builtins.property
     def upper(self) -> typing.Optional[jsii.Number]:
-        """The upper bound of the interval.
+        '''The upper bound of the interval.
 
         The scaling adjustment will be applied if the metric is lower than this value.
 
-        default
         :default: Threshold automatically derived from neighbouring intervals
+        '''
+        result = self._values.get("upper")
+        return typing.cast(typing.Optional[jsii.Number], result)
 
-        stability
-        :stability: experimental
-        """
-        return self._values.get("upper")
-
-    def __eq__(self, rhs) -> bool:
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:

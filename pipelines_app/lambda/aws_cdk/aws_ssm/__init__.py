@@ -1,5 +1,5 @@
-"""
-## AWS Systems Manager Construct Library
+'''
+# AWS Systems Manager Construct Library
 
 <!--BEGIN STABILITY BANNER-->---
 
@@ -13,7 +13,7 @@
 
 This module is part of the [AWS Cloud Development Kit](https://github.com/aws/aws-cdk) project.
 
-### Installation
+## Installation
 
 Install the module:
 
@@ -28,7 +28,7 @@ Import it into your code:
 import aws_cdk.aws_ssm as ssm
 ```
 
-### Using existing SSM Parameters in your CDK app
+## Using existing SSM Parameters in your CDK app
 
 You can reference existing SSM Parameter Store values that you want to use in
 your CDK app by using `ssm.ParameterStoreString`:
@@ -49,7 +49,7 @@ secret_value = ssm.StringParameter.from_secure_string_parameter_attributes(self,
 )
 ```
 
-### Creating new SSM Parameters in your CDK app
+## Creating new SSM Parameters in your CDK app
 
 You can create either `ssm.StringParameter` or `ssm.StringListParameter`s in
 a CDK app. These are public (not secret) values. Parameters of type
@@ -91,7 +91,7 @@ list_parameter = ssm.StringListParameter(stack, "StringListParameter",
 When specifying an `allowedPattern`, the values provided as string literals
 are validated against the pattern and an exception is raised if a value
 provided does not comply.
-"""
+'''
 import abc
 import builtins
 import datetime
@@ -99,14 +99,15 @@ import enum
 import typing
 
 import jsii
-import jsii.compat
 import publication
+import typing_extensions
 
 from ._jsii import *
 
 import aws_cdk.aws_iam
 import aws_cdk.aws_kms
 import aws_cdk.core
+import constructs
 
 
 @jsii.implements(aws_cdk.core.IInspectable)
@@ -115,49 +116,35 @@ class CfnAssociation(
     metaclass=jsii.JSIIMeta,
     jsii_type="@aws-cdk/aws-ssm.CfnAssociation",
 ):
-    """A CloudFormation ``AWS::SSM::Association``.
+    '''A CloudFormation ``AWS::SSM::Association``.
 
-    see
-    :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html
-    cloudformationResource:
-    :cloudformationResource:: AWS::SSM::Association
-    """
+    :cloudformationResource: AWS::SSM::Association
+    :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html
+    '''
 
     def __init__(
         self,
         scope: aws_cdk.core.Construct,
-        id: str,
+        id: builtins.str,
         *,
-        name: str,
-        apply_only_at_cron_interval: typing.Optional[
-            typing.Union[bool, aws_cdk.core.IResolvable]
-        ] = None,
-        association_name: typing.Optional[str] = None,
-        automation_target_parameter_name: typing.Optional[str] = None,
-        compliance_severity: typing.Optional[str] = None,
-        document_version: typing.Optional[str] = None,
-        instance_id: typing.Optional[str] = None,
-        max_concurrency: typing.Optional[str] = None,
-        max_errors: typing.Optional[str] = None,
-        output_location: typing.Optional[
-            typing.Union[
-                aws_cdk.core.IResolvable, "InstanceAssociationOutputLocationProperty"
-            ]
-        ] = None,
-        parameters: typing.Optional[
-            typing.Union[aws_cdk.core.IResolvable, typing.Mapping[str, str]]
-        ] = None,
-        schedule_expression: typing.Optional[str] = None,
-        sync_compliance: typing.Optional[str] = None,
-        targets: typing.Optional[
-            typing.Union[
-                aws_cdk.core.IResolvable,
-                typing.List[typing.Union[aws_cdk.core.IResolvable, "TargetProperty"]],
-            ]
-        ] = None,
+        name: builtins.str,
+        apply_only_at_cron_interval: typing.Optional[typing.Union[builtins.bool, aws_cdk.core.IResolvable]] = None,
+        association_name: typing.Optional[builtins.str] = None,
+        automation_target_parameter_name: typing.Optional[builtins.str] = None,
+        calendar_names: typing.Optional[typing.Sequence[builtins.str]] = None,
+        compliance_severity: typing.Optional[builtins.str] = None,
+        document_version: typing.Optional[builtins.str] = None,
+        instance_id: typing.Optional[builtins.str] = None,
+        max_concurrency: typing.Optional[builtins.str] = None,
+        max_errors: typing.Optional[builtins.str] = None,
+        output_location: typing.Optional[typing.Union[aws_cdk.core.IResolvable, "CfnAssociation.InstanceAssociationOutputLocationProperty"]] = None,
+        parameters: typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.Mapping[builtins.str, typing.Any]]] = None,
+        schedule_expression: typing.Optional[builtins.str] = None,
+        sync_compliance: typing.Optional[builtins.str] = None,
+        targets: typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.Sequence[typing.Union[aws_cdk.core.IResolvable, "CfnAssociation.TargetProperty"]]]] = None,
         wait_for_success_timeout_seconds: typing.Optional[jsii.Number] = None,
     ) -> None:
-        """Create a new ``AWS::SSM::Association``.
+        '''Create a new ``AWS::SSM::Association``.
 
         :param scope: - scope in which this resource is defined.
         :param id: - scoped id of the resource.
@@ -165,6 +152,7 @@ class CfnAssociation(
         :param apply_only_at_cron_interval: ``AWS::SSM::Association.ApplyOnlyAtCronInterval``.
         :param association_name: ``AWS::SSM::Association.AssociationName``.
         :param automation_target_parameter_name: ``AWS::SSM::Association.AutomationTargetParameterName``.
+        :param calendar_names: ``AWS::SSM::Association.CalendarNames``.
         :param compliance_severity: ``AWS::SSM::Association.ComplianceSeverity``.
         :param document_version: ``AWS::SSM::Association.DocumentVersion``.
         :param instance_id: ``AWS::SSM::Association.InstanceId``.
@@ -176,12 +164,13 @@ class CfnAssociation(
         :param sync_compliance: ``AWS::SSM::Association.SyncCompliance``.
         :param targets: ``AWS::SSM::Association.Targets``.
         :param wait_for_success_timeout_seconds: ``AWS::SSM::Association.WaitForSuccessTimeoutSeconds``.
-        """
+        '''
         props = CfnAssociationProps(
             name=name,
             apply_only_at_cron_interval=apply_only_at_cron_interval,
             association_name=association_name,
             automation_target_parameter_name=automation_target_parameter_name,
+            calendar_names=calendar_names,
             compliance_severity=compliance_severity,
             document_version=document_version,
             instance_id=instance_id,
@@ -197,324 +186,274 @@ class CfnAssociation(
 
         jsii.create(CfnAssociation, self, [scope, id, props])
 
-    @jsii.member(jsii_name="fromCloudFormation")
-    @builtins.classmethod
-    def from_cloud_formation(
-        cls,
-        scope: aws_cdk.core.Construct,
-        id: str,
-        resource_attributes: typing.Any,
-        *,
-        finder: aws_cdk.core.ICfnFinder,
-    ) -> "CfnAssociation":
-        """A factory method that creates a new instance of this class from an object containing the CloudFormation properties of this resource.
-
-        Used in the @aws-cdk/cloudformation-include module.
-
-        :param scope: -
-        :param id: -
-        :param resource_attributes: -
-        :param finder: The finder interface used to resolve references across the template.
-
-        stability
-        :stability: experimental
-        """
-        options = aws_cdk.core.FromCloudFormationOptions(finder=finder)
-
-        return jsii.sinvoke(
-            cls, "fromCloudFormation", [scope, id, resource_attributes, options]
-        )
-
     @jsii.member(jsii_name="inspect")
     def inspect(self, inspector: aws_cdk.core.TreeInspector) -> None:
-        """Examines the CloudFormation resource and discloses attributes.
+        '''Examines the CloudFormation resource and discloses attributes.
 
         :param inspector: - tree inspector to collect and process attributes.
-
-        stability
-        :stability: experimental
-        """
-        return jsii.invoke(self, "inspect", [inspector])
+        '''
+        return typing.cast(None, jsii.invoke(self, "inspect", [inspector]))
 
     @jsii.member(jsii_name="renderProperties")
     def _render_properties(
-        self, props: typing.Mapping[str, typing.Any]
-    ) -> typing.Mapping[str, typing.Any]:
-        """
+        self,
+        props: typing.Mapping[builtins.str, typing.Any],
+    ) -> typing.Mapping[builtins.str, typing.Any]:
+        '''
         :param props: -
-        """
-        return jsii.invoke(self, "renderProperties", [props])
+        '''
+        return typing.cast(typing.Mapping[builtins.str, typing.Any], jsii.invoke(self, "renderProperties", [props]))
 
-    @jsii.python.classproperty
+    @jsii.python.classproperty # type: ignore[misc]
     @jsii.member(jsii_name="CFN_RESOURCE_TYPE_NAME")
-    def CFN_RESOURCE_TYPE_NAME(cls) -> str:
-        """The CloudFormation resource type name for this resource class."""
-        return jsii.sget(cls, "CFN_RESOURCE_TYPE_NAME")
+    def CFN_RESOURCE_TYPE_NAME(cls) -> builtins.str:
+        '''The CloudFormation resource type name for this resource class.'''
+        return typing.cast(builtins.str, jsii.sget(cls, "CFN_RESOURCE_TYPE_NAME"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="attrAssociationId")
-    def attr_association_id(self) -> str:
-        """
-        cloudformationAttribute:
-        :cloudformationAttribute:: AssociationId
-        """
-        return jsii.get(self, "attrAssociationId")
+    def attr_association_id(self) -> builtins.str:
+        '''
+        :cloudformationAttribute: AssociationId
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "attrAssociationId"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="cfnProperties")
-    def _cfn_properties(self) -> typing.Mapping[str, typing.Any]:
-        return jsii.get(self, "cfnProperties")
+    def _cfn_properties(self) -> typing.Mapping[builtins.str, typing.Any]:
+        return typing.cast(typing.Mapping[builtins.str, typing.Any], jsii.get(self, "cfnProperties"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="name")
-    def name(self) -> str:
-        """``AWS::SSM::Association.Name``.
+    def name(self) -> builtins.str:
+        '''``AWS::SSM::Association.Name``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-name
-        """
-        return jsii.get(self, "name")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-name
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "name"))
 
     @name.setter
-    def name(self, value: str) -> None:
+    def name(self, value: builtins.str) -> None:
         jsii.set(self, "name", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="applyOnlyAtCronInterval")
     def apply_only_at_cron_interval(
         self,
-    ) -> typing.Optional[typing.Union[bool, aws_cdk.core.IResolvable]]:
-        """``AWS::SSM::Association.ApplyOnlyAtCronInterval``.
+    ) -> typing.Optional[typing.Union[builtins.bool, aws_cdk.core.IResolvable]]:
+        '''``AWS::SSM::Association.ApplyOnlyAtCronInterval``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-applyonlyatcroninterval
-        """
-        return jsii.get(self, "applyOnlyAtCronInterval")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-applyonlyatcroninterval
+        '''
+        return typing.cast(typing.Optional[typing.Union[builtins.bool, aws_cdk.core.IResolvable]], jsii.get(self, "applyOnlyAtCronInterval"))
 
     @apply_only_at_cron_interval.setter
     def apply_only_at_cron_interval(
-        self, value: typing.Optional[typing.Union[bool, aws_cdk.core.IResolvable]]
+        self,
+        value: typing.Optional[typing.Union[builtins.bool, aws_cdk.core.IResolvable]],
     ) -> None:
         jsii.set(self, "applyOnlyAtCronInterval", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="associationName")
-    def association_name(self) -> typing.Optional[str]:
-        """``AWS::SSM::Association.AssociationName``.
+    def association_name(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::Association.AssociationName``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-associationname
-        """
-        return jsii.get(self, "associationName")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-associationname
+        '''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "associationName"))
 
     @association_name.setter
-    def association_name(self, value: typing.Optional[str]) -> None:
+    def association_name(self, value: typing.Optional[builtins.str]) -> None:
         jsii.set(self, "associationName", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="automationTargetParameterName")
-    def automation_target_parameter_name(self) -> typing.Optional[str]:
-        """``AWS::SSM::Association.AutomationTargetParameterName``.
+    def automation_target_parameter_name(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::Association.AutomationTargetParameterName``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-automationtargetparametername
-        """
-        return jsii.get(self, "automationTargetParameterName")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-automationtargetparametername
+        '''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "automationTargetParameterName"))
 
     @automation_target_parameter_name.setter
-    def automation_target_parameter_name(self, value: typing.Optional[str]) -> None:
+    def automation_target_parameter_name(
+        self,
+        value: typing.Optional[builtins.str],
+    ) -> None:
         jsii.set(self, "automationTargetParameterName", value)
 
-    @builtins.property
-    @jsii.member(jsii_name="complianceSeverity")
-    def compliance_severity(self) -> typing.Optional[str]:
-        """``AWS::SSM::Association.ComplianceSeverity``.
+    @builtins.property # type: ignore[misc]
+    @jsii.member(jsii_name="calendarNames")
+    def calendar_names(self) -> typing.Optional[typing.List[builtins.str]]:
+        '''``AWS::SSM::Association.CalendarNames``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-complianceseverity
-        """
-        return jsii.get(self, "complianceSeverity")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-calendarnames
+        '''
+        return typing.cast(typing.Optional[typing.List[builtins.str]], jsii.get(self, "calendarNames"))
+
+    @calendar_names.setter
+    def calendar_names(self, value: typing.Optional[typing.List[builtins.str]]) -> None:
+        jsii.set(self, "calendarNames", value)
+
+    @builtins.property # type: ignore[misc]
+    @jsii.member(jsii_name="complianceSeverity")
+    def compliance_severity(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::Association.ComplianceSeverity``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-complianceseverity
+        '''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "complianceSeverity"))
 
     @compliance_severity.setter
-    def compliance_severity(self, value: typing.Optional[str]) -> None:
+    def compliance_severity(self, value: typing.Optional[builtins.str]) -> None:
         jsii.set(self, "complianceSeverity", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="documentVersion")
-    def document_version(self) -> typing.Optional[str]:
-        """``AWS::SSM::Association.DocumentVersion``.
+    def document_version(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::Association.DocumentVersion``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-documentversion
-        """
-        return jsii.get(self, "documentVersion")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-documentversion
+        '''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "documentVersion"))
 
     @document_version.setter
-    def document_version(self, value: typing.Optional[str]) -> None:
+    def document_version(self, value: typing.Optional[builtins.str]) -> None:
         jsii.set(self, "documentVersion", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="instanceId")
-    def instance_id(self) -> typing.Optional[str]:
-        """``AWS::SSM::Association.InstanceId``.
+    def instance_id(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::Association.InstanceId``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-instanceid
-        """
-        return jsii.get(self, "instanceId")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-instanceid
+        '''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "instanceId"))
 
     @instance_id.setter
-    def instance_id(self, value: typing.Optional[str]) -> None:
+    def instance_id(self, value: typing.Optional[builtins.str]) -> None:
         jsii.set(self, "instanceId", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="maxConcurrency")
-    def max_concurrency(self) -> typing.Optional[str]:
-        """``AWS::SSM::Association.MaxConcurrency``.
+    def max_concurrency(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::Association.MaxConcurrency``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-maxconcurrency
-        """
-        return jsii.get(self, "maxConcurrency")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-maxconcurrency
+        '''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "maxConcurrency"))
 
     @max_concurrency.setter
-    def max_concurrency(self, value: typing.Optional[str]) -> None:
+    def max_concurrency(self, value: typing.Optional[builtins.str]) -> None:
         jsii.set(self, "maxConcurrency", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="maxErrors")
-    def max_errors(self) -> typing.Optional[str]:
-        """``AWS::SSM::Association.MaxErrors``.
+    def max_errors(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::Association.MaxErrors``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-maxerrors
-        """
-        return jsii.get(self, "maxErrors")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-maxerrors
+        '''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "maxErrors"))
 
     @max_errors.setter
-    def max_errors(self, value: typing.Optional[str]) -> None:
+    def max_errors(self, value: typing.Optional[builtins.str]) -> None:
         jsii.set(self, "maxErrors", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="outputLocation")
     def output_location(
         self,
-    ) -> typing.Optional[
-        typing.Union[
-            aws_cdk.core.IResolvable, "InstanceAssociationOutputLocationProperty"
-        ]
-    ]:
-        """``AWS::SSM::Association.OutputLocation``.
+    ) -> typing.Optional[typing.Union[aws_cdk.core.IResolvable, "CfnAssociation.InstanceAssociationOutputLocationProperty"]]:
+        '''``AWS::SSM::Association.OutputLocation``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-outputlocation
-        """
-        return jsii.get(self, "outputLocation")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-outputlocation
+        '''
+        return typing.cast(typing.Optional[typing.Union[aws_cdk.core.IResolvable, "CfnAssociation.InstanceAssociationOutputLocationProperty"]], jsii.get(self, "outputLocation"))
 
     @output_location.setter
     def output_location(
         self,
-        value: typing.Optional[
-            typing.Union[
-                aws_cdk.core.IResolvable, "InstanceAssociationOutputLocationProperty"
-            ]
-        ],
+        value: typing.Optional[typing.Union[aws_cdk.core.IResolvable, "CfnAssociation.InstanceAssociationOutputLocationProperty"]],
     ) -> None:
         jsii.set(self, "outputLocation", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="parameters")
     def parameters(
         self,
-    ) -> typing.Optional[
-        typing.Union[aws_cdk.core.IResolvable, typing.Mapping[str, str]]
-    ]:
-        """``AWS::SSM::Association.Parameters``.
+    ) -> typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.Mapping[builtins.str, typing.Any]]]:
+        '''``AWS::SSM::Association.Parameters``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-parameters
-        """
-        return jsii.get(self, "parameters")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-parameters
+        '''
+        return typing.cast(typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.Mapping[builtins.str, typing.Any]]], jsii.get(self, "parameters"))
 
     @parameters.setter
     def parameters(
         self,
-        value: typing.Optional[
-            typing.Union[aws_cdk.core.IResolvable, typing.Mapping[str, str]]
-        ],
+        value: typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.Mapping[builtins.str, typing.Any]]],
     ) -> None:
         jsii.set(self, "parameters", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="scheduleExpression")
-    def schedule_expression(self) -> typing.Optional[str]:
-        """``AWS::SSM::Association.ScheduleExpression``.
+    def schedule_expression(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::Association.ScheduleExpression``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-scheduleexpression
-        """
-        return jsii.get(self, "scheduleExpression")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-scheduleexpression
+        '''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "scheduleExpression"))
 
     @schedule_expression.setter
-    def schedule_expression(self, value: typing.Optional[str]) -> None:
+    def schedule_expression(self, value: typing.Optional[builtins.str]) -> None:
         jsii.set(self, "scheduleExpression", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="syncCompliance")
-    def sync_compliance(self) -> typing.Optional[str]:
-        """``AWS::SSM::Association.SyncCompliance``.
+    def sync_compliance(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::Association.SyncCompliance``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-synccompliance
-        """
-        return jsii.get(self, "syncCompliance")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-synccompliance
+        '''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "syncCompliance"))
 
     @sync_compliance.setter
-    def sync_compliance(self, value: typing.Optional[str]) -> None:
+    def sync_compliance(self, value: typing.Optional[builtins.str]) -> None:
         jsii.set(self, "syncCompliance", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="targets")
     def targets(
         self,
-    ) -> typing.Optional[
-        typing.Union[
-            aws_cdk.core.IResolvable,
-            typing.List[typing.Union[aws_cdk.core.IResolvable, "TargetProperty"]],
-        ]
-    ]:
-        """``AWS::SSM::Association.Targets``.
+    ) -> typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, "CfnAssociation.TargetProperty"]]]]:
+        '''``AWS::SSM::Association.Targets``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-targets
-        """
-        return jsii.get(self, "targets")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-targets
+        '''
+        return typing.cast(typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, "CfnAssociation.TargetProperty"]]]], jsii.get(self, "targets"))
 
     @targets.setter
     def targets(
         self,
-        value: typing.Optional[
-            typing.Union[
-                aws_cdk.core.IResolvable,
-                typing.List[typing.Union[aws_cdk.core.IResolvable, "TargetProperty"]],
-            ]
-        ],
+        value: typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, "CfnAssociation.TargetProperty"]]]],
     ) -> None:
         jsii.set(self, "targets", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="waitForSuccessTimeoutSeconds")
     def wait_for_success_timeout_seconds(self) -> typing.Optional[jsii.Number]:
-        """``AWS::SSM::Association.WaitForSuccessTimeoutSeconds``.
+        '''``AWS::SSM::Association.WaitForSuccessTimeoutSeconds``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-waitforsuccesstimeoutseconds
-        """
-        return jsii.get(self, "waitForSuccessTimeoutSeconds")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-waitforsuccesstimeoutseconds
+        '''
+        return typing.cast(typing.Optional[jsii.Number], jsii.get(self, "waitForSuccessTimeoutSeconds"))
 
     @wait_for_success_timeout_seconds.setter
     def wait_for_success_timeout_seconds(
-        self, value: typing.Optional[jsii.Number]
+        self,
+        value: typing.Optional[jsii.Number],
     ) -> None:
         jsii.set(self, "waitForSuccessTimeoutSeconds", value)
 
@@ -527,41 +466,32 @@ class CfnAssociation(
         def __init__(
             self,
             *,
-            s3_location: typing.Optional[
-                typing.Union[
-                    aws_cdk.core.IResolvable, "CfnAssociation.S3OutputLocationProperty"
-                ]
-            ] = None,
+            s3_location: typing.Optional[typing.Union[aws_cdk.core.IResolvable, "CfnAssociation.S3OutputLocationProperty"]] = None,
         ) -> None:
-            """
+            '''
             :param s3_location: ``CfnAssociation.InstanceAssociationOutputLocationProperty.S3Location``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-association-instanceassociationoutputlocation.html
-            """
-            self._values = {}
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-association-instanceassociationoutputlocation.html
+            '''
+            self._values: typing.Dict[str, typing.Any] = {}
             if s3_location is not None:
                 self._values["s3_location"] = s3_location
 
         @builtins.property
         def s3_location(
             self,
-        ) -> typing.Optional[
-            typing.Union[
-                aws_cdk.core.IResolvable, "CfnAssociation.S3OutputLocationProperty"
-            ]
-        ]:
-            """``CfnAssociation.InstanceAssociationOutputLocationProperty.S3Location``.
+        ) -> typing.Optional[typing.Union[aws_cdk.core.IResolvable, "CfnAssociation.S3OutputLocationProperty"]]:
+            '''``CfnAssociation.InstanceAssociationOutputLocationProperty.S3Location``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-association-instanceassociationoutputlocation.html#cfn-ssm-association-instanceassociationoutputlocation-s3location
-            """
-            return self._values.get("s3_location")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-association-instanceassociationoutputlocation.html#cfn-ssm-association-instanceassociationoutputlocation-s3location
+            '''
+            result = self._values.get("s3_location")
+            return typing.cast(typing.Optional[typing.Union[aws_cdk.core.IResolvable, "CfnAssociation.S3OutputLocationProperty"]], result)
 
-        def __eq__(self, rhs) -> bool:
+        def __eq__(self, rhs: typing.Any) -> builtins.bool:
             return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-        def __ne__(self, rhs) -> bool:
+        def __ne__(self, rhs: typing.Any) -> builtins.bool:
             return not (rhs == self)
 
         def __repr__(self) -> str:
@@ -582,19 +512,18 @@ class CfnAssociation(
         def __init__(
             self,
             *,
-            output_s3_bucket_name: typing.Optional[str] = None,
-            output_s3_key_prefix: typing.Optional[str] = None,
-            output_s3_region: typing.Optional[str] = None,
+            output_s3_bucket_name: typing.Optional[builtins.str] = None,
+            output_s3_key_prefix: typing.Optional[builtins.str] = None,
+            output_s3_region: typing.Optional[builtins.str] = None,
         ) -> None:
-            """
+            '''
             :param output_s3_bucket_name: ``CfnAssociation.S3OutputLocationProperty.OutputS3BucketName``.
             :param output_s3_key_prefix: ``CfnAssociation.S3OutputLocationProperty.OutputS3KeyPrefix``.
             :param output_s3_region: ``CfnAssociation.S3OutputLocationProperty.OutputS3Region``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-association-s3outputlocation.html
-            """
-            self._values = {}
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-association-s3outputlocation.html
+            '''
+            self._values: typing.Dict[str, typing.Any] = {}
             if output_s3_bucket_name is not None:
                 self._values["output_s3_bucket_name"] = output_s3_bucket_name
             if output_s3_key_prefix is not None:
@@ -603,36 +532,36 @@ class CfnAssociation(
                 self._values["output_s3_region"] = output_s3_region
 
         @builtins.property
-        def output_s3_bucket_name(self) -> typing.Optional[str]:
-            """``CfnAssociation.S3OutputLocationProperty.OutputS3BucketName``.
+        def output_s3_bucket_name(self) -> typing.Optional[builtins.str]:
+            '''``CfnAssociation.S3OutputLocationProperty.OutputS3BucketName``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-association-s3outputlocation.html#cfn-ssm-association-s3outputlocation-outputs3bucketname
-            """
-            return self._values.get("output_s3_bucket_name")
-
-        @builtins.property
-        def output_s3_key_prefix(self) -> typing.Optional[str]:
-            """``CfnAssociation.S3OutputLocationProperty.OutputS3KeyPrefix``.
-
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-association-s3outputlocation.html#cfn-ssm-association-s3outputlocation-outputs3keyprefix
-            """
-            return self._values.get("output_s3_key_prefix")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-association-s3outputlocation.html#cfn-ssm-association-s3outputlocation-outputs3bucketname
+            '''
+            result = self._values.get("output_s3_bucket_name")
+            return typing.cast(typing.Optional[builtins.str], result)
 
         @builtins.property
-        def output_s3_region(self) -> typing.Optional[str]:
-            """``CfnAssociation.S3OutputLocationProperty.OutputS3Region``.
+        def output_s3_key_prefix(self) -> typing.Optional[builtins.str]:
+            '''``CfnAssociation.S3OutputLocationProperty.OutputS3KeyPrefix``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-association-s3outputlocation.html#cfn-ssm-association-s3outputlocation-outputs3region
-            """
-            return self._values.get("output_s3_region")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-association-s3outputlocation.html#cfn-ssm-association-s3outputlocation-outputs3keyprefix
+            '''
+            result = self._values.get("output_s3_key_prefix")
+            return typing.cast(typing.Optional[builtins.str], result)
 
-        def __eq__(self, rhs) -> bool:
+        @builtins.property
+        def output_s3_region(self) -> typing.Optional[builtins.str]:
+            '''``CfnAssociation.S3OutputLocationProperty.OutputS3Region``.
+
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-association-s3outputlocation.html#cfn-ssm-association-s3outputlocation-outputs3region
+            '''
+            result = self._values.get("output_s3_region")
+            return typing.cast(typing.Optional[builtins.str], result)
+
+        def __eq__(self, rhs: typing.Any) -> builtins.bool:
             return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-        def __ne__(self, rhs) -> bool:
+        def __ne__(self, rhs: typing.Any) -> builtins.bool:
             return not (rhs == self)
 
         def __repr__(self) -> str:
@@ -646,41 +575,47 @@ class CfnAssociation(
         name_mapping={"key": "key", "values": "values"},
     )
     class TargetProperty:
-        def __init__(self, *, key: str, values: typing.List[str]) -> None:
-            """
+        def __init__(
+            self,
+            *,
+            key: builtins.str,
+            values: typing.Sequence[builtins.str],
+        ) -> None:
+            '''
             :param key: ``CfnAssociation.TargetProperty.Key``.
             :param values: ``CfnAssociation.TargetProperty.Values``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-association-target.html
-            """
-            self._values = {
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-association-target.html
+            '''
+            self._values: typing.Dict[str, typing.Any] = {
                 "key": key,
                 "values": values,
             }
 
         @builtins.property
-        def key(self) -> str:
-            """``CfnAssociation.TargetProperty.Key``.
+        def key(self) -> builtins.str:
+            '''``CfnAssociation.TargetProperty.Key``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-association-target.html#cfn-ssm-association-target-key
-            """
-            return self._values.get("key")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-association-target.html#cfn-ssm-association-target-key
+            '''
+            result = self._values.get("key")
+            assert result is not None, "Required property 'key' is missing"
+            return typing.cast(builtins.str, result)
 
         @builtins.property
-        def values(self) -> typing.List[str]:
-            """``CfnAssociation.TargetProperty.Values``.
+        def values(self) -> typing.List[builtins.str]:
+            '''``CfnAssociation.TargetProperty.Values``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-association-target.html#cfn-ssm-association-target-values
-            """
-            return self._values.get("values")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-association-target.html#cfn-ssm-association-target-values
+            '''
+            result = self._values.get("values")
+            assert result is not None, "Required property 'values' is missing"
+            return typing.cast(typing.List[builtins.str], result)
 
-        def __eq__(self, rhs) -> bool:
+        def __eq__(self, rhs: typing.Any) -> builtins.bool:
             return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-        def __ne__(self, rhs) -> bool:
+        def __ne__(self, rhs: typing.Any) -> builtins.bool:
             return not (rhs == self)
 
         def __repr__(self) -> str:
@@ -697,6 +632,7 @@ class CfnAssociation(
         "apply_only_at_cron_interval": "applyOnlyAtCronInterval",
         "association_name": "associationName",
         "automation_target_parameter_name": "automationTargetParameterName",
+        "calendar_names": "calendarNames",
         "compliance_severity": "complianceSeverity",
         "document_version": "documentVersion",
         "instance_id": "instanceId",
@@ -714,46 +650,30 @@ class CfnAssociationProps:
     def __init__(
         self,
         *,
-        name: str,
-        apply_only_at_cron_interval: typing.Optional[
-            typing.Union[bool, aws_cdk.core.IResolvable]
-        ] = None,
-        association_name: typing.Optional[str] = None,
-        automation_target_parameter_name: typing.Optional[str] = None,
-        compliance_severity: typing.Optional[str] = None,
-        document_version: typing.Optional[str] = None,
-        instance_id: typing.Optional[str] = None,
-        max_concurrency: typing.Optional[str] = None,
-        max_errors: typing.Optional[str] = None,
-        output_location: typing.Optional[
-            typing.Union[
-                aws_cdk.core.IResolvable,
-                "CfnAssociation.InstanceAssociationOutputLocationProperty",
-            ]
-        ] = None,
-        parameters: typing.Optional[
-            typing.Union[aws_cdk.core.IResolvable, typing.Mapping[str, str]]
-        ] = None,
-        schedule_expression: typing.Optional[str] = None,
-        sync_compliance: typing.Optional[str] = None,
-        targets: typing.Optional[
-            typing.Union[
-                aws_cdk.core.IResolvable,
-                typing.List[
-                    typing.Union[
-                        aws_cdk.core.IResolvable, "CfnAssociation.TargetProperty"
-                    ]
-                ],
-            ]
-        ] = None,
+        name: builtins.str,
+        apply_only_at_cron_interval: typing.Optional[typing.Union[builtins.bool, aws_cdk.core.IResolvable]] = None,
+        association_name: typing.Optional[builtins.str] = None,
+        automation_target_parameter_name: typing.Optional[builtins.str] = None,
+        calendar_names: typing.Optional[typing.Sequence[builtins.str]] = None,
+        compliance_severity: typing.Optional[builtins.str] = None,
+        document_version: typing.Optional[builtins.str] = None,
+        instance_id: typing.Optional[builtins.str] = None,
+        max_concurrency: typing.Optional[builtins.str] = None,
+        max_errors: typing.Optional[builtins.str] = None,
+        output_location: typing.Optional[typing.Union[aws_cdk.core.IResolvable, CfnAssociation.InstanceAssociationOutputLocationProperty]] = None,
+        parameters: typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.Mapping[builtins.str, typing.Any]]] = None,
+        schedule_expression: typing.Optional[builtins.str] = None,
+        sync_compliance: typing.Optional[builtins.str] = None,
+        targets: typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.Sequence[typing.Union[aws_cdk.core.IResolvable, CfnAssociation.TargetProperty]]]] = None,
         wait_for_success_timeout_seconds: typing.Optional[jsii.Number] = None,
     ) -> None:
-        """Properties for defining a ``AWS::SSM::Association``.
+        '''Properties for defining a ``AWS::SSM::Association``.
 
         :param name: ``AWS::SSM::Association.Name``.
         :param apply_only_at_cron_interval: ``AWS::SSM::Association.ApplyOnlyAtCronInterval``.
         :param association_name: ``AWS::SSM::Association.AssociationName``.
         :param automation_target_parameter_name: ``AWS::SSM::Association.AutomationTargetParameterName``.
+        :param calendar_names: ``AWS::SSM::Association.CalendarNames``.
         :param compliance_severity: ``AWS::SSM::Association.ComplianceSeverity``.
         :param document_version: ``AWS::SSM::Association.DocumentVersion``.
         :param instance_id: ``AWS::SSM::Association.InstanceId``.
@@ -766,10 +686,9 @@ class CfnAssociationProps:
         :param targets: ``AWS::SSM::Association.Targets``.
         :param wait_for_success_timeout_seconds: ``AWS::SSM::Association.WaitForSuccessTimeoutSeconds``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html
-        """
-        self._values = {
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html
+        '''
+        self._values: typing.Dict[str, typing.Any] = {
             "name": name,
         }
         if apply_only_at_cron_interval is not None:
@@ -777,9 +696,9 @@ class CfnAssociationProps:
         if association_name is not None:
             self._values["association_name"] = association_name
         if automation_target_parameter_name is not None:
-            self._values[
-                "automation_target_parameter_name"
-            ] = automation_target_parameter_name
+            self._values["automation_target_parameter_name"] = automation_target_parameter_name
+        if calendar_names is not None:
+            self._values["calendar_names"] = calendar_names
         if compliance_severity is not None:
             self._values["compliance_severity"] = compliance_severity
         if document_version is not None:
@@ -801,171 +720,165 @@ class CfnAssociationProps:
         if targets is not None:
             self._values["targets"] = targets
         if wait_for_success_timeout_seconds is not None:
-            self._values[
-                "wait_for_success_timeout_seconds"
-            ] = wait_for_success_timeout_seconds
+            self._values["wait_for_success_timeout_seconds"] = wait_for_success_timeout_seconds
 
     @builtins.property
-    def name(self) -> str:
-        """``AWS::SSM::Association.Name``.
+    def name(self) -> builtins.str:
+        '''``AWS::SSM::Association.Name``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-name
-        """
-        return self._values.get("name")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-name
+        '''
+        result = self._values.get("name")
+        assert result is not None, "Required property 'name' is missing"
+        return typing.cast(builtins.str, result)
 
     @builtins.property
     def apply_only_at_cron_interval(
         self,
-    ) -> typing.Optional[typing.Union[bool, aws_cdk.core.IResolvable]]:
-        """``AWS::SSM::Association.ApplyOnlyAtCronInterval``.
+    ) -> typing.Optional[typing.Union[builtins.bool, aws_cdk.core.IResolvable]]:
+        '''``AWS::SSM::Association.ApplyOnlyAtCronInterval``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-applyonlyatcroninterval
-        """
-        return self._values.get("apply_only_at_cron_interval")
-
-    @builtins.property
-    def association_name(self) -> typing.Optional[str]:
-        """``AWS::SSM::Association.AssociationName``.
-
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-associationname
-        """
-        return self._values.get("association_name")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-applyonlyatcroninterval
+        '''
+        result = self._values.get("apply_only_at_cron_interval")
+        return typing.cast(typing.Optional[typing.Union[builtins.bool, aws_cdk.core.IResolvable]], result)
 
     @builtins.property
-    def automation_target_parameter_name(self) -> typing.Optional[str]:
-        """``AWS::SSM::Association.AutomationTargetParameterName``.
+    def association_name(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::Association.AssociationName``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-automationtargetparametername
-        """
-        return self._values.get("automation_target_parameter_name")
-
-    @builtins.property
-    def compliance_severity(self) -> typing.Optional[str]:
-        """``AWS::SSM::Association.ComplianceSeverity``.
-
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-complianceseverity
-        """
-        return self._values.get("compliance_severity")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-associationname
+        '''
+        result = self._values.get("association_name")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
-    def document_version(self) -> typing.Optional[str]:
-        """``AWS::SSM::Association.DocumentVersion``.
+    def automation_target_parameter_name(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::Association.AutomationTargetParameterName``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-documentversion
-        """
-        return self._values.get("document_version")
-
-    @builtins.property
-    def instance_id(self) -> typing.Optional[str]:
-        """``AWS::SSM::Association.InstanceId``.
-
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-instanceid
-        """
-        return self._values.get("instance_id")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-automationtargetparametername
+        '''
+        result = self._values.get("automation_target_parameter_name")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
-    def max_concurrency(self) -> typing.Optional[str]:
-        """``AWS::SSM::Association.MaxConcurrency``.
+    def calendar_names(self) -> typing.Optional[typing.List[builtins.str]]:
+        '''``AWS::SSM::Association.CalendarNames``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-maxconcurrency
-        """
-        return self._values.get("max_concurrency")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-calendarnames
+        '''
+        result = self._values.get("calendar_names")
+        return typing.cast(typing.Optional[typing.List[builtins.str]], result)
 
     @builtins.property
-    def max_errors(self) -> typing.Optional[str]:
-        """``AWS::SSM::Association.MaxErrors``.
+    def compliance_severity(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::Association.ComplianceSeverity``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-maxerrors
-        """
-        return self._values.get("max_errors")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-complianceseverity
+        '''
+        result = self._values.get("compliance_severity")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def document_version(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::Association.DocumentVersion``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-documentversion
+        '''
+        result = self._values.get("document_version")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def instance_id(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::Association.InstanceId``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-instanceid
+        '''
+        result = self._values.get("instance_id")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def max_concurrency(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::Association.MaxConcurrency``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-maxconcurrency
+        '''
+        result = self._values.get("max_concurrency")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def max_errors(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::Association.MaxErrors``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-maxerrors
+        '''
+        result = self._values.get("max_errors")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def output_location(
         self,
-    ) -> typing.Optional[
-        typing.Union[
-            aws_cdk.core.IResolvable,
-            "CfnAssociation.InstanceAssociationOutputLocationProperty",
-        ]
-    ]:
-        """``AWS::SSM::Association.OutputLocation``.
+    ) -> typing.Optional[typing.Union[aws_cdk.core.IResolvable, CfnAssociation.InstanceAssociationOutputLocationProperty]]:
+        '''``AWS::SSM::Association.OutputLocation``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-outputlocation
-        """
-        return self._values.get("output_location")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-outputlocation
+        '''
+        result = self._values.get("output_location")
+        return typing.cast(typing.Optional[typing.Union[aws_cdk.core.IResolvable, CfnAssociation.InstanceAssociationOutputLocationProperty]], result)
 
     @builtins.property
     def parameters(
         self,
-    ) -> typing.Optional[
-        typing.Union[aws_cdk.core.IResolvable, typing.Mapping[str, str]]
-    ]:
-        """``AWS::SSM::Association.Parameters``.
+    ) -> typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.Mapping[builtins.str, typing.Any]]]:
+        '''``AWS::SSM::Association.Parameters``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-parameters
-        """
-        return self._values.get("parameters")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-parameters
+        '''
+        result = self._values.get("parameters")
+        return typing.cast(typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.Mapping[builtins.str, typing.Any]]], result)
 
     @builtins.property
-    def schedule_expression(self) -> typing.Optional[str]:
-        """``AWS::SSM::Association.ScheduleExpression``.
+    def schedule_expression(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::Association.ScheduleExpression``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-scheduleexpression
-        """
-        return self._values.get("schedule_expression")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-scheduleexpression
+        '''
+        result = self._values.get("schedule_expression")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
-    def sync_compliance(self) -> typing.Optional[str]:
-        """``AWS::SSM::Association.SyncCompliance``.
+    def sync_compliance(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::Association.SyncCompliance``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-synccompliance
-        """
-        return self._values.get("sync_compliance")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-synccompliance
+        '''
+        result = self._values.get("sync_compliance")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def targets(
         self,
-    ) -> typing.Optional[
-        typing.Union[
-            aws_cdk.core.IResolvable,
-            typing.List[
-                typing.Union[aws_cdk.core.IResolvable, "CfnAssociation.TargetProperty"]
-            ],
-        ]
-    ]:
-        """``AWS::SSM::Association.Targets``.
+    ) -> typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, CfnAssociation.TargetProperty]]]]:
+        '''``AWS::SSM::Association.Targets``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-targets
-        """
-        return self._values.get("targets")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-targets
+        '''
+        result = self._values.get("targets")
+        return typing.cast(typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, CfnAssociation.TargetProperty]]]], result)
 
     @builtins.property
     def wait_for_success_timeout_seconds(self) -> typing.Optional[jsii.Number]:
-        """``AWS::SSM::Association.WaitForSuccessTimeoutSeconds``.
+        '''``AWS::SSM::Association.WaitForSuccessTimeoutSeconds``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-waitforsuccesstimeoutseconds
-        """
-        return self._values.get("wait_for_success_timeout_seconds")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-waitforsuccesstimeoutseconds
+        '''
+        result = self._values.get("wait_for_success_timeout_seconds")
+        return typing.cast(typing.Optional[jsii.Number], result)
 
-    def __eq__(self, rhs) -> bool:
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
@@ -980,149 +893,325 @@ class CfnDocument(
     metaclass=jsii.JSIIMeta,
     jsii_type="@aws-cdk/aws-ssm.CfnDocument",
 ):
-    """A CloudFormation ``AWS::SSM::Document``.
+    '''A CloudFormation ``AWS::SSM::Document``.
 
-    see
-    :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-document.html
-    cloudformationResource:
-    :cloudformationResource:: AWS::SSM::Document
-    """
+    :cloudformationResource: AWS::SSM::Document
+    :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-document.html
+    '''
 
     def __init__(
         self,
         scope: aws_cdk.core.Construct,
-        id: str,
+        id: builtins.str,
         *,
         content: typing.Any,
-        document_type: typing.Optional[str] = None,
-        name: typing.Optional[str] = None,
-        tags: typing.Optional[typing.List[aws_cdk.core.CfnTag]] = None,
+        attachments: typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.Sequence[typing.Union[aws_cdk.core.IResolvable, "CfnDocument.AttachmentsSourceProperty"]]]] = None,
+        document_format: typing.Optional[builtins.str] = None,
+        document_type: typing.Optional[builtins.str] = None,
+        name: typing.Optional[builtins.str] = None,
+        requires: typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.Sequence[typing.Union[aws_cdk.core.IResolvable, "CfnDocument.DocumentRequiresProperty"]]]] = None,
+        tags: typing.Optional[typing.Sequence[aws_cdk.core.CfnTag]] = None,
+        target_type: typing.Optional[builtins.str] = None,
+        version_name: typing.Optional[builtins.str] = None,
     ) -> None:
-        """Create a new ``AWS::SSM::Document``.
+        '''Create a new ``AWS::SSM::Document``.
 
         :param scope: - scope in which this resource is defined.
         :param id: - scoped id of the resource.
         :param content: ``AWS::SSM::Document.Content``.
+        :param attachments: ``AWS::SSM::Document.Attachments``.
+        :param document_format: ``AWS::SSM::Document.DocumentFormat``.
         :param document_type: ``AWS::SSM::Document.DocumentType``.
         :param name: ``AWS::SSM::Document.Name``.
+        :param requires: ``AWS::SSM::Document.Requires``.
         :param tags: ``AWS::SSM::Document.Tags``.
-        """
+        :param target_type: ``AWS::SSM::Document.TargetType``.
+        :param version_name: ``AWS::SSM::Document.VersionName``.
+        '''
         props = CfnDocumentProps(
-            content=content, document_type=document_type, name=name, tags=tags
+            content=content,
+            attachments=attachments,
+            document_format=document_format,
+            document_type=document_type,
+            name=name,
+            requires=requires,
+            tags=tags,
+            target_type=target_type,
+            version_name=version_name,
         )
 
         jsii.create(CfnDocument, self, [scope, id, props])
 
-    @jsii.member(jsii_name="fromCloudFormation")
-    @builtins.classmethod
-    def from_cloud_formation(
-        cls,
-        scope: aws_cdk.core.Construct,
-        id: str,
-        resource_attributes: typing.Any,
-        *,
-        finder: aws_cdk.core.ICfnFinder,
-    ) -> "CfnDocument":
-        """A factory method that creates a new instance of this class from an object containing the CloudFormation properties of this resource.
-
-        Used in the @aws-cdk/cloudformation-include module.
-
-        :param scope: -
-        :param id: -
-        :param resource_attributes: -
-        :param finder: The finder interface used to resolve references across the template.
-
-        stability
-        :stability: experimental
-        """
-        options = aws_cdk.core.FromCloudFormationOptions(finder=finder)
-
-        return jsii.sinvoke(
-            cls, "fromCloudFormation", [scope, id, resource_attributes, options]
-        )
-
     @jsii.member(jsii_name="inspect")
     def inspect(self, inspector: aws_cdk.core.TreeInspector) -> None:
-        """Examines the CloudFormation resource and discloses attributes.
+        '''Examines the CloudFormation resource and discloses attributes.
 
         :param inspector: - tree inspector to collect and process attributes.
-
-        stability
-        :stability: experimental
-        """
-        return jsii.invoke(self, "inspect", [inspector])
+        '''
+        return typing.cast(None, jsii.invoke(self, "inspect", [inspector]))
 
     @jsii.member(jsii_name="renderProperties")
     def _render_properties(
-        self, props: typing.Mapping[str, typing.Any]
-    ) -> typing.Mapping[str, typing.Any]:
-        """
+        self,
+        props: typing.Mapping[builtins.str, typing.Any],
+    ) -> typing.Mapping[builtins.str, typing.Any]:
+        '''
         :param props: -
-        """
-        return jsii.invoke(self, "renderProperties", [props])
+        '''
+        return typing.cast(typing.Mapping[builtins.str, typing.Any], jsii.invoke(self, "renderProperties", [props]))
 
-    @jsii.python.classproperty
+    @jsii.python.classproperty # type: ignore[misc]
     @jsii.member(jsii_name="CFN_RESOURCE_TYPE_NAME")
-    def CFN_RESOURCE_TYPE_NAME(cls) -> str:
-        """The CloudFormation resource type name for this resource class."""
-        return jsii.sget(cls, "CFN_RESOURCE_TYPE_NAME")
+    def CFN_RESOURCE_TYPE_NAME(cls) -> builtins.str:
+        '''The CloudFormation resource type name for this resource class.'''
+        return typing.cast(builtins.str, jsii.sget(cls, "CFN_RESOURCE_TYPE_NAME"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="cfnProperties")
-    def _cfn_properties(self) -> typing.Mapping[str, typing.Any]:
-        return jsii.get(self, "cfnProperties")
+    def _cfn_properties(self) -> typing.Mapping[builtins.str, typing.Any]:
+        return typing.cast(typing.Mapping[builtins.str, typing.Any], jsii.get(self, "cfnProperties"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="tags")
     def tags(self) -> aws_cdk.core.TagManager:
-        """``AWS::SSM::Document.Tags``.
+        '''``AWS::SSM::Document.Tags``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-document.html#cfn-ssm-document-tags
-        """
-        return jsii.get(self, "tags")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-document.html#cfn-ssm-document-tags
+        '''
+        return typing.cast(aws_cdk.core.TagManager, jsii.get(self, "tags"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="content")
     def content(self) -> typing.Any:
-        """``AWS::SSM::Document.Content``.
+        '''``AWS::SSM::Document.Content``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-document.html#cfn-ssm-document-content
-        """
-        return jsii.get(self, "content")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-document.html#cfn-ssm-document-content
+        '''
+        return typing.cast(typing.Any, jsii.get(self, "content"))
 
     @content.setter
     def content(self, value: typing.Any) -> None:
         jsii.set(self, "content", value)
 
-    @builtins.property
-    @jsii.member(jsii_name="documentType")
-    def document_type(self) -> typing.Optional[str]:
-        """``AWS::SSM::Document.DocumentType``.
+    @builtins.property # type: ignore[misc]
+    @jsii.member(jsii_name="attachments")
+    def attachments(
+        self,
+    ) -> typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, "CfnDocument.AttachmentsSourceProperty"]]]]:
+        '''``AWS::SSM::Document.Attachments``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-document.html#cfn-ssm-document-documenttype
-        """
-        return jsii.get(self, "documentType")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-document.html#cfn-ssm-document-attachments
+        '''
+        return typing.cast(typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, "CfnDocument.AttachmentsSourceProperty"]]]], jsii.get(self, "attachments"))
+
+    @attachments.setter
+    def attachments(
+        self,
+        value: typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, "CfnDocument.AttachmentsSourceProperty"]]]],
+    ) -> None:
+        jsii.set(self, "attachments", value)
+
+    @builtins.property # type: ignore[misc]
+    @jsii.member(jsii_name="documentFormat")
+    def document_format(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::Document.DocumentFormat``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-document.html#cfn-ssm-document-documentformat
+        '''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "documentFormat"))
+
+    @document_format.setter
+    def document_format(self, value: typing.Optional[builtins.str]) -> None:
+        jsii.set(self, "documentFormat", value)
+
+    @builtins.property # type: ignore[misc]
+    @jsii.member(jsii_name="documentType")
+    def document_type(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::Document.DocumentType``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-document.html#cfn-ssm-document-documenttype
+        '''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "documentType"))
 
     @document_type.setter
-    def document_type(self, value: typing.Optional[str]) -> None:
+    def document_type(self, value: typing.Optional[builtins.str]) -> None:
         jsii.set(self, "documentType", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="name")
-    def name(self) -> typing.Optional[str]:
-        """``AWS::SSM::Document.Name``.
+    def name(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::Document.Name``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-document.html#cfn-ssm-document-name
-        """
-        return jsii.get(self, "name")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-document.html#cfn-ssm-document-name
+        '''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "name"))
 
     @name.setter
-    def name(self, value: typing.Optional[str]) -> None:
+    def name(self, value: typing.Optional[builtins.str]) -> None:
         jsii.set(self, "name", value)
+
+    @builtins.property # type: ignore[misc]
+    @jsii.member(jsii_name="requires")
+    def requires(
+        self,
+    ) -> typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, "CfnDocument.DocumentRequiresProperty"]]]]:
+        '''``AWS::SSM::Document.Requires``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-document.html#cfn-ssm-document-requires
+        '''
+        return typing.cast(typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, "CfnDocument.DocumentRequiresProperty"]]]], jsii.get(self, "requires"))
+
+    @requires.setter
+    def requires(
+        self,
+        value: typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, "CfnDocument.DocumentRequiresProperty"]]]],
+    ) -> None:
+        jsii.set(self, "requires", value)
+
+    @builtins.property # type: ignore[misc]
+    @jsii.member(jsii_name="targetType")
+    def target_type(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::Document.TargetType``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-document.html#cfn-ssm-document-targettype
+        '''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "targetType"))
+
+    @target_type.setter
+    def target_type(self, value: typing.Optional[builtins.str]) -> None:
+        jsii.set(self, "targetType", value)
+
+    @builtins.property # type: ignore[misc]
+    @jsii.member(jsii_name="versionName")
+    def version_name(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::Document.VersionName``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-document.html#cfn-ssm-document-versionname
+        '''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "versionName"))
+
+    @version_name.setter
+    def version_name(self, value: typing.Optional[builtins.str]) -> None:
+        jsii.set(self, "versionName", value)
+
+    @jsii.data_type(
+        jsii_type="@aws-cdk/aws-ssm.CfnDocument.AttachmentsSourceProperty",
+        jsii_struct_bases=[],
+        name_mapping={"key": "key", "name": "name", "values": "values"},
+    )
+    class AttachmentsSourceProperty:
+        def __init__(
+            self,
+            *,
+            key: typing.Optional[builtins.str] = None,
+            name: typing.Optional[builtins.str] = None,
+            values: typing.Optional[typing.Sequence[builtins.str]] = None,
+        ) -> None:
+            '''
+            :param key: ``CfnDocument.AttachmentsSourceProperty.Key``.
+            :param name: ``CfnDocument.AttachmentsSourceProperty.Name``.
+            :param values: ``CfnDocument.AttachmentsSourceProperty.Values``.
+
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-document-attachmentssource.html
+            '''
+            self._values: typing.Dict[str, typing.Any] = {}
+            if key is not None:
+                self._values["key"] = key
+            if name is not None:
+                self._values["name"] = name
+            if values is not None:
+                self._values["values"] = values
+
+        @builtins.property
+        def key(self) -> typing.Optional[builtins.str]:
+            '''``CfnDocument.AttachmentsSourceProperty.Key``.
+
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-document-attachmentssource.html#cfn-ssm-document-attachmentssource-key
+            '''
+            result = self._values.get("key")
+            return typing.cast(typing.Optional[builtins.str], result)
+
+        @builtins.property
+        def name(self) -> typing.Optional[builtins.str]:
+            '''``CfnDocument.AttachmentsSourceProperty.Name``.
+
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-document-attachmentssource.html#cfn-ssm-document-attachmentssource-name
+            '''
+            result = self._values.get("name")
+            return typing.cast(typing.Optional[builtins.str], result)
+
+        @builtins.property
+        def values(self) -> typing.Optional[typing.List[builtins.str]]:
+            '''``CfnDocument.AttachmentsSourceProperty.Values``.
+
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-document-attachmentssource.html#cfn-ssm-document-attachmentssource-values
+            '''
+            result = self._values.get("values")
+            return typing.cast(typing.Optional[typing.List[builtins.str]], result)
+
+        def __eq__(self, rhs: typing.Any) -> builtins.bool:
+            return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+        def __ne__(self, rhs: typing.Any) -> builtins.bool:
+            return not (rhs == self)
+
+        def __repr__(self) -> str:
+            return "AttachmentsSourceProperty(%s)" % ", ".join(
+                k + "=" + repr(v) for k, v in self._values.items()
+            )
+
+    @jsii.data_type(
+        jsii_type="@aws-cdk/aws-ssm.CfnDocument.DocumentRequiresProperty",
+        jsii_struct_bases=[],
+        name_mapping={"name": "name", "version": "version"},
+    )
+    class DocumentRequiresProperty:
+        def __init__(
+            self,
+            *,
+            name: typing.Optional[builtins.str] = None,
+            version: typing.Optional[builtins.str] = None,
+        ) -> None:
+            '''
+            :param name: ``CfnDocument.DocumentRequiresProperty.Name``.
+            :param version: ``CfnDocument.DocumentRequiresProperty.Version``.
+
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-document-documentrequires.html
+            '''
+            self._values: typing.Dict[str, typing.Any] = {}
+            if name is not None:
+                self._values["name"] = name
+            if version is not None:
+                self._values["version"] = version
+
+        @builtins.property
+        def name(self) -> typing.Optional[builtins.str]:
+            '''``CfnDocument.DocumentRequiresProperty.Name``.
+
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-document-documentrequires.html#cfn-ssm-document-documentrequires-name
+            '''
+            result = self._values.get("name")
+            return typing.cast(typing.Optional[builtins.str], result)
+
+        @builtins.property
+        def version(self) -> typing.Optional[builtins.str]:
+            '''``CfnDocument.DocumentRequiresProperty.Version``.
+
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-document-documentrequires.html#cfn-ssm-document-documentrequires-version
+            '''
+            result = self._values.get("version")
+            return typing.cast(typing.Optional[builtins.str], result)
+
+        def __eq__(self, rhs: typing.Any) -> builtins.bool:
+            return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+        def __ne__(self, rhs: typing.Any) -> builtins.bool:
+            return not (rhs == self)
+
+        def __repr__(self) -> str:
+            return "DocumentRequiresProperty(%s)" % ", ".join(
+                k + "=" + repr(v) for k, v in self._values.items()
+            )
 
 
 @jsii.data_type(
@@ -1130,9 +1219,14 @@ class CfnDocument(
     jsii_struct_bases=[],
     name_mapping={
         "content": "content",
+        "attachments": "attachments",
+        "document_format": "documentFormat",
         "document_type": "documentType",
         "name": "name",
+        "requires": "requires",
         "tags": "tags",
+        "target_type": "targetType",
+        "version_name": "versionName",
     },
 )
 class CfnDocumentProps:
@@ -1140,70 +1234,139 @@ class CfnDocumentProps:
         self,
         *,
         content: typing.Any,
-        document_type: typing.Optional[str] = None,
-        name: typing.Optional[str] = None,
-        tags: typing.Optional[typing.List[aws_cdk.core.CfnTag]] = None,
+        attachments: typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.Sequence[typing.Union[aws_cdk.core.IResolvable, CfnDocument.AttachmentsSourceProperty]]]] = None,
+        document_format: typing.Optional[builtins.str] = None,
+        document_type: typing.Optional[builtins.str] = None,
+        name: typing.Optional[builtins.str] = None,
+        requires: typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.Sequence[typing.Union[aws_cdk.core.IResolvable, CfnDocument.DocumentRequiresProperty]]]] = None,
+        tags: typing.Optional[typing.Sequence[aws_cdk.core.CfnTag]] = None,
+        target_type: typing.Optional[builtins.str] = None,
+        version_name: typing.Optional[builtins.str] = None,
     ) -> None:
-        """Properties for defining a ``AWS::SSM::Document``.
+        '''Properties for defining a ``AWS::SSM::Document``.
 
         :param content: ``AWS::SSM::Document.Content``.
+        :param attachments: ``AWS::SSM::Document.Attachments``.
+        :param document_format: ``AWS::SSM::Document.DocumentFormat``.
         :param document_type: ``AWS::SSM::Document.DocumentType``.
         :param name: ``AWS::SSM::Document.Name``.
+        :param requires: ``AWS::SSM::Document.Requires``.
         :param tags: ``AWS::SSM::Document.Tags``.
+        :param target_type: ``AWS::SSM::Document.TargetType``.
+        :param version_name: ``AWS::SSM::Document.VersionName``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-document.html
-        """
-        self._values = {
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-document.html
+        '''
+        self._values: typing.Dict[str, typing.Any] = {
             "content": content,
         }
+        if attachments is not None:
+            self._values["attachments"] = attachments
+        if document_format is not None:
+            self._values["document_format"] = document_format
         if document_type is not None:
             self._values["document_type"] = document_type
         if name is not None:
             self._values["name"] = name
+        if requires is not None:
+            self._values["requires"] = requires
         if tags is not None:
             self._values["tags"] = tags
+        if target_type is not None:
+            self._values["target_type"] = target_type
+        if version_name is not None:
+            self._values["version_name"] = version_name
 
     @builtins.property
     def content(self) -> typing.Any:
-        """``AWS::SSM::Document.Content``.
+        '''``AWS::SSM::Document.Content``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-document.html#cfn-ssm-document-content
-        """
-        return self._values.get("content")
-
-    @builtins.property
-    def document_type(self) -> typing.Optional[str]:
-        """``AWS::SSM::Document.DocumentType``.
-
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-document.html#cfn-ssm-document-documenttype
-        """
-        return self._values.get("document_type")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-document.html#cfn-ssm-document-content
+        '''
+        result = self._values.get("content")
+        assert result is not None, "Required property 'content' is missing"
+        return typing.cast(typing.Any, result)
 
     @builtins.property
-    def name(self) -> typing.Optional[str]:
-        """``AWS::SSM::Document.Name``.
+    def attachments(
+        self,
+    ) -> typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, CfnDocument.AttachmentsSourceProperty]]]]:
+        '''``AWS::SSM::Document.Attachments``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-document.html#cfn-ssm-document-name
-        """
-        return self._values.get("name")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-document.html#cfn-ssm-document-attachments
+        '''
+        result = self._values.get("attachments")
+        return typing.cast(typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, CfnDocument.AttachmentsSourceProperty]]]], result)
+
+    @builtins.property
+    def document_format(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::Document.DocumentFormat``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-document.html#cfn-ssm-document-documentformat
+        '''
+        result = self._values.get("document_format")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def document_type(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::Document.DocumentType``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-document.html#cfn-ssm-document-documenttype
+        '''
+        result = self._values.get("document_type")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def name(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::Document.Name``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-document.html#cfn-ssm-document-name
+        '''
+        result = self._values.get("name")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def requires(
+        self,
+    ) -> typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, CfnDocument.DocumentRequiresProperty]]]]:
+        '''``AWS::SSM::Document.Requires``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-document.html#cfn-ssm-document-requires
+        '''
+        result = self._values.get("requires")
+        return typing.cast(typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, CfnDocument.DocumentRequiresProperty]]]], result)
 
     @builtins.property
     def tags(self) -> typing.Optional[typing.List[aws_cdk.core.CfnTag]]:
-        """``AWS::SSM::Document.Tags``.
+        '''``AWS::SSM::Document.Tags``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-document.html#cfn-ssm-document-tags
-        """
-        return self._values.get("tags")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-document.html#cfn-ssm-document-tags
+        '''
+        result = self._values.get("tags")
+        return typing.cast(typing.Optional[typing.List[aws_cdk.core.CfnTag]], result)
 
-    def __eq__(self, rhs) -> bool:
+    @builtins.property
+    def target_type(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::Document.TargetType``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-document.html#cfn-ssm-document-targettype
+        '''
+        result = self._values.get("target_type")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def version_name(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::Document.VersionName``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-document.html#cfn-ssm-document-versionname
+        '''
+        result = self._values.get("version_name")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
@@ -1218,32 +1381,30 @@ class CfnMaintenanceWindow(
     metaclass=jsii.JSIIMeta,
     jsii_type="@aws-cdk/aws-ssm.CfnMaintenanceWindow",
 ):
-    """A CloudFormation ``AWS::SSM::MaintenanceWindow``.
+    '''A CloudFormation ``AWS::SSM::MaintenanceWindow``.
 
-    see
-    :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html
-    cloudformationResource:
-    :cloudformationResource:: AWS::SSM::MaintenanceWindow
-    """
+    :cloudformationResource: AWS::SSM::MaintenanceWindow
+    :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html
+    '''
 
     def __init__(
         self,
         scope: aws_cdk.core.Construct,
-        id: str,
+        id: builtins.str,
         *,
-        allow_unassociated_targets: typing.Union[bool, aws_cdk.core.IResolvable],
+        allow_unassociated_targets: typing.Union[builtins.bool, aws_cdk.core.IResolvable],
         cutoff: jsii.Number,
         duration: jsii.Number,
-        name: str,
-        schedule: str,
-        description: typing.Optional[str] = None,
-        end_date: typing.Optional[str] = None,
+        name: builtins.str,
+        schedule: builtins.str,
+        description: typing.Optional[builtins.str] = None,
+        end_date: typing.Optional[builtins.str] = None,
         schedule_offset: typing.Optional[jsii.Number] = None,
-        schedule_timezone: typing.Optional[str] = None,
-        start_date: typing.Optional[str] = None,
-        tags: typing.Optional[typing.List[aws_cdk.core.CfnTag]] = None,
+        schedule_timezone: typing.Optional[builtins.str] = None,
+        start_date: typing.Optional[builtins.str] = None,
+        tags: typing.Optional[typing.Sequence[aws_cdk.core.CfnTag]] = None,
     ) -> None:
-        """Create a new ``AWS::SSM::MaintenanceWindow``.
+        '''Create a new ``AWS::SSM::MaintenanceWindow``.
 
         :param scope: - scope in which this resource is defined.
         :param id: - scoped id of the resource.
@@ -1258,7 +1419,7 @@ class CfnMaintenanceWindow(
         :param schedule_timezone: ``AWS::SSM::MaintenanceWindow.ScheduleTimezone``.
         :param start_date: ``AWS::SSM::MaintenanceWindow.StartDate``.
         :param tags: ``AWS::SSM::MaintenanceWindow.Tags``.
-        """
+        '''
         props = CfnMaintenanceWindowProps(
             allow_unassociated_targets=allow_unassociated_targets,
             cutoff=cutoff,
@@ -1275,217 +1436,177 @@ class CfnMaintenanceWindow(
 
         jsii.create(CfnMaintenanceWindow, self, [scope, id, props])
 
-    @jsii.member(jsii_name="fromCloudFormation")
-    @builtins.classmethod
-    def from_cloud_formation(
-        cls,
-        scope: aws_cdk.core.Construct,
-        id: str,
-        resource_attributes: typing.Any,
-        *,
-        finder: aws_cdk.core.ICfnFinder,
-    ) -> "CfnMaintenanceWindow":
-        """A factory method that creates a new instance of this class from an object containing the CloudFormation properties of this resource.
-
-        Used in the @aws-cdk/cloudformation-include module.
-
-        :param scope: -
-        :param id: -
-        :param resource_attributes: -
-        :param finder: The finder interface used to resolve references across the template.
-
-        stability
-        :stability: experimental
-        """
-        options = aws_cdk.core.FromCloudFormationOptions(finder=finder)
-
-        return jsii.sinvoke(
-            cls, "fromCloudFormation", [scope, id, resource_attributes, options]
-        )
-
     @jsii.member(jsii_name="inspect")
     def inspect(self, inspector: aws_cdk.core.TreeInspector) -> None:
-        """Examines the CloudFormation resource and discloses attributes.
+        '''Examines the CloudFormation resource and discloses attributes.
 
         :param inspector: - tree inspector to collect and process attributes.
-
-        stability
-        :stability: experimental
-        """
-        return jsii.invoke(self, "inspect", [inspector])
+        '''
+        return typing.cast(None, jsii.invoke(self, "inspect", [inspector]))
 
     @jsii.member(jsii_name="renderProperties")
     def _render_properties(
-        self, props: typing.Mapping[str, typing.Any]
-    ) -> typing.Mapping[str, typing.Any]:
-        """
+        self,
+        props: typing.Mapping[builtins.str, typing.Any],
+    ) -> typing.Mapping[builtins.str, typing.Any]:
+        '''
         :param props: -
-        """
-        return jsii.invoke(self, "renderProperties", [props])
+        '''
+        return typing.cast(typing.Mapping[builtins.str, typing.Any], jsii.invoke(self, "renderProperties", [props]))
 
-    @jsii.python.classproperty
+    @jsii.python.classproperty # type: ignore[misc]
     @jsii.member(jsii_name="CFN_RESOURCE_TYPE_NAME")
-    def CFN_RESOURCE_TYPE_NAME(cls) -> str:
-        """The CloudFormation resource type name for this resource class."""
-        return jsii.sget(cls, "CFN_RESOURCE_TYPE_NAME")
+    def CFN_RESOURCE_TYPE_NAME(cls) -> builtins.str:
+        '''The CloudFormation resource type name for this resource class.'''
+        return typing.cast(builtins.str, jsii.sget(cls, "CFN_RESOURCE_TYPE_NAME"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="cfnProperties")
-    def _cfn_properties(self) -> typing.Mapping[str, typing.Any]:
-        return jsii.get(self, "cfnProperties")
+    def _cfn_properties(self) -> typing.Mapping[builtins.str, typing.Any]:
+        return typing.cast(typing.Mapping[builtins.str, typing.Any], jsii.get(self, "cfnProperties"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="tags")
     def tags(self) -> aws_cdk.core.TagManager:
-        """``AWS::SSM::MaintenanceWindow.Tags``.
+        '''``AWS::SSM::MaintenanceWindow.Tags``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html#cfn-ssm-maintenancewindow-tags
-        """
-        return jsii.get(self, "tags")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html#cfn-ssm-maintenancewindow-tags
+        '''
+        return typing.cast(aws_cdk.core.TagManager, jsii.get(self, "tags"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="allowUnassociatedTargets")
     def allow_unassociated_targets(
         self,
-    ) -> typing.Union[bool, aws_cdk.core.IResolvable]:
-        """``AWS::SSM::MaintenanceWindow.AllowUnassociatedTargets``.
+    ) -> typing.Union[builtins.bool, aws_cdk.core.IResolvable]:
+        '''``AWS::SSM::MaintenanceWindow.AllowUnassociatedTargets``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html#cfn-ssm-maintenancewindow-allowunassociatedtargets
-        """
-        return jsii.get(self, "allowUnassociatedTargets")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html#cfn-ssm-maintenancewindow-allowunassociatedtargets
+        '''
+        return typing.cast(typing.Union[builtins.bool, aws_cdk.core.IResolvable], jsii.get(self, "allowUnassociatedTargets"))
 
     @allow_unassociated_targets.setter
     def allow_unassociated_targets(
-        self, value: typing.Union[bool, aws_cdk.core.IResolvable]
+        self,
+        value: typing.Union[builtins.bool, aws_cdk.core.IResolvable],
     ) -> None:
         jsii.set(self, "allowUnassociatedTargets", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="cutoff")
     def cutoff(self) -> jsii.Number:
-        """``AWS::SSM::MaintenanceWindow.Cutoff``.
+        '''``AWS::SSM::MaintenanceWindow.Cutoff``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html#cfn-ssm-maintenancewindow-cutoff
-        """
-        return jsii.get(self, "cutoff")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html#cfn-ssm-maintenancewindow-cutoff
+        '''
+        return typing.cast(jsii.Number, jsii.get(self, "cutoff"))
 
     @cutoff.setter
     def cutoff(self, value: jsii.Number) -> None:
         jsii.set(self, "cutoff", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="duration")
     def duration(self) -> jsii.Number:
-        """``AWS::SSM::MaintenanceWindow.Duration``.
+        '''``AWS::SSM::MaintenanceWindow.Duration``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html#cfn-ssm-maintenancewindow-duration
-        """
-        return jsii.get(self, "duration")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html#cfn-ssm-maintenancewindow-duration
+        '''
+        return typing.cast(jsii.Number, jsii.get(self, "duration"))
 
     @duration.setter
     def duration(self, value: jsii.Number) -> None:
         jsii.set(self, "duration", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="name")
-    def name(self) -> str:
-        """``AWS::SSM::MaintenanceWindow.Name``.
+    def name(self) -> builtins.str:
+        '''``AWS::SSM::MaintenanceWindow.Name``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html#cfn-ssm-maintenancewindow-name
-        """
-        return jsii.get(self, "name")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html#cfn-ssm-maintenancewindow-name
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "name"))
 
     @name.setter
-    def name(self, value: str) -> None:
+    def name(self, value: builtins.str) -> None:
         jsii.set(self, "name", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="schedule")
-    def schedule(self) -> str:
-        """``AWS::SSM::MaintenanceWindow.Schedule``.
+    def schedule(self) -> builtins.str:
+        '''``AWS::SSM::MaintenanceWindow.Schedule``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html#cfn-ssm-maintenancewindow-schedule
-        """
-        return jsii.get(self, "schedule")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html#cfn-ssm-maintenancewindow-schedule
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "schedule"))
 
     @schedule.setter
-    def schedule(self, value: str) -> None:
+    def schedule(self, value: builtins.str) -> None:
         jsii.set(self, "schedule", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="description")
-    def description(self) -> typing.Optional[str]:
-        """``AWS::SSM::MaintenanceWindow.Description``.
+    def description(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::MaintenanceWindow.Description``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html#cfn-ssm-maintenancewindow-description
-        """
-        return jsii.get(self, "description")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html#cfn-ssm-maintenancewindow-description
+        '''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "description"))
 
     @description.setter
-    def description(self, value: typing.Optional[str]) -> None:
+    def description(self, value: typing.Optional[builtins.str]) -> None:
         jsii.set(self, "description", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="endDate")
-    def end_date(self) -> typing.Optional[str]:
-        """``AWS::SSM::MaintenanceWindow.EndDate``.
+    def end_date(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::MaintenanceWindow.EndDate``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html#cfn-ssm-maintenancewindow-enddate
-        """
-        return jsii.get(self, "endDate")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html#cfn-ssm-maintenancewindow-enddate
+        '''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "endDate"))
 
     @end_date.setter
-    def end_date(self, value: typing.Optional[str]) -> None:
+    def end_date(self, value: typing.Optional[builtins.str]) -> None:
         jsii.set(self, "endDate", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="scheduleOffset")
     def schedule_offset(self) -> typing.Optional[jsii.Number]:
-        """``AWS::SSM::MaintenanceWindow.ScheduleOffset``.
+        '''``AWS::SSM::MaintenanceWindow.ScheduleOffset``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html#cfn-ssm-maintenancewindow-scheduleoffset
-        """
-        return jsii.get(self, "scheduleOffset")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html#cfn-ssm-maintenancewindow-scheduleoffset
+        '''
+        return typing.cast(typing.Optional[jsii.Number], jsii.get(self, "scheduleOffset"))
 
     @schedule_offset.setter
     def schedule_offset(self, value: typing.Optional[jsii.Number]) -> None:
         jsii.set(self, "scheduleOffset", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="scheduleTimezone")
-    def schedule_timezone(self) -> typing.Optional[str]:
-        """``AWS::SSM::MaintenanceWindow.ScheduleTimezone``.
+    def schedule_timezone(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::MaintenanceWindow.ScheduleTimezone``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html#cfn-ssm-maintenancewindow-scheduletimezone
-        """
-        return jsii.get(self, "scheduleTimezone")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html#cfn-ssm-maintenancewindow-scheduletimezone
+        '''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "scheduleTimezone"))
 
     @schedule_timezone.setter
-    def schedule_timezone(self, value: typing.Optional[str]) -> None:
+    def schedule_timezone(self, value: typing.Optional[builtins.str]) -> None:
         jsii.set(self, "scheduleTimezone", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="startDate")
-    def start_date(self) -> typing.Optional[str]:
-        """``AWS::SSM::MaintenanceWindow.StartDate``.
+    def start_date(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::MaintenanceWindow.StartDate``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html#cfn-ssm-maintenancewindow-startdate
-        """
-        return jsii.get(self, "startDate")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html#cfn-ssm-maintenancewindow-startdate
+        '''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "startDate"))
 
     @start_date.setter
-    def start_date(self, value: typing.Optional[str]) -> None:
+    def start_date(self, value: typing.Optional[builtins.str]) -> None:
         jsii.set(self, "startDate", value)
 
 
@@ -1510,19 +1631,19 @@ class CfnMaintenanceWindowProps:
     def __init__(
         self,
         *,
-        allow_unassociated_targets: typing.Union[bool, aws_cdk.core.IResolvable],
+        allow_unassociated_targets: typing.Union[builtins.bool, aws_cdk.core.IResolvable],
         cutoff: jsii.Number,
         duration: jsii.Number,
-        name: str,
-        schedule: str,
-        description: typing.Optional[str] = None,
-        end_date: typing.Optional[str] = None,
+        name: builtins.str,
+        schedule: builtins.str,
+        description: typing.Optional[builtins.str] = None,
+        end_date: typing.Optional[builtins.str] = None,
         schedule_offset: typing.Optional[jsii.Number] = None,
-        schedule_timezone: typing.Optional[str] = None,
-        start_date: typing.Optional[str] = None,
-        tags: typing.Optional[typing.List[aws_cdk.core.CfnTag]] = None,
+        schedule_timezone: typing.Optional[builtins.str] = None,
+        start_date: typing.Optional[builtins.str] = None,
+        tags: typing.Optional[typing.Sequence[aws_cdk.core.CfnTag]] = None,
     ) -> None:
-        """Properties for defining a ``AWS::SSM::MaintenanceWindow``.
+        '''Properties for defining a ``AWS::SSM::MaintenanceWindow``.
 
         :param allow_unassociated_targets: ``AWS::SSM::MaintenanceWindow.AllowUnassociatedTargets``.
         :param cutoff: ``AWS::SSM::MaintenanceWindow.Cutoff``.
@@ -1536,10 +1657,9 @@ class CfnMaintenanceWindowProps:
         :param start_date: ``AWS::SSM::MaintenanceWindow.StartDate``.
         :param tags: ``AWS::SSM::MaintenanceWindow.Tags``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html
-        """
-        self._values = {
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html
+        '''
+        self._values: typing.Dict[str, typing.Any] = {
             "allow_unassociated_targets": allow_unassociated_targets,
             "cutoff": cutoff,
             "duration": duration,
@@ -1562,108 +1682,113 @@ class CfnMaintenanceWindowProps:
     @builtins.property
     def allow_unassociated_targets(
         self,
-    ) -> typing.Union[bool, aws_cdk.core.IResolvable]:
-        """``AWS::SSM::MaintenanceWindow.AllowUnassociatedTargets``.
+    ) -> typing.Union[builtins.bool, aws_cdk.core.IResolvable]:
+        '''``AWS::SSM::MaintenanceWindow.AllowUnassociatedTargets``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html#cfn-ssm-maintenancewindow-allowunassociatedtargets
-        """
-        return self._values.get("allow_unassociated_targets")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html#cfn-ssm-maintenancewindow-allowunassociatedtargets
+        '''
+        result = self._values.get("allow_unassociated_targets")
+        assert result is not None, "Required property 'allow_unassociated_targets' is missing"
+        return typing.cast(typing.Union[builtins.bool, aws_cdk.core.IResolvable], result)
 
     @builtins.property
     def cutoff(self) -> jsii.Number:
-        """``AWS::SSM::MaintenanceWindow.Cutoff``.
+        '''``AWS::SSM::MaintenanceWindow.Cutoff``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html#cfn-ssm-maintenancewindow-cutoff
-        """
-        return self._values.get("cutoff")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html#cfn-ssm-maintenancewindow-cutoff
+        '''
+        result = self._values.get("cutoff")
+        assert result is not None, "Required property 'cutoff' is missing"
+        return typing.cast(jsii.Number, result)
 
     @builtins.property
     def duration(self) -> jsii.Number:
-        """``AWS::SSM::MaintenanceWindow.Duration``.
+        '''``AWS::SSM::MaintenanceWindow.Duration``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html#cfn-ssm-maintenancewindow-duration
-        """
-        return self._values.get("duration")
-
-    @builtins.property
-    def name(self) -> str:
-        """``AWS::SSM::MaintenanceWindow.Name``.
-
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html#cfn-ssm-maintenancewindow-name
-        """
-        return self._values.get("name")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html#cfn-ssm-maintenancewindow-duration
+        '''
+        result = self._values.get("duration")
+        assert result is not None, "Required property 'duration' is missing"
+        return typing.cast(jsii.Number, result)
 
     @builtins.property
-    def schedule(self) -> str:
-        """``AWS::SSM::MaintenanceWindow.Schedule``.
+    def name(self) -> builtins.str:
+        '''``AWS::SSM::MaintenanceWindow.Name``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html#cfn-ssm-maintenancewindow-schedule
-        """
-        return self._values.get("schedule")
-
-    @builtins.property
-    def description(self) -> typing.Optional[str]:
-        """``AWS::SSM::MaintenanceWindow.Description``.
-
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html#cfn-ssm-maintenancewindow-description
-        """
-        return self._values.get("description")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html#cfn-ssm-maintenancewindow-name
+        '''
+        result = self._values.get("name")
+        assert result is not None, "Required property 'name' is missing"
+        return typing.cast(builtins.str, result)
 
     @builtins.property
-    def end_date(self) -> typing.Optional[str]:
-        """``AWS::SSM::MaintenanceWindow.EndDate``.
+    def schedule(self) -> builtins.str:
+        '''``AWS::SSM::MaintenanceWindow.Schedule``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html#cfn-ssm-maintenancewindow-enddate
-        """
-        return self._values.get("end_date")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html#cfn-ssm-maintenancewindow-schedule
+        '''
+        result = self._values.get("schedule")
+        assert result is not None, "Required property 'schedule' is missing"
+        return typing.cast(builtins.str, result)
+
+    @builtins.property
+    def description(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::MaintenanceWindow.Description``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html#cfn-ssm-maintenancewindow-description
+        '''
+        result = self._values.get("description")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def end_date(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::MaintenanceWindow.EndDate``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html#cfn-ssm-maintenancewindow-enddate
+        '''
+        result = self._values.get("end_date")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def schedule_offset(self) -> typing.Optional[jsii.Number]:
-        """``AWS::SSM::MaintenanceWindow.ScheduleOffset``.
+        '''``AWS::SSM::MaintenanceWindow.ScheduleOffset``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html#cfn-ssm-maintenancewindow-scheduleoffset
-        """
-        return self._values.get("schedule_offset")
-
-    @builtins.property
-    def schedule_timezone(self) -> typing.Optional[str]:
-        """``AWS::SSM::MaintenanceWindow.ScheduleTimezone``.
-
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html#cfn-ssm-maintenancewindow-scheduletimezone
-        """
-        return self._values.get("schedule_timezone")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html#cfn-ssm-maintenancewindow-scheduleoffset
+        '''
+        result = self._values.get("schedule_offset")
+        return typing.cast(typing.Optional[jsii.Number], result)
 
     @builtins.property
-    def start_date(self) -> typing.Optional[str]:
-        """``AWS::SSM::MaintenanceWindow.StartDate``.
+    def schedule_timezone(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::MaintenanceWindow.ScheduleTimezone``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html#cfn-ssm-maintenancewindow-startdate
-        """
-        return self._values.get("start_date")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html#cfn-ssm-maintenancewindow-scheduletimezone
+        '''
+        result = self._values.get("schedule_timezone")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def start_date(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::MaintenanceWindow.StartDate``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html#cfn-ssm-maintenancewindow-startdate
+        '''
+        result = self._values.get("start_date")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def tags(self) -> typing.Optional[typing.List[aws_cdk.core.CfnTag]]:
-        """``AWS::SSM::MaintenanceWindow.Tags``.
+        '''``AWS::SSM::MaintenanceWindow.Tags``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html#cfn-ssm-maintenancewindow-tags
-        """
-        return self._values.get("tags")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html#cfn-ssm-maintenancewindow-tags
+        '''
+        result = self._values.get("tags")
+        return typing.cast(typing.Optional[typing.List[aws_cdk.core.CfnTag]], result)
 
-    def __eq__(self, rhs) -> bool:
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
@@ -1678,30 +1803,25 @@ class CfnMaintenanceWindowTarget(
     metaclass=jsii.JSIIMeta,
     jsii_type="@aws-cdk/aws-ssm.CfnMaintenanceWindowTarget",
 ):
-    """A CloudFormation ``AWS::SSM::MaintenanceWindowTarget``.
+    '''A CloudFormation ``AWS::SSM::MaintenanceWindowTarget``.
 
-    see
-    :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtarget.html
-    cloudformationResource:
-    :cloudformationResource:: AWS::SSM::MaintenanceWindowTarget
-    """
+    :cloudformationResource: AWS::SSM::MaintenanceWindowTarget
+    :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtarget.html
+    '''
 
     def __init__(
         self,
         scope: aws_cdk.core.Construct,
-        id: str,
+        id: builtins.str,
         *,
-        resource_type: str,
-        targets: typing.Union[
-            aws_cdk.core.IResolvable,
-            typing.List[typing.Union[aws_cdk.core.IResolvable, "TargetsProperty"]],
-        ],
-        window_id: str,
-        description: typing.Optional[str] = None,
-        name: typing.Optional[str] = None,
-        owner_information: typing.Optional[str] = None,
+        resource_type: builtins.str,
+        targets: typing.Union[aws_cdk.core.IResolvable, typing.Sequence[typing.Union[aws_cdk.core.IResolvable, "CfnMaintenanceWindowTarget.TargetsProperty"]]],
+        window_id: builtins.str,
+        description: typing.Optional[builtins.str] = None,
+        name: typing.Optional[builtins.str] = None,
+        owner_information: typing.Optional[builtins.str] = None,
     ) -> None:
-        """Create a new ``AWS::SSM::MaintenanceWindowTarget``.
+        '''Create a new ``AWS::SSM::MaintenanceWindowTarget``.
 
         :param scope: - scope in which this resource is defined.
         :param id: - scoped id of the resource.
@@ -1711,7 +1831,7 @@ class CfnMaintenanceWindowTarget(
         :param description: ``AWS::SSM::MaintenanceWindowTarget.Description``.
         :param name: ``AWS::SSM::MaintenanceWindowTarget.Name``.
         :param owner_information: ``AWS::SSM::MaintenanceWindowTarget.OwnerInformation``.
-        """
+        '''
         props = CfnMaintenanceWindowTargetProps(
             resource_type=resource_type,
             targets=targets,
@@ -1723,158 +1843,116 @@ class CfnMaintenanceWindowTarget(
 
         jsii.create(CfnMaintenanceWindowTarget, self, [scope, id, props])
 
-    @jsii.member(jsii_name="fromCloudFormation")
-    @builtins.classmethod
-    def from_cloud_formation(
-        cls,
-        scope: aws_cdk.core.Construct,
-        id: str,
-        resource_attributes: typing.Any,
-        *,
-        finder: aws_cdk.core.ICfnFinder,
-    ) -> "CfnMaintenanceWindowTarget":
-        """A factory method that creates a new instance of this class from an object containing the CloudFormation properties of this resource.
-
-        Used in the @aws-cdk/cloudformation-include module.
-
-        :param scope: -
-        :param id: -
-        :param resource_attributes: -
-        :param finder: The finder interface used to resolve references across the template.
-
-        stability
-        :stability: experimental
-        """
-        options = aws_cdk.core.FromCloudFormationOptions(finder=finder)
-
-        return jsii.sinvoke(
-            cls, "fromCloudFormation", [scope, id, resource_attributes, options]
-        )
-
     @jsii.member(jsii_name="inspect")
     def inspect(self, inspector: aws_cdk.core.TreeInspector) -> None:
-        """Examines the CloudFormation resource and discloses attributes.
+        '''Examines the CloudFormation resource and discloses attributes.
 
         :param inspector: - tree inspector to collect and process attributes.
-
-        stability
-        :stability: experimental
-        """
-        return jsii.invoke(self, "inspect", [inspector])
+        '''
+        return typing.cast(None, jsii.invoke(self, "inspect", [inspector]))
 
     @jsii.member(jsii_name="renderProperties")
     def _render_properties(
-        self, props: typing.Mapping[str, typing.Any]
-    ) -> typing.Mapping[str, typing.Any]:
-        """
+        self,
+        props: typing.Mapping[builtins.str, typing.Any],
+    ) -> typing.Mapping[builtins.str, typing.Any]:
+        '''
         :param props: -
-        """
-        return jsii.invoke(self, "renderProperties", [props])
+        '''
+        return typing.cast(typing.Mapping[builtins.str, typing.Any], jsii.invoke(self, "renderProperties", [props]))
 
-    @jsii.python.classproperty
+    @jsii.python.classproperty # type: ignore[misc]
     @jsii.member(jsii_name="CFN_RESOURCE_TYPE_NAME")
-    def CFN_RESOURCE_TYPE_NAME(cls) -> str:
-        """The CloudFormation resource type name for this resource class."""
-        return jsii.sget(cls, "CFN_RESOURCE_TYPE_NAME")
+    def CFN_RESOURCE_TYPE_NAME(cls) -> builtins.str:
+        '''The CloudFormation resource type name for this resource class.'''
+        return typing.cast(builtins.str, jsii.sget(cls, "CFN_RESOURCE_TYPE_NAME"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="cfnProperties")
-    def _cfn_properties(self) -> typing.Mapping[str, typing.Any]:
-        return jsii.get(self, "cfnProperties")
+    def _cfn_properties(self) -> typing.Mapping[builtins.str, typing.Any]:
+        return typing.cast(typing.Mapping[builtins.str, typing.Any], jsii.get(self, "cfnProperties"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="resourceType")
-    def resource_type(self) -> str:
-        """``AWS::SSM::MaintenanceWindowTarget.ResourceType``.
+    def resource_type(self) -> builtins.str:
+        '''``AWS::SSM::MaintenanceWindowTarget.ResourceType``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtarget.html#cfn-ssm-maintenancewindowtarget-resourcetype
-        """
-        return jsii.get(self, "resourceType")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtarget.html#cfn-ssm-maintenancewindowtarget-resourcetype
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "resourceType"))
 
     @resource_type.setter
-    def resource_type(self, value: str) -> None:
+    def resource_type(self, value: builtins.str) -> None:
         jsii.set(self, "resourceType", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="targets")
     def targets(
         self,
-    ) -> typing.Union[
-        aws_cdk.core.IResolvable,
-        typing.List[typing.Union[aws_cdk.core.IResolvable, "TargetsProperty"]],
-    ]:
-        """``AWS::SSM::MaintenanceWindowTarget.Targets``.
+    ) -> typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, "CfnMaintenanceWindowTarget.TargetsProperty"]]]:
+        '''``AWS::SSM::MaintenanceWindowTarget.Targets``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtarget.html#cfn-ssm-maintenancewindowtarget-targets
-        """
-        return jsii.get(self, "targets")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtarget.html#cfn-ssm-maintenancewindowtarget-targets
+        '''
+        return typing.cast(typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, "CfnMaintenanceWindowTarget.TargetsProperty"]]], jsii.get(self, "targets"))
 
     @targets.setter
     def targets(
         self,
-        value: typing.Union[
-            aws_cdk.core.IResolvable,
-            typing.List[typing.Union[aws_cdk.core.IResolvable, "TargetsProperty"]],
-        ],
+        value: typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, "CfnMaintenanceWindowTarget.TargetsProperty"]]],
     ) -> None:
         jsii.set(self, "targets", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="windowId")
-    def window_id(self) -> str:
-        """``AWS::SSM::MaintenanceWindowTarget.WindowId``.
+    def window_id(self) -> builtins.str:
+        '''``AWS::SSM::MaintenanceWindowTarget.WindowId``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtarget.html#cfn-ssm-maintenancewindowtarget-windowid
-        """
-        return jsii.get(self, "windowId")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtarget.html#cfn-ssm-maintenancewindowtarget-windowid
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "windowId"))
 
     @window_id.setter
-    def window_id(self, value: str) -> None:
+    def window_id(self, value: builtins.str) -> None:
         jsii.set(self, "windowId", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="description")
-    def description(self) -> typing.Optional[str]:
-        """``AWS::SSM::MaintenanceWindowTarget.Description``.
+    def description(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::MaintenanceWindowTarget.Description``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtarget.html#cfn-ssm-maintenancewindowtarget-description
-        """
-        return jsii.get(self, "description")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtarget.html#cfn-ssm-maintenancewindowtarget-description
+        '''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "description"))
 
     @description.setter
-    def description(self, value: typing.Optional[str]) -> None:
+    def description(self, value: typing.Optional[builtins.str]) -> None:
         jsii.set(self, "description", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="name")
-    def name(self) -> typing.Optional[str]:
-        """``AWS::SSM::MaintenanceWindowTarget.Name``.
+    def name(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::MaintenanceWindowTarget.Name``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtarget.html#cfn-ssm-maintenancewindowtarget-name
-        """
-        return jsii.get(self, "name")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtarget.html#cfn-ssm-maintenancewindowtarget-name
+        '''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "name"))
 
     @name.setter
-    def name(self, value: typing.Optional[str]) -> None:
+    def name(self, value: typing.Optional[builtins.str]) -> None:
         jsii.set(self, "name", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="ownerInformation")
-    def owner_information(self) -> typing.Optional[str]:
-        """``AWS::SSM::MaintenanceWindowTarget.OwnerInformation``.
+    def owner_information(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::MaintenanceWindowTarget.OwnerInformation``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtarget.html#cfn-ssm-maintenancewindowtarget-ownerinformation
-        """
-        return jsii.get(self, "ownerInformation")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtarget.html#cfn-ssm-maintenancewindowtarget-ownerinformation
+        '''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "ownerInformation"))
 
     @owner_information.setter
-    def owner_information(self, value: typing.Optional[str]) -> None:
+    def owner_information(self, value: typing.Optional[builtins.str]) -> None:
         jsii.set(self, "ownerInformation", value)
 
     @jsii.data_type(
@@ -1884,43 +1962,46 @@ class CfnMaintenanceWindowTarget(
     )
     class TargetsProperty:
         def __init__(
-            self, *, key: str, values: typing.Optional[typing.List[str]] = None
+            self,
+            *,
+            key: builtins.str,
+            values: typing.Sequence[builtins.str],
         ) -> None:
-            """
+            '''
             :param key: ``CfnMaintenanceWindowTarget.TargetsProperty.Key``.
             :param values: ``CfnMaintenanceWindowTarget.TargetsProperty.Values``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtarget-targets.html
-            """
-            self._values = {
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtarget-targets.html
+            '''
+            self._values: typing.Dict[str, typing.Any] = {
                 "key": key,
+                "values": values,
             }
-            if values is not None:
-                self._values["values"] = values
 
         @builtins.property
-        def key(self) -> str:
-            """``CfnMaintenanceWindowTarget.TargetsProperty.Key``.
+        def key(self) -> builtins.str:
+            '''``CfnMaintenanceWindowTarget.TargetsProperty.Key``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtarget-targets.html#cfn-ssm-maintenancewindowtarget-targets-key
-            """
-            return self._values.get("key")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtarget-targets.html#cfn-ssm-maintenancewindowtarget-targets-key
+            '''
+            result = self._values.get("key")
+            assert result is not None, "Required property 'key' is missing"
+            return typing.cast(builtins.str, result)
 
         @builtins.property
-        def values(self) -> typing.Optional[typing.List[str]]:
-            """``CfnMaintenanceWindowTarget.TargetsProperty.Values``.
+        def values(self) -> typing.List[builtins.str]:
+            '''``CfnMaintenanceWindowTarget.TargetsProperty.Values``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtarget-targets.html#cfn-ssm-maintenancewindowtarget-targets-values
-            """
-            return self._values.get("values")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtarget-targets.html#cfn-ssm-maintenancewindowtarget-targets-values
+            '''
+            result = self._values.get("values")
+            assert result is not None, "Required property 'values' is missing"
+            return typing.cast(typing.List[builtins.str], result)
 
-        def __eq__(self, rhs) -> bool:
+        def __eq__(self, rhs: typing.Any) -> builtins.bool:
             return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-        def __ne__(self, rhs) -> bool:
+        def __ne__(self, rhs: typing.Any) -> builtins.bool:
             return not (rhs == self)
 
         def __repr__(self) -> str:
@@ -1945,22 +2026,14 @@ class CfnMaintenanceWindowTargetProps:
     def __init__(
         self,
         *,
-        resource_type: str,
-        targets: typing.Union[
-            aws_cdk.core.IResolvable,
-            typing.List[
-                typing.Union[
-                    aws_cdk.core.IResolvable,
-                    "CfnMaintenanceWindowTarget.TargetsProperty",
-                ]
-            ],
-        ],
-        window_id: str,
-        description: typing.Optional[str] = None,
-        name: typing.Optional[str] = None,
-        owner_information: typing.Optional[str] = None,
+        resource_type: builtins.str,
+        targets: typing.Union[aws_cdk.core.IResolvable, typing.Sequence[typing.Union[aws_cdk.core.IResolvable, CfnMaintenanceWindowTarget.TargetsProperty]]],
+        window_id: builtins.str,
+        description: typing.Optional[builtins.str] = None,
+        name: typing.Optional[builtins.str] = None,
+        owner_information: typing.Optional[builtins.str] = None,
     ) -> None:
-        """Properties for defining a ``AWS::SSM::MaintenanceWindowTarget``.
+        '''Properties for defining a ``AWS::SSM::MaintenanceWindowTarget``.
 
         :param resource_type: ``AWS::SSM::MaintenanceWindowTarget.ResourceType``.
         :param targets: ``AWS::SSM::MaintenanceWindowTarget.Targets``.
@@ -1969,10 +2042,9 @@ class CfnMaintenanceWindowTargetProps:
         :param name: ``AWS::SSM::MaintenanceWindowTarget.Name``.
         :param owner_information: ``AWS::SSM::MaintenanceWindowTarget.OwnerInformation``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtarget.html
-        """
-        self._values = {
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtarget.html
+        '''
+        self._values: typing.Dict[str, typing.Any] = {
             "resource_type": resource_type,
             "targets": targets,
             "window_id": window_id,
@@ -1985,72 +2057,68 @@ class CfnMaintenanceWindowTargetProps:
             self._values["owner_information"] = owner_information
 
     @builtins.property
-    def resource_type(self) -> str:
-        """``AWS::SSM::MaintenanceWindowTarget.ResourceType``.
+    def resource_type(self) -> builtins.str:
+        '''``AWS::SSM::MaintenanceWindowTarget.ResourceType``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtarget.html#cfn-ssm-maintenancewindowtarget-resourcetype
-        """
-        return self._values.get("resource_type")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtarget.html#cfn-ssm-maintenancewindowtarget-resourcetype
+        '''
+        result = self._values.get("resource_type")
+        assert result is not None, "Required property 'resource_type' is missing"
+        return typing.cast(builtins.str, result)
 
     @builtins.property
     def targets(
         self,
-    ) -> typing.Union[
-        aws_cdk.core.IResolvable,
-        typing.List[
-            typing.Union[
-                aws_cdk.core.IResolvable, "CfnMaintenanceWindowTarget.TargetsProperty"
-            ]
-        ],
-    ]:
-        """``AWS::SSM::MaintenanceWindowTarget.Targets``.
+    ) -> typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, CfnMaintenanceWindowTarget.TargetsProperty]]]:
+        '''``AWS::SSM::MaintenanceWindowTarget.Targets``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtarget.html#cfn-ssm-maintenancewindowtarget-targets
-        """
-        return self._values.get("targets")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtarget.html#cfn-ssm-maintenancewindowtarget-targets
+        '''
+        result = self._values.get("targets")
+        assert result is not None, "Required property 'targets' is missing"
+        return typing.cast(typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, CfnMaintenanceWindowTarget.TargetsProperty]]], result)
 
     @builtins.property
-    def window_id(self) -> str:
-        """``AWS::SSM::MaintenanceWindowTarget.WindowId``.
+    def window_id(self) -> builtins.str:
+        '''``AWS::SSM::MaintenanceWindowTarget.WindowId``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtarget.html#cfn-ssm-maintenancewindowtarget-windowid
-        """
-        return self._values.get("window_id")
-
-    @builtins.property
-    def description(self) -> typing.Optional[str]:
-        """``AWS::SSM::MaintenanceWindowTarget.Description``.
-
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtarget.html#cfn-ssm-maintenancewindowtarget-description
-        """
-        return self._values.get("description")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtarget.html#cfn-ssm-maintenancewindowtarget-windowid
+        '''
+        result = self._values.get("window_id")
+        assert result is not None, "Required property 'window_id' is missing"
+        return typing.cast(builtins.str, result)
 
     @builtins.property
-    def name(self) -> typing.Optional[str]:
-        """``AWS::SSM::MaintenanceWindowTarget.Name``.
+    def description(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::MaintenanceWindowTarget.Description``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtarget.html#cfn-ssm-maintenancewindowtarget-name
-        """
-        return self._values.get("name")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtarget.html#cfn-ssm-maintenancewindowtarget-description
+        '''
+        result = self._values.get("description")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
-    def owner_information(self) -> typing.Optional[str]:
-        """``AWS::SSM::MaintenanceWindowTarget.OwnerInformation``.
+    def name(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::MaintenanceWindowTarget.Name``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtarget.html#cfn-ssm-maintenancewindowtarget-ownerinformation
-        """
-        return self._values.get("owner_information")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtarget.html#cfn-ssm-maintenancewindowtarget-name
+        '''
+        result = self._values.get("name")
+        return typing.cast(typing.Optional[builtins.str], result)
 
-    def __eq__(self, rhs) -> bool:
+    @builtins.property
+    def owner_information(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::MaintenanceWindowTarget.OwnerInformation``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtarget.html#cfn-ssm-maintenancewindowtarget-ownerinformation
+        '''
+        result = self._values.get("owner_information")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
@@ -2065,341 +2133,277 @@ class CfnMaintenanceWindowTask(
     metaclass=jsii.JSIIMeta,
     jsii_type="@aws-cdk/aws-ssm.CfnMaintenanceWindowTask",
 ):
-    """A CloudFormation ``AWS::SSM::MaintenanceWindowTask``.
+    '''A CloudFormation ``AWS::SSM::MaintenanceWindowTask``.
 
-    see
-    :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtask.html
-    cloudformationResource:
-    :cloudformationResource:: AWS::SSM::MaintenanceWindowTask
-    """
+    :cloudformationResource: AWS::SSM::MaintenanceWindowTask
+    :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtask.html
+    '''
 
     def __init__(
         self,
         scope: aws_cdk.core.Construct,
-        id: str,
+        id: builtins.str,
         *,
-        max_concurrency: str,
-        max_errors: str,
         priority: jsii.Number,
-        targets: typing.Union[
-            aws_cdk.core.IResolvable,
-            typing.List[typing.Union[aws_cdk.core.IResolvable, "TargetProperty"]],
-        ],
-        task_arn: str,
-        task_type: str,
-        window_id: str,
-        description: typing.Optional[str] = None,
-        logging_info: typing.Optional[
-            typing.Union[aws_cdk.core.IResolvable, "LoggingInfoProperty"]
-        ] = None,
-        name: typing.Optional[str] = None,
-        service_role_arn: typing.Optional[str] = None,
-        task_invocation_parameters: typing.Optional[
-            typing.Union[aws_cdk.core.IResolvable, "TaskInvocationParametersProperty"]
-        ] = None,
+        task_arn: builtins.str,
+        task_type: builtins.str,
+        window_id: builtins.str,
+        description: typing.Optional[builtins.str] = None,
+        logging_info: typing.Optional[typing.Union[aws_cdk.core.IResolvable, "CfnMaintenanceWindowTask.LoggingInfoProperty"]] = None,
+        max_concurrency: typing.Optional[builtins.str] = None,
+        max_errors: typing.Optional[builtins.str] = None,
+        name: typing.Optional[builtins.str] = None,
+        service_role_arn: typing.Optional[builtins.str] = None,
+        targets: typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.Sequence[typing.Union[aws_cdk.core.IResolvable, "CfnMaintenanceWindowTask.TargetProperty"]]]] = None,
+        task_invocation_parameters: typing.Optional[typing.Union[aws_cdk.core.IResolvable, "CfnMaintenanceWindowTask.TaskInvocationParametersProperty"]] = None,
         task_parameters: typing.Any = None,
     ) -> None:
-        """Create a new ``AWS::SSM::MaintenanceWindowTask``.
+        '''Create a new ``AWS::SSM::MaintenanceWindowTask``.
 
         :param scope: - scope in which this resource is defined.
         :param id: - scoped id of the resource.
-        :param max_concurrency: ``AWS::SSM::MaintenanceWindowTask.MaxConcurrency``.
-        :param max_errors: ``AWS::SSM::MaintenanceWindowTask.MaxErrors``.
         :param priority: ``AWS::SSM::MaintenanceWindowTask.Priority``.
-        :param targets: ``AWS::SSM::MaintenanceWindowTask.Targets``.
         :param task_arn: ``AWS::SSM::MaintenanceWindowTask.TaskArn``.
         :param task_type: ``AWS::SSM::MaintenanceWindowTask.TaskType``.
         :param window_id: ``AWS::SSM::MaintenanceWindowTask.WindowId``.
         :param description: ``AWS::SSM::MaintenanceWindowTask.Description``.
         :param logging_info: ``AWS::SSM::MaintenanceWindowTask.LoggingInfo``.
+        :param max_concurrency: ``AWS::SSM::MaintenanceWindowTask.MaxConcurrency``.
+        :param max_errors: ``AWS::SSM::MaintenanceWindowTask.MaxErrors``.
         :param name: ``AWS::SSM::MaintenanceWindowTask.Name``.
         :param service_role_arn: ``AWS::SSM::MaintenanceWindowTask.ServiceRoleArn``.
+        :param targets: ``AWS::SSM::MaintenanceWindowTask.Targets``.
         :param task_invocation_parameters: ``AWS::SSM::MaintenanceWindowTask.TaskInvocationParameters``.
         :param task_parameters: ``AWS::SSM::MaintenanceWindowTask.TaskParameters``.
-        """
+        '''
         props = CfnMaintenanceWindowTaskProps(
-            max_concurrency=max_concurrency,
-            max_errors=max_errors,
             priority=priority,
-            targets=targets,
             task_arn=task_arn,
             task_type=task_type,
             window_id=window_id,
             description=description,
             logging_info=logging_info,
+            max_concurrency=max_concurrency,
+            max_errors=max_errors,
             name=name,
             service_role_arn=service_role_arn,
+            targets=targets,
             task_invocation_parameters=task_invocation_parameters,
             task_parameters=task_parameters,
         )
 
         jsii.create(CfnMaintenanceWindowTask, self, [scope, id, props])
 
-    @jsii.member(jsii_name="fromCloudFormation")
-    @builtins.classmethod
-    def from_cloud_formation(
-        cls,
-        scope: aws_cdk.core.Construct,
-        id: str,
-        resource_attributes: typing.Any,
-        *,
-        finder: aws_cdk.core.ICfnFinder,
-    ) -> "CfnMaintenanceWindowTask":
-        """A factory method that creates a new instance of this class from an object containing the CloudFormation properties of this resource.
-
-        Used in the @aws-cdk/cloudformation-include module.
-
-        :param scope: -
-        :param id: -
-        :param resource_attributes: -
-        :param finder: The finder interface used to resolve references across the template.
-
-        stability
-        :stability: experimental
-        """
-        options = aws_cdk.core.FromCloudFormationOptions(finder=finder)
-
-        return jsii.sinvoke(
-            cls, "fromCloudFormation", [scope, id, resource_attributes, options]
-        )
-
     @jsii.member(jsii_name="inspect")
     def inspect(self, inspector: aws_cdk.core.TreeInspector) -> None:
-        """Examines the CloudFormation resource and discloses attributes.
+        '''Examines the CloudFormation resource and discloses attributes.
 
         :param inspector: - tree inspector to collect and process attributes.
-
-        stability
-        :stability: experimental
-        """
-        return jsii.invoke(self, "inspect", [inspector])
+        '''
+        return typing.cast(None, jsii.invoke(self, "inspect", [inspector]))
 
     @jsii.member(jsii_name="renderProperties")
     def _render_properties(
-        self, props: typing.Mapping[str, typing.Any]
-    ) -> typing.Mapping[str, typing.Any]:
-        """
+        self,
+        props: typing.Mapping[builtins.str, typing.Any],
+    ) -> typing.Mapping[builtins.str, typing.Any]:
+        '''
         :param props: -
-        """
-        return jsii.invoke(self, "renderProperties", [props])
+        '''
+        return typing.cast(typing.Mapping[builtins.str, typing.Any], jsii.invoke(self, "renderProperties", [props]))
 
-    @jsii.python.classproperty
+    @jsii.python.classproperty # type: ignore[misc]
     @jsii.member(jsii_name="CFN_RESOURCE_TYPE_NAME")
-    def CFN_RESOURCE_TYPE_NAME(cls) -> str:
-        """The CloudFormation resource type name for this resource class."""
-        return jsii.sget(cls, "CFN_RESOURCE_TYPE_NAME")
+    def CFN_RESOURCE_TYPE_NAME(cls) -> builtins.str:
+        '''The CloudFormation resource type name for this resource class.'''
+        return typing.cast(builtins.str, jsii.sget(cls, "CFN_RESOURCE_TYPE_NAME"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="cfnProperties")
-    def _cfn_properties(self) -> typing.Mapping[str, typing.Any]:
-        return jsii.get(self, "cfnProperties")
+    def _cfn_properties(self) -> typing.Mapping[builtins.str, typing.Any]:
+        return typing.cast(typing.Mapping[builtins.str, typing.Any], jsii.get(self, "cfnProperties"))
 
-    @builtins.property
-    @jsii.member(jsii_name="maxConcurrency")
-    def max_concurrency(self) -> str:
-        """``AWS::SSM::MaintenanceWindowTask.MaxConcurrency``.
-
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtask.html#cfn-ssm-maintenancewindowtask-maxconcurrency
-        """
-        return jsii.get(self, "maxConcurrency")
-
-    @max_concurrency.setter
-    def max_concurrency(self, value: str) -> None:
-        jsii.set(self, "maxConcurrency", value)
-
-    @builtins.property
-    @jsii.member(jsii_name="maxErrors")
-    def max_errors(self) -> str:
-        """``AWS::SSM::MaintenanceWindowTask.MaxErrors``.
-
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtask.html#cfn-ssm-maintenancewindowtask-maxerrors
-        """
-        return jsii.get(self, "maxErrors")
-
-    @max_errors.setter
-    def max_errors(self, value: str) -> None:
-        jsii.set(self, "maxErrors", value)
-
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="priority")
     def priority(self) -> jsii.Number:
-        """``AWS::SSM::MaintenanceWindowTask.Priority``.
+        '''``AWS::SSM::MaintenanceWindowTask.Priority``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtask.html#cfn-ssm-maintenancewindowtask-priority
-        """
-        return jsii.get(self, "priority")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtask.html#cfn-ssm-maintenancewindowtask-priority
+        '''
+        return typing.cast(jsii.Number, jsii.get(self, "priority"))
 
     @priority.setter
     def priority(self, value: jsii.Number) -> None:
         jsii.set(self, "priority", value)
 
-    @builtins.property
-    @jsii.member(jsii_name="targets")
-    def targets(
-        self,
-    ) -> typing.Union[
-        aws_cdk.core.IResolvable,
-        typing.List[typing.Union[aws_cdk.core.IResolvable, "TargetProperty"]],
-    ]:
-        """``AWS::SSM::MaintenanceWindowTask.Targets``.
-
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtask.html#cfn-ssm-maintenancewindowtask-targets
-        """
-        return jsii.get(self, "targets")
-
-    @targets.setter
-    def targets(
-        self,
-        value: typing.Union[
-            aws_cdk.core.IResolvable,
-            typing.List[typing.Union[aws_cdk.core.IResolvable, "TargetProperty"]],
-        ],
-    ) -> None:
-        jsii.set(self, "targets", value)
-
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="taskArn")
-    def task_arn(self) -> str:
-        """``AWS::SSM::MaintenanceWindowTask.TaskArn``.
+    def task_arn(self) -> builtins.str:
+        '''``AWS::SSM::MaintenanceWindowTask.TaskArn``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtask.html#cfn-ssm-maintenancewindowtask-taskarn
-        """
-        return jsii.get(self, "taskArn")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtask.html#cfn-ssm-maintenancewindowtask-taskarn
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "taskArn"))
 
     @task_arn.setter
-    def task_arn(self, value: str) -> None:
+    def task_arn(self, value: builtins.str) -> None:
         jsii.set(self, "taskArn", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="taskParameters")
     def task_parameters(self) -> typing.Any:
-        """``AWS::SSM::MaintenanceWindowTask.TaskParameters``.
+        '''``AWS::SSM::MaintenanceWindowTask.TaskParameters``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtask.html#cfn-ssm-maintenancewindowtask-taskparameters
-        """
-        return jsii.get(self, "taskParameters")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtask.html#cfn-ssm-maintenancewindowtask-taskparameters
+        '''
+        return typing.cast(typing.Any, jsii.get(self, "taskParameters"))
 
     @task_parameters.setter
     def task_parameters(self, value: typing.Any) -> None:
         jsii.set(self, "taskParameters", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="taskType")
-    def task_type(self) -> str:
-        """``AWS::SSM::MaintenanceWindowTask.TaskType``.
+    def task_type(self) -> builtins.str:
+        '''``AWS::SSM::MaintenanceWindowTask.TaskType``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtask.html#cfn-ssm-maintenancewindowtask-tasktype
-        """
-        return jsii.get(self, "taskType")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtask.html#cfn-ssm-maintenancewindowtask-tasktype
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "taskType"))
 
     @task_type.setter
-    def task_type(self, value: str) -> None:
+    def task_type(self, value: builtins.str) -> None:
         jsii.set(self, "taskType", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="windowId")
-    def window_id(self) -> str:
-        """``AWS::SSM::MaintenanceWindowTask.WindowId``.
+    def window_id(self) -> builtins.str:
+        '''``AWS::SSM::MaintenanceWindowTask.WindowId``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtask.html#cfn-ssm-maintenancewindowtask-windowid
-        """
-        return jsii.get(self, "windowId")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtask.html#cfn-ssm-maintenancewindowtask-windowid
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "windowId"))
 
     @window_id.setter
-    def window_id(self, value: str) -> None:
+    def window_id(self, value: builtins.str) -> None:
         jsii.set(self, "windowId", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="description")
-    def description(self) -> typing.Optional[str]:
-        """``AWS::SSM::MaintenanceWindowTask.Description``.
+    def description(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::MaintenanceWindowTask.Description``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtask.html#cfn-ssm-maintenancewindowtask-description
-        """
-        return jsii.get(self, "description")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtask.html#cfn-ssm-maintenancewindowtask-description
+        '''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "description"))
 
     @description.setter
-    def description(self, value: typing.Optional[str]) -> None:
+    def description(self, value: typing.Optional[builtins.str]) -> None:
         jsii.set(self, "description", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="loggingInfo")
     def logging_info(
         self,
-    ) -> typing.Optional[typing.Union[aws_cdk.core.IResolvable, "LoggingInfoProperty"]]:
-        """``AWS::SSM::MaintenanceWindowTask.LoggingInfo``.
+    ) -> typing.Optional[typing.Union[aws_cdk.core.IResolvable, "CfnMaintenanceWindowTask.LoggingInfoProperty"]]:
+        '''``AWS::SSM::MaintenanceWindowTask.LoggingInfo``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtask.html#cfn-ssm-maintenancewindowtask-logginginfo
-        """
-        return jsii.get(self, "loggingInfo")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtask.html#cfn-ssm-maintenancewindowtask-logginginfo
+        '''
+        return typing.cast(typing.Optional[typing.Union[aws_cdk.core.IResolvable, "CfnMaintenanceWindowTask.LoggingInfoProperty"]], jsii.get(self, "loggingInfo"))
 
     @logging_info.setter
     def logging_info(
         self,
-        value: typing.Optional[
-            typing.Union[aws_cdk.core.IResolvable, "LoggingInfoProperty"]
-        ],
+        value: typing.Optional[typing.Union[aws_cdk.core.IResolvable, "CfnMaintenanceWindowTask.LoggingInfoProperty"]],
     ) -> None:
         jsii.set(self, "loggingInfo", value)
 
-    @builtins.property
-    @jsii.member(jsii_name="name")
-    def name(self) -> typing.Optional[str]:
-        """``AWS::SSM::MaintenanceWindowTask.Name``.
+    @builtins.property # type: ignore[misc]
+    @jsii.member(jsii_name="maxConcurrency")
+    def max_concurrency(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::MaintenanceWindowTask.MaxConcurrency``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtask.html#cfn-ssm-maintenancewindowtask-name
-        """
-        return jsii.get(self, "name")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtask.html#cfn-ssm-maintenancewindowtask-maxconcurrency
+        '''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "maxConcurrency"))
+
+    @max_concurrency.setter
+    def max_concurrency(self, value: typing.Optional[builtins.str]) -> None:
+        jsii.set(self, "maxConcurrency", value)
+
+    @builtins.property # type: ignore[misc]
+    @jsii.member(jsii_name="maxErrors")
+    def max_errors(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::MaintenanceWindowTask.MaxErrors``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtask.html#cfn-ssm-maintenancewindowtask-maxerrors
+        '''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "maxErrors"))
+
+    @max_errors.setter
+    def max_errors(self, value: typing.Optional[builtins.str]) -> None:
+        jsii.set(self, "maxErrors", value)
+
+    @builtins.property # type: ignore[misc]
+    @jsii.member(jsii_name="name")
+    def name(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::MaintenanceWindowTask.Name``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtask.html#cfn-ssm-maintenancewindowtask-name
+        '''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "name"))
 
     @name.setter
-    def name(self, value: typing.Optional[str]) -> None:
+    def name(self, value: typing.Optional[builtins.str]) -> None:
         jsii.set(self, "name", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="serviceRoleArn")
-    def service_role_arn(self) -> typing.Optional[str]:
-        """``AWS::SSM::MaintenanceWindowTask.ServiceRoleArn``.
+    def service_role_arn(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::MaintenanceWindowTask.ServiceRoleArn``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtask.html#cfn-ssm-maintenancewindowtask-servicerolearn
-        """
-        return jsii.get(self, "serviceRoleArn")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtask.html#cfn-ssm-maintenancewindowtask-servicerolearn
+        '''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "serviceRoleArn"))
 
     @service_role_arn.setter
-    def service_role_arn(self, value: typing.Optional[str]) -> None:
+    def service_role_arn(self, value: typing.Optional[builtins.str]) -> None:
         jsii.set(self, "serviceRoleArn", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
+    @jsii.member(jsii_name="targets")
+    def targets(
+        self,
+    ) -> typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, "CfnMaintenanceWindowTask.TargetProperty"]]]]:
+        '''``AWS::SSM::MaintenanceWindowTask.Targets``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtask.html#cfn-ssm-maintenancewindowtask-targets
+        '''
+        return typing.cast(typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, "CfnMaintenanceWindowTask.TargetProperty"]]]], jsii.get(self, "targets"))
+
+    @targets.setter
+    def targets(
+        self,
+        value: typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, "CfnMaintenanceWindowTask.TargetProperty"]]]],
+    ) -> None:
+        jsii.set(self, "targets", value)
+
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="taskInvocationParameters")
     def task_invocation_parameters(
         self,
-    ) -> typing.Optional[
-        typing.Union[aws_cdk.core.IResolvable, "TaskInvocationParametersProperty"]
-    ]:
-        """``AWS::SSM::MaintenanceWindowTask.TaskInvocationParameters``.
+    ) -> typing.Optional[typing.Union[aws_cdk.core.IResolvable, "CfnMaintenanceWindowTask.TaskInvocationParametersProperty"]]:
+        '''``AWS::SSM::MaintenanceWindowTask.TaskInvocationParameters``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtask.html#cfn-ssm-maintenancewindowtask-taskinvocationparameters
-        """
-        return jsii.get(self, "taskInvocationParameters")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtask.html#cfn-ssm-maintenancewindowtask-taskinvocationparameters
+        '''
+        return typing.cast(typing.Optional[typing.Union[aws_cdk.core.IResolvable, "CfnMaintenanceWindowTask.TaskInvocationParametersProperty"]], jsii.get(self, "taskInvocationParameters"))
 
     @task_invocation_parameters.setter
     def task_invocation_parameters(
         self,
-        value: typing.Optional[
-            typing.Union[aws_cdk.core.IResolvable, "TaskInvocationParametersProperty"]
-        ],
+        value: typing.Optional[typing.Union[aws_cdk.core.IResolvable, "CfnMaintenanceWindowTask.TaskInvocationParametersProperty"]],
     ) -> None:
         jsii.set(self, "taskInvocationParameters", value)
 
@@ -2414,17 +2418,20 @@ class CfnMaintenanceWindowTask(
     )
     class LoggingInfoProperty:
         def __init__(
-            self, *, region: str, s3_bucket: str, s3_prefix: typing.Optional[str] = None
+            self,
+            *,
+            region: builtins.str,
+            s3_bucket: builtins.str,
+            s3_prefix: typing.Optional[builtins.str] = None,
         ) -> None:
-            """
+            '''
             :param region: ``CfnMaintenanceWindowTask.LoggingInfoProperty.Region``.
             :param s3_bucket: ``CfnMaintenanceWindowTask.LoggingInfoProperty.S3Bucket``.
             :param s3_prefix: ``CfnMaintenanceWindowTask.LoggingInfoProperty.S3Prefix``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-logginginfo.html
-            """
-            self._values = {
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-logginginfo.html
+            '''
+            self._values: typing.Dict[str, typing.Any] = {
                 "region": region,
                 "s3_bucket": s3_bucket,
             }
@@ -2432,36 +2439,38 @@ class CfnMaintenanceWindowTask(
                 self._values["s3_prefix"] = s3_prefix
 
         @builtins.property
-        def region(self) -> str:
-            """``CfnMaintenanceWindowTask.LoggingInfoProperty.Region``.
+        def region(self) -> builtins.str:
+            '''``CfnMaintenanceWindowTask.LoggingInfoProperty.Region``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-logginginfo.html#cfn-ssm-maintenancewindowtask-logginginfo-region
-            """
-            return self._values.get("region")
-
-        @builtins.property
-        def s3_bucket(self) -> str:
-            """``CfnMaintenanceWindowTask.LoggingInfoProperty.S3Bucket``.
-
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-logginginfo.html#cfn-ssm-maintenancewindowtask-logginginfo-s3bucket
-            """
-            return self._values.get("s3_bucket")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-logginginfo.html#cfn-ssm-maintenancewindowtask-logginginfo-region
+            '''
+            result = self._values.get("region")
+            assert result is not None, "Required property 'region' is missing"
+            return typing.cast(builtins.str, result)
 
         @builtins.property
-        def s3_prefix(self) -> typing.Optional[str]:
-            """``CfnMaintenanceWindowTask.LoggingInfoProperty.S3Prefix``.
+        def s3_bucket(self) -> builtins.str:
+            '''``CfnMaintenanceWindowTask.LoggingInfoProperty.S3Bucket``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-logginginfo.html#cfn-ssm-maintenancewindowtask-logginginfo-s3prefix
-            """
-            return self._values.get("s3_prefix")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-logginginfo.html#cfn-ssm-maintenancewindowtask-logginginfo-s3bucket
+            '''
+            result = self._values.get("s3_bucket")
+            assert result is not None, "Required property 's3_bucket' is missing"
+            return typing.cast(builtins.str, result)
 
-        def __eq__(self, rhs) -> bool:
+        @builtins.property
+        def s3_prefix(self) -> typing.Optional[builtins.str]:
+            '''``CfnMaintenanceWindowTask.LoggingInfoProperty.S3Prefix``.
+
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-logginginfo.html#cfn-ssm-maintenancewindowtask-logginginfo-s3prefix
+            '''
+            result = self._values.get("s3_prefix")
+            return typing.cast(typing.Optional[builtins.str], result)
+
+        def __eq__(self, rhs: typing.Any) -> builtins.bool:
             return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-        def __ne__(self, rhs) -> bool:
+        def __ne__(self, rhs: typing.Any) -> builtins.bool:
             return not (rhs == self)
 
         def __repr__(self) -> str:
@@ -2481,44 +2490,43 @@ class CfnMaintenanceWindowTask(
         def __init__(
             self,
             *,
-            document_version: typing.Optional[str] = None,
+            document_version: typing.Optional[builtins.str] = None,
             parameters: typing.Any = None,
         ) -> None:
-            """
+            '''
             :param document_version: ``CfnMaintenanceWindowTask.MaintenanceWindowAutomationParametersProperty.DocumentVersion``.
             :param parameters: ``CfnMaintenanceWindowTask.MaintenanceWindowAutomationParametersProperty.Parameters``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-maintenancewindowautomationparameters.html
-            """
-            self._values = {}
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-maintenancewindowautomationparameters.html
+            '''
+            self._values: typing.Dict[str, typing.Any] = {}
             if document_version is not None:
                 self._values["document_version"] = document_version
             if parameters is not None:
                 self._values["parameters"] = parameters
 
         @builtins.property
-        def document_version(self) -> typing.Optional[str]:
-            """``CfnMaintenanceWindowTask.MaintenanceWindowAutomationParametersProperty.DocumentVersion``.
+        def document_version(self) -> typing.Optional[builtins.str]:
+            '''``CfnMaintenanceWindowTask.MaintenanceWindowAutomationParametersProperty.DocumentVersion``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-maintenancewindowautomationparameters.html#cfn-ssm-maintenancewindowtask-maintenancewindowautomationparameters-documentversion
-            """
-            return self._values.get("document_version")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-maintenancewindowautomationparameters.html#cfn-ssm-maintenancewindowtask-maintenancewindowautomationparameters-documentversion
+            '''
+            result = self._values.get("document_version")
+            return typing.cast(typing.Optional[builtins.str], result)
 
         @builtins.property
         def parameters(self) -> typing.Any:
-            """``CfnMaintenanceWindowTask.MaintenanceWindowAutomationParametersProperty.Parameters``.
+            '''``CfnMaintenanceWindowTask.MaintenanceWindowAutomationParametersProperty.Parameters``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-maintenancewindowautomationparameters.html#cfn-ssm-maintenancewindowtask-maintenancewindowautomationparameters-parameters
-            """
-            return self._values.get("parameters")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-maintenancewindowautomationparameters.html#cfn-ssm-maintenancewindowtask-maintenancewindowautomationparameters-parameters
+            '''
+            result = self._values.get("parameters")
+            return typing.cast(typing.Any, result)
 
-        def __eq__(self, rhs) -> bool:
+        def __eq__(self, rhs: typing.Any) -> builtins.bool:
             return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-        def __ne__(self, rhs) -> bool:
+        def __ne__(self, rhs: typing.Any) -> builtins.bool:
             return not (rhs == self)
 
         def __repr__(self) -> str:
@@ -2539,19 +2547,18 @@ class CfnMaintenanceWindowTask(
         def __init__(
             self,
             *,
-            client_context: typing.Optional[str] = None,
-            payload: typing.Optional[str] = None,
-            qualifier: typing.Optional[str] = None,
+            client_context: typing.Optional[builtins.str] = None,
+            payload: typing.Optional[builtins.str] = None,
+            qualifier: typing.Optional[builtins.str] = None,
         ) -> None:
-            """
+            '''
             :param client_context: ``CfnMaintenanceWindowTask.MaintenanceWindowLambdaParametersProperty.ClientContext``.
             :param payload: ``CfnMaintenanceWindowTask.MaintenanceWindowLambdaParametersProperty.Payload``.
             :param qualifier: ``CfnMaintenanceWindowTask.MaintenanceWindowLambdaParametersProperty.Qualifier``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-maintenancewindowlambdaparameters.html
-            """
-            self._values = {}
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-maintenancewindowlambdaparameters.html
+            '''
+            self._values: typing.Dict[str, typing.Any] = {}
             if client_context is not None:
                 self._values["client_context"] = client_context
             if payload is not None:
@@ -2560,36 +2567,36 @@ class CfnMaintenanceWindowTask(
                 self._values["qualifier"] = qualifier
 
         @builtins.property
-        def client_context(self) -> typing.Optional[str]:
-            """``CfnMaintenanceWindowTask.MaintenanceWindowLambdaParametersProperty.ClientContext``.
+        def client_context(self) -> typing.Optional[builtins.str]:
+            '''``CfnMaintenanceWindowTask.MaintenanceWindowLambdaParametersProperty.ClientContext``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-maintenancewindowlambdaparameters.html#cfn-ssm-maintenancewindowtask-maintenancewindowlambdaparameters-clientcontext
-            """
-            return self._values.get("client_context")
-
-        @builtins.property
-        def payload(self) -> typing.Optional[str]:
-            """``CfnMaintenanceWindowTask.MaintenanceWindowLambdaParametersProperty.Payload``.
-
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-maintenancewindowlambdaparameters.html#cfn-ssm-maintenancewindowtask-maintenancewindowlambdaparameters-payload
-            """
-            return self._values.get("payload")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-maintenancewindowlambdaparameters.html#cfn-ssm-maintenancewindowtask-maintenancewindowlambdaparameters-clientcontext
+            '''
+            result = self._values.get("client_context")
+            return typing.cast(typing.Optional[builtins.str], result)
 
         @builtins.property
-        def qualifier(self) -> typing.Optional[str]:
-            """``CfnMaintenanceWindowTask.MaintenanceWindowLambdaParametersProperty.Qualifier``.
+        def payload(self) -> typing.Optional[builtins.str]:
+            '''``CfnMaintenanceWindowTask.MaintenanceWindowLambdaParametersProperty.Payload``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-maintenancewindowlambdaparameters.html#cfn-ssm-maintenancewindowtask-maintenancewindowlambdaparameters-qualifier
-            """
-            return self._values.get("qualifier")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-maintenancewindowlambdaparameters.html#cfn-ssm-maintenancewindowtask-maintenancewindowlambdaparameters-payload
+            '''
+            result = self._values.get("payload")
+            return typing.cast(typing.Optional[builtins.str], result)
 
-        def __eq__(self, rhs) -> bool:
+        @builtins.property
+        def qualifier(self) -> typing.Optional[builtins.str]:
+            '''``CfnMaintenanceWindowTask.MaintenanceWindowLambdaParametersProperty.Qualifier``.
+
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-maintenancewindowlambdaparameters.html#cfn-ssm-maintenancewindowtask-maintenancewindowlambdaparameters-qualifier
+            '''
+            result = self._values.get("qualifier")
+            return typing.cast(typing.Optional[builtins.str], result)
+
+        def __eq__(self, rhs: typing.Any) -> builtins.bool:
             return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-        def __ne__(self, rhs) -> bool:
+        def __ne__(self, rhs: typing.Any) -> builtins.bool:
             return not (rhs == self)
 
         def __repr__(self) -> str:
@@ -2616,22 +2623,17 @@ class CfnMaintenanceWindowTask(
         def __init__(
             self,
             *,
-            comment: typing.Optional[str] = None,
-            document_hash: typing.Optional[str] = None,
-            document_hash_type: typing.Optional[str] = None,
-            notification_config: typing.Optional[
-                typing.Union[
-                    aws_cdk.core.IResolvable,
-                    "CfnMaintenanceWindowTask.NotificationConfigProperty",
-                ]
-            ] = None,
-            output_s3_bucket_name: typing.Optional[str] = None,
-            output_s3_key_prefix: typing.Optional[str] = None,
+            comment: typing.Optional[builtins.str] = None,
+            document_hash: typing.Optional[builtins.str] = None,
+            document_hash_type: typing.Optional[builtins.str] = None,
+            notification_config: typing.Optional[typing.Union[aws_cdk.core.IResolvable, "CfnMaintenanceWindowTask.NotificationConfigProperty"]] = None,
+            output_s3_bucket_name: typing.Optional[builtins.str] = None,
+            output_s3_key_prefix: typing.Optional[builtins.str] = None,
             parameters: typing.Any = None,
-            service_role_arn: typing.Optional[str] = None,
+            service_role_arn: typing.Optional[builtins.str] = None,
             timeout_seconds: typing.Optional[jsii.Number] = None,
         ) -> None:
-            """
+            '''
             :param comment: ``CfnMaintenanceWindowTask.MaintenanceWindowRunCommandParametersProperty.Comment``.
             :param document_hash: ``CfnMaintenanceWindowTask.MaintenanceWindowRunCommandParametersProperty.DocumentHash``.
             :param document_hash_type: ``CfnMaintenanceWindowTask.MaintenanceWindowRunCommandParametersProperty.DocumentHashType``.
@@ -2642,10 +2644,9 @@ class CfnMaintenanceWindowTask(
             :param service_role_arn: ``CfnMaintenanceWindowTask.MaintenanceWindowRunCommandParametersProperty.ServiceRoleArn``.
             :param timeout_seconds: ``CfnMaintenanceWindowTask.MaintenanceWindowRunCommandParametersProperty.TimeoutSeconds``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-maintenancewindowruncommandparameters.html
-            """
-            self._values = {}
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-maintenancewindowruncommandparameters.html
+            '''
+            self._values: typing.Dict[str, typing.Any] = {}
             if comment is not None:
                 self._values["comment"] = comment
             if document_hash is not None:
@@ -2666,97 +2667,92 @@ class CfnMaintenanceWindowTask(
                 self._values["timeout_seconds"] = timeout_seconds
 
         @builtins.property
-        def comment(self) -> typing.Optional[str]:
-            """``CfnMaintenanceWindowTask.MaintenanceWindowRunCommandParametersProperty.Comment``.
+        def comment(self) -> typing.Optional[builtins.str]:
+            '''``CfnMaintenanceWindowTask.MaintenanceWindowRunCommandParametersProperty.Comment``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-maintenancewindowruncommandparameters.html#cfn-ssm-maintenancewindowtask-maintenancewindowruncommandparameters-comment
-            """
-            return self._values.get("comment")
-
-        @builtins.property
-        def document_hash(self) -> typing.Optional[str]:
-            """``CfnMaintenanceWindowTask.MaintenanceWindowRunCommandParametersProperty.DocumentHash``.
-
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-maintenancewindowruncommandparameters.html#cfn-ssm-maintenancewindowtask-maintenancewindowruncommandparameters-documenthash
-            """
-            return self._values.get("document_hash")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-maintenancewindowruncommandparameters.html#cfn-ssm-maintenancewindowtask-maintenancewindowruncommandparameters-comment
+            '''
+            result = self._values.get("comment")
+            return typing.cast(typing.Optional[builtins.str], result)
 
         @builtins.property
-        def document_hash_type(self) -> typing.Optional[str]:
-            """``CfnMaintenanceWindowTask.MaintenanceWindowRunCommandParametersProperty.DocumentHashType``.
+        def document_hash(self) -> typing.Optional[builtins.str]:
+            '''``CfnMaintenanceWindowTask.MaintenanceWindowRunCommandParametersProperty.DocumentHash``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-maintenancewindowruncommandparameters.html#cfn-ssm-maintenancewindowtask-maintenancewindowruncommandparameters-documenthashtype
-            """
-            return self._values.get("document_hash_type")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-maintenancewindowruncommandparameters.html#cfn-ssm-maintenancewindowtask-maintenancewindowruncommandparameters-documenthash
+            '''
+            result = self._values.get("document_hash")
+            return typing.cast(typing.Optional[builtins.str], result)
+
+        @builtins.property
+        def document_hash_type(self) -> typing.Optional[builtins.str]:
+            '''``CfnMaintenanceWindowTask.MaintenanceWindowRunCommandParametersProperty.DocumentHashType``.
+
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-maintenancewindowruncommandparameters.html#cfn-ssm-maintenancewindowtask-maintenancewindowruncommandparameters-documenthashtype
+            '''
+            result = self._values.get("document_hash_type")
+            return typing.cast(typing.Optional[builtins.str], result)
 
         @builtins.property
         def notification_config(
             self,
-        ) -> typing.Optional[
-            typing.Union[
-                aws_cdk.core.IResolvable,
-                "CfnMaintenanceWindowTask.NotificationConfigProperty",
-            ]
-        ]:
-            """``CfnMaintenanceWindowTask.MaintenanceWindowRunCommandParametersProperty.NotificationConfig``.
+        ) -> typing.Optional[typing.Union[aws_cdk.core.IResolvable, "CfnMaintenanceWindowTask.NotificationConfigProperty"]]:
+            '''``CfnMaintenanceWindowTask.MaintenanceWindowRunCommandParametersProperty.NotificationConfig``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-maintenancewindowruncommandparameters.html#cfn-ssm-maintenancewindowtask-maintenancewindowruncommandparameters-notificationconfig
-            """
-            return self._values.get("notification_config")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-maintenancewindowruncommandparameters.html#cfn-ssm-maintenancewindowtask-maintenancewindowruncommandparameters-notificationconfig
+            '''
+            result = self._values.get("notification_config")
+            return typing.cast(typing.Optional[typing.Union[aws_cdk.core.IResolvable, "CfnMaintenanceWindowTask.NotificationConfigProperty"]], result)
 
         @builtins.property
-        def output_s3_bucket_name(self) -> typing.Optional[str]:
-            """``CfnMaintenanceWindowTask.MaintenanceWindowRunCommandParametersProperty.OutputS3BucketName``.
+        def output_s3_bucket_name(self) -> typing.Optional[builtins.str]:
+            '''``CfnMaintenanceWindowTask.MaintenanceWindowRunCommandParametersProperty.OutputS3BucketName``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-maintenancewindowruncommandparameters.html#cfn-ssm-maintenancewindowtask-maintenancewindowruncommandparameters-outputs3bucketname
-            """
-            return self._values.get("output_s3_bucket_name")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-maintenancewindowruncommandparameters.html#cfn-ssm-maintenancewindowtask-maintenancewindowruncommandparameters-outputs3bucketname
+            '''
+            result = self._values.get("output_s3_bucket_name")
+            return typing.cast(typing.Optional[builtins.str], result)
 
         @builtins.property
-        def output_s3_key_prefix(self) -> typing.Optional[str]:
-            """``CfnMaintenanceWindowTask.MaintenanceWindowRunCommandParametersProperty.OutputS3KeyPrefix``.
+        def output_s3_key_prefix(self) -> typing.Optional[builtins.str]:
+            '''``CfnMaintenanceWindowTask.MaintenanceWindowRunCommandParametersProperty.OutputS3KeyPrefix``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-maintenancewindowruncommandparameters.html#cfn-ssm-maintenancewindowtask-maintenancewindowruncommandparameters-outputs3keyprefix
-            """
-            return self._values.get("output_s3_key_prefix")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-maintenancewindowruncommandparameters.html#cfn-ssm-maintenancewindowtask-maintenancewindowruncommandparameters-outputs3keyprefix
+            '''
+            result = self._values.get("output_s3_key_prefix")
+            return typing.cast(typing.Optional[builtins.str], result)
 
         @builtins.property
         def parameters(self) -> typing.Any:
-            """``CfnMaintenanceWindowTask.MaintenanceWindowRunCommandParametersProperty.Parameters``.
+            '''``CfnMaintenanceWindowTask.MaintenanceWindowRunCommandParametersProperty.Parameters``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-maintenancewindowruncommandparameters.html#cfn-ssm-maintenancewindowtask-maintenancewindowruncommandparameters-parameters
-            """
-            return self._values.get("parameters")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-maintenancewindowruncommandparameters.html#cfn-ssm-maintenancewindowtask-maintenancewindowruncommandparameters-parameters
+            '''
+            result = self._values.get("parameters")
+            return typing.cast(typing.Any, result)
 
         @builtins.property
-        def service_role_arn(self) -> typing.Optional[str]:
-            """``CfnMaintenanceWindowTask.MaintenanceWindowRunCommandParametersProperty.ServiceRoleArn``.
+        def service_role_arn(self) -> typing.Optional[builtins.str]:
+            '''``CfnMaintenanceWindowTask.MaintenanceWindowRunCommandParametersProperty.ServiceRoleArn``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-maintenancewindowruncommandparameters.html#cfn-ssm-maintenancewindowtask-maintenancewindowruncommandparameters-servicerolearn
-            """
-            return self._values.get("service_role_arn")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-maintenancewindowruncommandparameters.html#cfn-ssm-maintenancewindowtask-maintenancewindowruncommandparameters-servicerolearn
+            '''
+            result = self._values.get("service_role_arn")
+            return typing.cast(typing.Optional[builtins.str], result)
 
         @builtins.property
         def timeout_seconds(self) -> typing.Optional[jsii.Number]:
-            """``CfnMaintenanceWindowTask.MaintenanceWindowRunCommandParametersProperty.TimeoutSeconds``.
+            '''``CfnMaintenanceWindowTask.MaintenanceWindowRunCommandParametersProperty.TimeoutSeconds``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-maintenancewindowruncommandparameters.html#cfn-ssm-maintenancewindowtask-maintenancewindowruncommandparameters-timeoutseconds
-            """
-            return self._values.get("timeout_seconds")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-maintenancewindowruncommandparameters.html#cfn-ssm-maintenancewindowtask-maintenancewindowruncommandparameters-timeoutseconds
+            '''
+            result = self._values.get("timeout_seconds")
+            return typing.cast(typing.Optional[jsii.Number], result)
 
-        def __eq__(self, rhs) -> bool:
+        def __eq__(self, rhs: typing.Any) -> builtins.bool:
             return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-        def __ne__(self, rhs) -> bool:
+        def __ne__(self, rhs: typing.Any) -> builtins.bool:
             return not (rhs == self)
 
         def __repr__(self) -> str:
@@ -2773,44 +2769,43 @@ class CfnMaintenanceWindowTask(
         def __init__(
             self,
             *,
-            input: typing.Optional[str] = None,
-            name: typing.Optional[str] = None,
+            input: typing.Optional[builtins.str] = None,
+            name: typing.Optional[builtins.str] = None,
         ) -> None:
-            """
+            '''
             :param input: ``CfnMaintenanceWindowTask.MaintenanceWindowStepFunctionsParametersProperty.Input``.
             :param name: ``CfnMaintenanceWindowTask.MaintenanceWindowStepFunctionsParametersProperty.Name``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-maintenancewindowstepfunctionsparameters.html
-            """
-            self._values = {}
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-maintenancewindowstepfunctionsparameters.html
+            '''
+            self._values: typing.Dict[str, typing.Any] = {}
             if input is not None:
                 self._values["input"] = input
             if name is not None:
                 self._values["name"] = name
 
         @builtins.property
-        def input(self) -> typing.Optional[str]:
-            """``CfnMaintenanceWindowTask.MaintenanceWindowStepFunctionsParametersProperty.Input``.
+        def input(self) -> typing.Optional[builtins.str]:
+            '''``CfnMaintenanceWindowTask.MaintenanceWindowStepFunctionsParametersProperty.Input``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-maintenancewindowstepfunctionsparameters.html#cfn-ssm-maintenancewindowtask-maintenancewindowstepfunctionsparameters-input
-            """
-            return self._values.get("input")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-maintenancewindowstepfunctionsparameters.html#cfn-ssm-maintenancewindowtask-maintenancewindowstepfunctionsparameters-input
+            '''
+            result = self._values.get("input")
+            return typing.cast(typing.Optional[builtins.str], result)
 
         @builtins.property
-        def name(self) -> typing.Optional[str]:
-            """``CfnMaintenanceWindowTask.MaintenanceWindowStepFunctionsParametersProperty.Name``.
+        def name(self) -> typing.Optional[builtins.str]:
+            '''``CfnMaintenanceWindowTask.MaintenanceWindowStepFunctionsParametersProperty.Name``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-maintenancewindowstepfunctionsparameters.html#cfn-ssm-maintenancewindowtask-maintenancewindowstepfunctionsparameters-name
-            """
-            return self._values.get("name")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-maintenancewindowstepfunctionsparameters.html#cfn-ssm-maintenancewindowtask-maintenancewindowstepfunctionsparameters-name
+            '''
+            result = self._values.get("name")
+            return typing.cast(typing.Optional[builtins.str], result)
 
-        def __eq__(self, rhs) -> bool:
+        def __eq__(self, rhs: typing.Any) -> builtins.bool:
             return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-        def __ne__(self, rhs) -> bool:
+        def __ne__(self, rhs: typing.Any) -> builtins.bool:
             return not (rhs == self)
 
         def __repr__(self) -> str:
@@ -2831,19 +2826,18 @@ class CfnMaintenanceWindowTask(
         def __init__(
             self,
             *,
-            notification_arn: str,
-            notification_events: typing.Optional[typing.List[str]] = None,
-            notification_type: typing.Optional[str] = None,
+            notification_arn: builtins.str,
+            notification_events: typing.Optional[typing.Sequence[builtins.str]] = None,
+            notification_type: typing.Optional[builtins.str] = None,
         ) -> None:
-            """
+            '''
             :param notification_arn: ``CfnMaintenanceWindowTask.NotificationConfigProperty.NotificationArn``.
             :param notification_events: ``CfnMaintenanceWindowTask.NotificationConfigProperty.NotificationEvents``.
             :param notification_type: ``CfnMaintenanceWindowTask.NotificationConfigProperty.NotificationType``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-notificationconfig.html
-            """
-            self._values = {
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-notificationconfig.html
+            '''
+            self._values: typing.Dict[str, typing.Any] = {
                 "notification_arn": notification_arn,
             }
             if notification_events is not None:
@@ -2852,36 +2846,37 @@ class CfnMaintenanceWindowTask(
                 self._values["notification_type"] = notification_type
 
         @builtins.property
-        def notification_arn(self) -> str:
-            """``CfnMaintenanceWindowTask.NotificationConfigProperty.NotificationArn``.
+        def notification_arn(self) -> builtins.str:
+            '''``CfnMaintenanceWindowTask.NotificationConfigProperty.NotificationArn``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-notificationconfig.html#cfn-ssm-maintenancewindowtask-notificationconfig-notificationarn
-            """
-            return self._values.get("notification_arn")
-
-        @builtins.property
-        def notification_events(self) -> typing.Optional[typing.List[str]]:
-            """``CfnMaintenanceWindowTask.NotificationConfigProperty.NotificationEvents``.
-
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-notificationconfig.html#cfn-ssm-maintenancewindowtask-notificationconfig-notificationevents
-            """
-            return self._values.get("notification_events")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-notificationconfig.html#cfn-ssm-maintenancewindowtask-notificationconfig-notificationarn
+            '''
+            result = self._values.get("notification_arn")
+            assert result is not None, "Required property 'notification_arn' is missing"
+            return typing.cast(builtins.str, result)
 
         @builtins.property
-        def notification_type(self) -> typing.Optional[str]:
-            """``CfnMaintenanceWindowTask.NotificationConfigProperty.NotificationType``.
+        def notification_events(self) -> typing.Optional[typing.List[builtins.str]]:
+            '''``CfnMaintenanceWindowTask.NotificationConfigProperty.NotificationEvents``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-notificationconfig.html#cfn-ssm-maintenancewindowtask-notificationconfig-notificationtype
-            """
-            return self._values.get("notification_type")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-notificationconfig.html#cfn-ssm-maintenancewindowtask-notificationconfig-notificationevents
+            '''
+            result = self._values.get("notification_events")
+            return typing.cast(typing.Optional[typing.List[builtins.str]], result)
 
-        def __eq__(self, rhs) -> bool:
+        @builtins.property
+        def notification_type(self) -> typing.Optional[builtins.str]:
+            '''``CfnMaintenanceWindowTask.NotificationConfigProperty.NotificationType``.
+
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-notificationconfig.html#cfn-ssm-maintenancewindowtask-notificationconfig-notificationtype
+            '''
+            result = self._values.get("notification_type")
+            return typing.cast(typing.Optional[builtins.str], result)
+
+        def __eq__(self, rhs: typing.Any) -> builtins.bool:
             return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-        def __ne__(self, rhs) -> bool:
+        def __ne__(self, rhs: typing.Any) -> builtins.bool:
             return not (rhs == self)
 
         def __repr__(self) -> str:
@@ -2896,43 +2891,46 @@ class CfnMaintenanceWindowTask(
     )
     class TargetProperty:
         def __init__(
-            self, *, key: str, values: typing.Optional[typing.List[str]] = None
+            self,
+            *,
+            key: builtins.str,
+            values: typing.Sequence[builtins.str],
         ) -> None:
-            """
+            '''
             :param key: ``CfnMaintenanceWindowTask.TargetProperty.Key``.
             :param values: ``CfnMaintenanceWindowTask.TargetProperty.Values``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-target.html
-            """
-            self._values = {
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-target.html
+            '''
+            self._values: typing.Dict[str, typing.Any] = {
                 "key": key,
+                "values": values,
             }
-            if values is not None:
-                self._values["values"] = values
 
         @builtins.property
-        def key(self) -> str:
-            """``CfnMaintenanceWindowTask.TargetProperty.Key``.
+        def key(self) -> builtins.str:
+            '''``CfnMaintenanceWindowTask.TargetProperty.Key``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-target.html#cfn-ssm-maintenancewindowtask-target-key
-            """
-            return self._values.get("key")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-target.html#cfn-ssm-maintenancewindowtask-target-key
+            '''
+            result = self._values.get("key")
+            assert result is not None, "Required property 'key' is missing"
+            return typing.cast(builtins.str, result)
 
         @builtins.property
-        def values(self) -> typing.Optional[typing.List[str]]:
-            """``CfnMaintenanceWindowTask.TargetProperty.Values``.
+        def values(self) -> typing.List[builtins.str]:
+            '''``CfnMaintenanceWindowTask.TargetProperty.Values``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-target.html#cfn-ssm-maintenancewindowtask-target-values
-            """
-            return self._values.get("values")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-target.html#cfn-ssm-maintenancewindowtask-target-values
+            '''
+            result = self._values.get("values")
+            assert result is not None, "Required property 'values' is missing"
+            return typing.cast(typing.List[builtins.str], result)
 
-        def __eq__(self, rhs) -> bool:
+        def __eq__(self, rhs: typing.Any) -> builtins.bool:
             return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-        def __ne__(self, rhs) -> bool:
+        def __ne__(self, rhs: typing.Any) -> builtins.bool:
             return not (rhs == self)
 
         def __repr__(self) -> str:
@@ -2954,126 +2952,77 @@ class CfnMaintenanceWindowTask(
         def __init__(
             self,
             *,
-            maintenance_window_automation_parameters: typing.Optional[
-                typing.Union[
-                    aws_cdk.core.IResolvable,
-                    "CfnMaintenanceWindowTask.MaintenanceWindowAutomationParametersProperty",
-                ]
-            ] = None,
-            maintenance_window_lambda_parameters: typing.Optional[
-                typing.Union[
-                    aws_cdk.core.IResolvable,
-                    "CfnMaintenanceWindowTask.MaintenanceWindowLambdaParametersProperty",
-                ]
-            ] = None,
-            maintenance_window_run_command_parameters: typing.Optional[
-                typing.Union[
-                    aws_cdk.core.IResolvable,
-                    "CfnMaintenanceWindowTask.MaintenanceWindowRunCommandParametersProperty",
-                ]
-            ] = None,
-            maintenance_window_step_functions_parameters: typing.Optional[
-                typing.Union[
-                    aws_cdk.core.IResolvable,
-                    "CfnMaintenanceWindowTask.MaintenanceWindowStepFunctionsParametersProperty",
-                ]
-            ] = None,
+            maintenance_window_automation_parameters: typing.Optional[typing.Union[aws_cdk.core.IResolvable, "CfnMaintenanceWindowTask.MaintenanceWindowAutomationParametersProperty"]] = None,
+            maintenance_window_lambda_parameters: typing.Optional[typing.Union[aws_cdk.core.IResolvable, "CfnMaintenanceWindowTask.MaintenanceWindowLambdaParametersProperty"]] = None,
+            maintenance_window_run_command_parameters: typing.Optional[typing.Union[aws_cdk.core.IResolvable, "CfnMaintenanceWindowTask.MaintenanceWindowRunCommandParametersProperty"]] = None,
+            maintenance_window_step_functions_parameters: typing.Optional[typing.Union[aws_cdk.core.IResolvable, "CfnMaintenanceWindowTask.MaintenanceWindowStepFunctionsParametersProperty"]] = None,
         ) -> None:
-            """
+            '''
             :param maintenance_window_automation_parameters: ``CfnMaintenanceWindowTask.TaskInvocationParametersProperty.MaintenanceWindowAutomationParameters``.
             :param maintenance_window_lambda_parameters: ``CfnMaintenanceWindowTask.TaskInvocationParametersProperty.MaintenanceWindowLambdaParameters``.
             :param maintenance_window_run_command_parameters: ``CfnMaintenanceWindowTask.TaskInvocationParametersProperty.MaintenanceWindowRunCommandParameters``.
             :param maintenance_window_step_functions_parameters: ``CfnMaintenanceWindowTask.TaskInvocationParametersProperty.MaintenanceWindowStepFunctionsParameters``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-taskinvocationparameters.html
-            """
-            self._values = {}
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-taskinvocationparameters.html
+            '''
+            self._values: typing.Dict[str, typing.Any] = {}
             if maintenance_window_automation_parameters is not None:
-                self._values[
-                    "maintenance_window_automation_parameters"
-                ] = maintenance_window_automation_parameters
+                self._values["maintenance_window_automation_parameters"] = maintenance_window_automation_parameters
             if maintenance_window_lambda_parameters is not None:
-                self._values[
-                    "maintenance_window_lambda_parameters"
-                ] = maintenance_window_lambda_parameters
+                self._values["maintenance_window_lambda_parameters"] = maintenance_window_lambda_parameters
             if maintenance_window_run_command_parameters is not None:
-                self._values[
-                    "maintenance_window_run_command_parameters"
-                ] = maintenance_window_run_command_parameters
+                self._values["maintenance_window_run_command_parameters"] = maintenance_window_run_command_parameters
             if maintenance_window_step_functions_parameters is not None:
-                self._values[
-                    "maintenance_window_step_functions_parameters"
-                ] = maintenance_window_step_functions_parameters
+                self._values["maintenance_window_step_functions_parameters"] = maintenance_window_step_functions_parameters
 
         @builtins.property
         def maintenance_window_automation_parameters(
             self,
-        ) -> typing.Optional[
-            typing.Union[
-                aws_cdk.core.IResolvable,
-                "CfnMaintenanceWindowTask.MaintenanceWindowAutomationParametersProperty",
-            ]
-        ]:
-            """``CfnMaintenanceWindowTask.TaskInvocationParametersProperty.MaintenanceWindowAutomationParameters``.
+        ) -> typing.Optional[typing.Union[aws_cdk.core.IResolvable, "CfnMaintenanceWindowTask.MaintenanceWindowAutomationParametersProperty"]]:
+            '''``CfnMaintenanceWindowTask.TaskInvocationParametersProperty.MaintenanceWindowAutomationParameters``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-taskinvocationparameters.html#cfn-ssm-maintenancewindowtask-taskinvocationparameters-maintenancewindowautomationparameters
-            """
-            return self._values.get("maintenance_window_automation_parameters")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-taskinvocationparameters.html#cfn-ssm-maintenancewindowtask-taskinvocationparameters-maintenancewindowautomationparameters
+            '''
+            result = self._values.get("maintenance_window_automation_parameters")
+            return typing.cast(typing.Optional[typing.Union[aws_cdk.core.IResolvable, "CfnMaintenanceWindowTask.MaintenanceWindowAutomationParametersProperty"]], result)
 
         @builtins.property
         def maintenance_window_lambda_parameters(
             self,
-        ) -> typing.Optional[
-            typing.Union[
-                aws_cdk.core.IResolvable,
-                "CfnMaintenanceWindowTask.MaintenanceWindowLambdaParametersProperty",
-            ]
-        ]:
-            """``CfnMaintenanceWindowTask.TaskInvocationParametersProperty.MaintenanceWindowLambdaParameters``.
+        ) -> typing.Optional[typing.Union[aws_cdk.core.IResolvable, "CfnMaintenanceWindowTask.MaintenanceWindowLambdaParametersProperty"]]:
+            '''``CfnMaintenanceWindowTask.TaskInvocationParametersProperty.MaintenanceWindowLambdaParameters``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-taskinvocationparameters.html#cfn-ssm-maintenancewindowtask-taskinvocationparameters-maintenancewindowlambdaparameters
-            """
-            return self._values.get("maintenance_window_lambda_parameters")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-taskinvocationparameters.html#cfn-ssm-maintenancewindowtask-taskinvocationparameters-maintenancewindowlambdaparameters
+            '''
+            result = self._values.get("maintenance_window_lambda_parameters")
+            return typing.cast(typing.Optional[typing.Union[aws_cdk.core.IResolvable, "CfnMaintenanceWindowTask.MaintenanceWindowLambdaParametersProperty"]], result)
 
         @builtins.property
         def maintenance_window_run_command_parameters(
             self,
-        ) -> typing.Optional[
-            typing.Union[
-                aws_cdk.core.IResolvable,
-                "CfnMaintenanceWindowTask.MaintenanceWindowRunCommandParametersProperty",
-            ]
-        ]:
-            """``CfnMaintenanceWindowTask.TaskInvocationParametersProperty.MaintenanceWindowRunCommandParameters``.
+        ) -> typing.Optional[typing.Union[aws_cdk.core.IResolvable, "CfnMaintenanceWindowTask.MaintenanceWindowRunCommandParametersProperty"]]:
+            '''``CfnMaintenanceWindowTask.TaskInvocationParametersProperty.MaintenanceWindowRunCommandParameters``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-taskinvocationparameters.html#cfn-ssm-maintenancewindowtask-taskinvocationparameters-maintenancewindowruncommandparameters
-            """
-            return self._values.get("maintenance_window_run_command_parameters")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-taskinvocationparameters.html#cfn-ssm-maintenancewindowtask-taskinvocationparameters-maintenancewindowruncommandparameters
+            '''
+            result = self._values.get("maintenance_window_run_command_parameters")
+            return typing.cast(typing.Optional[typing.Union[aws_cdk.core.IResolvable, "CfnMaintenanceWindowTask.MaintenanceWindowRunCommandParametersProperty"]], result)
 
         @builtins.property
         def maintenance_window_step_functions_parameters(
             self,
-        ) -> typing.Optional[
-            typing.Union[
-                aws_cdk.core.IResolvable,
-                "CfnMaintenanceWindowTask.MaintenanceWindowStepFunctionsParametersProperty",
-            ]
-        ]:
-            """``CfnMaintenanceWindowTask.TaskInvocationParametersProperty.MaintenanceWindowStepFunctionsParameters``.
+        ) -> typing.Optional[typing.Union[aws_cdk.core.IResolvable, "CfnMaintenanceWindowTask.MaintenanceWindowStepFunctionsParametersProperty"]]:
+            '''``CfnMaintenanceWindowTask.TaskInvocationParametersProperty.MaintenanceWindowStepFunctionsParameters``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-taskinvocationparameters.html#cfn-ssm-maintenancewindowtask-taskinvocationparameters-maintenancewindowstepfunctionsparameters
-            """
-            return self._values.get("maintenance_window_step_functions_parameters")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtask-taskinvocationparameters.html#cfn-ssm-maintenancewindowtask-taskinvocationparameters-maintenancewindowstepfunctionsparameters
+            '''
+            result = self._values.get("maintenance_window_step_functions_parameters")
+            return typing.cast(typing.Optional[typing.Union[aws_cdk.core.IResolvable, "CfnMaintenanceWindowTask.MaintenanceWindowStepFunctionsParametersProperty"]], result)
 
-        def __eq__(self, rhs) -> bool:
+        def __eq__(self, rhs: typing.Any) -> builtins.bool:
             return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-        def __ne__(self, rhs) -> bool:
+        def __ne__(self, rhs: typing.Any) -> builtins.bool:
             return not (rhs == self)
 
         def __repr__(self) -> str:
@@ -3086,17 +3035,17 @@ class CfnMaintenanceWindowTask(
     jsii_type="@aws-cdk/aws-ssm.CfnMaintenanceWindowTaskProps",
     jsii_struct_bases=[],
     name_mapping={
-        "max_concurrency": "maxConcurrency",
-        "max_errors": "maxErrors",
         "priority": "priority",
-        "targets": "targets",
         "task_arn": "taskArn",
         "task_type": "taskType",
         "window_id": "windowId",
         "description": "description",
         "logging_info": "loggingInfo",
+        "max_concurrency": "maxConcurrency",
+        "max_errors": "maxErrors",
         "name": "name",
         "service_role_arn": "serviceRoleArn",
+        "targets": "targets",
         "task_invocation_parameters": "taskInvocationParameters",
         "task_parameters": "taskParameters",
     },
@@ -3105,60 +3054,40 @@ class CfnMaintenanceWindowTaskProps:
     def __init__(
         self,
         *,
-        max_concurrency: str,
-        max_errors: str,
         priority: jsii.Number,
-        targets: typing.Union[
-            aws_cdk.core.IResolvable,
-            typing.List[
-                typing.Union[
-                    aws_cdk.core.IResolvable, "CfnMaintenanceWindowTask.TargetProperty"
-                ]
-            ],
-        ],
-        task_arn: str,
-        task_type: str,
-        window_id: str,
-        description: typing.Optional[str] = None,
-        logging_info: typing.Optional[
-            typing.Union[
-                aws_cdk.core.IResolvable, "CfnMaintenanceWindowTask.LoggingInfoProperty"
-            ]
-        ] = None,
-        name: typing.Optional[str] = None,
-        service_role_arn: typing.Optional[str] = None,
-        task_invocation_parameters: typing.Optional[
-            typing.Union[
-                aws_cdk.core.IResolvable,
-                "CfnMaintenanceWindowTask.TaskInvocationParametersProperty",
-            ]
-        ] = None,
+        task_arn: builtins.str,
+        task_type: builtins.str,
+        window_id: builtins.str,
+        description: typing.Optional[builtins.str] = None,
+        logging_info: typing.Optional[typing.Union[aws_cdk.core.IResolvable, CfnMaintenanceWindowTask.LoggingInfoProperty]] = None,
+        max_concurrency: typing.Optional[builtins.str] = None,
+        max_errors: typing.Optional[builtins.str] = None,
+        name: typing.Optional[builtins.str] = None,
+        service_role_arn: typing.Optional[builtins.str] = None,
+        targets: typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.Sequence[typing.Union[aws_cdk.core.IResolvable, CfnMaintenanceWindowTask.TargetProperty]]]] = None,
+        task_invocation_parameters: typing.Optional[typing.Union[aws_cdk.core.IResolvable, CfnMaintenanceWindowTask.TaskInvocationParametersProperty]] = None,
         task_parameters: typing.Any = None,
     ) -> None:
-        """Properties for defining a ``AWS::SSM::MaintenanceWindowTask``.
+        '''Properties for defining a ``AWS::SSM::MaintenanceWindowTask``.
 
-        :param max_concurrency: ``AWS::SSM::MaintenanceWindowTask.MaxConcurrency``.
-        :param max_errors: ``AWS::SSM::MaintenanceWindowTask.MaxErrors``.
         :param priority: ``AWS::SSM::MaintenanceWindowTask.Priority``.
-        :param targets: ``AWS::SSM::MaintenanceWindowTask.Targets``.
         :param task_arn: ``AWS::SSM::MaintenanceWindowTask.TaskArn``.
         :param task_type: ``AWS::SSM::MaintenanceWindowTask.TaskType``.
         :param window_id: ``AWS::SSM::MaintenanceWindowTask.WindowId``.
         :param description: ``AWS::SSM::MaintenanceWindowTask.Description``.
         :param logging_info: ``AWS::SSM::MaintenanceWindowTask.LoggingInfo``.
+        :param max_concurrency: ``AWS::SSM::MaintenanceWindowTask.MaxConcurrency``.
+        :param max_errors: ``AWS::SSM::MaintenanceWindowTask.MaxErrors``.
         :param name: ``AWS::SSM::MaintenanceWindowTask.Name``.
         :param service_role_arn: ``AWS::SSM::MaintenanceWindowTask.ServiceRoleArn``.
+        :param targets: ``AWS::SSM::MaintenanceWindowTask.Targets``.
         :param task_invocation_parameters: ``AWS::SSM::MaintenanceWindowTask.TaskInvocationParameters``.
         :param task_parameters: ``AWS::SSM::MaintenanceWindowTask.TaskParameters``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtask.html
-        """
-        self._values = {
-            "max_concurrency": max_concurrency,
-            "max_errors": max_errors,
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtask.html
+        '''
+        self._values: typing.Dict[str, typing.Any] = {
             "priority": priority,
-            "targets": targets,
             "task_arn": task_arn,
             "task_type": task_type,
             "window_id": window_id,
@@ -3167,158 +3096,152 @@ class CfnMaintenanceWindowTaskProps:
             self._values["description"] = description
         if logging_info is not None:
             self._values["logging_info"] = logging_info
+        if max_concurrency is not None:
+            self._values["max_concurrency"] = max_concurrency
+        if max_errors is not None:
+            self._values["max_errors"] = max_errors
         if name is not None:
             self._values["name"] = name
         if service_role_arn is not None:
             self._values["service_role_arn"] = service_role_arn
+        if targets is not None:
+            self._values["targets"] = targets
         if task_invocation_parameters is not None:
             self._values["task_invocation_parameters"] = task_invocation_parameters
         if task_parameters is not None:
             self._values["task_parameters"] = task_parameters
 
     @builtins.property
-    def max_concurrency(self) -> str:
-        """``AWS::SSM::MaintenanceWindowTask.MaxConcurrency``.
-
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtask.html#cfn-ssm-maintenancewindowtask-maxconcurrency
-        """
-        return self._values.get("max_concurrency")
-
-    @builtins.property
-    def max_errors(self) -> str:
-        """``AWS::SSM::MaintenanceWindowTask.MaxErrors``.
-
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtask.html#cfn-ssm-maintenancewindowtask-maxerrors
-        """
-        return self._values.get("max_errors")
-
-    @builtins.property
     def priority(self) -> jsii.Number:
-        """``AWS::SSM::MaintenanceWindowTask.Priority``.
+        '''``AWS::SSM::MaintenanceWindowTask.Priority``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtask.html#cfn-ssm-maintenancewindowtask-priority
-        """
-        return self._values.get("priority")
-
-    @builtins.property
-    def targets(
-        self,
-    ) -> typing.Union[
-        aws_cdk.core.IResolvable,
-        typing.List[
-            typing.Union[
-                aws_cdk.core.IResolvable, "CfnMaintenanceWindowTask.TargetProperty"
-            ]
-        ],
-    ]:
-        """``AWS::SSM::MaintenanceWindowTask.Targets``.
-
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtask.html#cfn-ssm-maintenancewindowtask-targets
-        """
-        return self._values.get("targets")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtask.html#cfn-ssm-maintenancewindowtask-priority
+        '''
+        result = self._values.get("priority")
+        assert result is not None, "Required property 'priority' is missing"
+        return typing.cast(jsii.Number, result)
 
     @builtins.property
-    def task_arn(self) -> str:
-        """``AWS::SSM::MaintenanceWindowTask.TaskArn``.
+    def task_arn(self) -> builtins.str:
+        '''``AWS::SSM::MaintenanceWindowTask.TaskArn``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtask.html#cfn-ssm-maintenancewindowtask-taskarn
-        """
-        return self._values.get("task_arn")
-
-    @builtins.property
-    def task_type(self) -> str:
-        """``AWS::SSM::MaintenanceWindowTask.TaskType``.
-
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtask.html#cfn-ssm-maintenancewindowtask-tasktype
-        """
-        return self._values.get("task_type")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtask.html#cfn-ssm-maintenancewindowtask-taskarn
+        '''
+        result = self._values.get("task_arn")
+        assert result is not None, "Required property 'task_arn' is missing"
+        return typing.cast(builtins.str, result)
 
     @builtins.property
-    def window_id(self) -> str:
-        """``AWS::SSM::MaintenanceWindowTask.WindowId``.
+    def task_type(self) -> builtins.str:
+        '''``AWS::SSM::MaintenanceWindowTask.TaskType``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtask.html#cfn-ssm-maintenancewindowtask-windowid
-        """
-        return self._values.get("window_id")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtask.html#cfn-ssm-maintenancewindowtask-tasktype
+        '''
+        result = self._values.get("task_type")
+        assert result is not None, "Required property 'task_type' is missing"
+        return typing.cast(builtins.str, result)
 
     @builtins.property
-    def description(self) -> typing.Optional[str]:
-        """``AWS::SSM::MaintenanceWindowTask.Description``.
+    def window_id(self) -> builtins.str:
+        '''``AWS::SSM::MaintenanceWindowTask.WindowId``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtask.html#cfn-ssm-maintenancewindowtask-description
-        """
-        return self._values.get("description")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtask.html#cfn-ssm-maintenancewindowtask-windowid
+        '''
+        result = self._values.get("window_id")
+        assert result is not None, "Required property 'window_id' is missing"
+        return typing.cast(builtins.str, result)
+
+    @builtins.property
+    def description(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::MaintenanceWindowTask.Description``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtask.html#cfn-ssm-maintenancewindowtask-description
+        '''
+        result = self._values.get("description")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def logging_info(
         self,
-    ) -> typing.Optional[
-        typing.Union[
-            aws_cdk.core.IResolvable, "CfnMaintenanceWindowTask.LoggingInfoProperty"
-        ]
-    ]:
-        """``AWS::SSM::MaintenanceWindowTask.LoggingInfo``.
+    ) -> typing.Optional[typing.Union[aws_cdk.core.IResolvable, CfnMaintenanceWindowTask.LoggingInfoProperty]]:
+        '''``AWS::SSM::MaintenanceWindowTask.LoggingInfo``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtask.html#cfn-ssm-maintenancewindowtask-logginginfo
-        """
-        return self._values.get("logging_info")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtask.html#cfn-ssm-maintenancewindowtask-logginginfo
+        '''
+        result = self._values.get("logging_info")
+        return typing.cast(typing.Optional[typing.Union[aws_cdk.core.IResolvable, CfnMaintenanceWindowTask.LoggingInfoProperty]], result)
 
     @builtins.property
-    def name(self) -> typing.Optional[str]:
-        """``AWS::SSM::MaintenanceWindowTask.Name``.
+    def max_concurrency(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::MaintenanceWindowTask.MaxConcurrency``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtask.html#cfn-ssm-maintenancewindowtask-name
-        """
-        return self._values.get("name")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtask.html#cfn-ssm-maintenancewindowtask-maxconcurrency
+        '''
+        result = self._values.get("max_concurrency")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
-    def service_role_arn(self) -> typing.Optional[str]:
-        """``AWS::SSM::MaintenanceWindowTask.ServiceRoleArn``.
+    def max_errors(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::MaintenanceWindowTask.MaxErrors``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtask.html#cfn-ssm-maintenancewindowtask-servicerolearn
-        """
-        return self._values.get("service_role_arn")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtask.html#cfn-ssm-maintenancewindowtask-maxerrors
+        '''
+        result = self._values.get("max_errors")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def name(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::MaintenanceWindowTask.Name``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtask.html#cfn-ssm-maintenancewindowtask-name
+        '''
+        result = self._values.get("name")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def service_role_arn(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::MaintenanceWindowTask.ServiceRoleArn``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtask.html#cfn-ssm-maintenancewindowtask-servicerolearn
+        '''
+        result = self._values.get("service_role_arn")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def targets(
+        self,
+    ) -> typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, CfnMaintenanceWindowTask.TargetProperty]]]]:
+        '''``AWS::SSM::MaintenanceWindowTask.Targets``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtask.html#cfn-ssm-maintenancewindowtask-targets
+        '''
+        result = self._values.get("targets")
+        return typing.cast(typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, CfnMaintenanceWindowTask.TargetProperty]]]], result)
 
     @builtins.property
     def task_invocation_parameters(
         self,
-    ) -> typing.Optional[
-        typing.Union[
-            aws_cdk.core.IResolvable,
-            "CfnMaintenanceWindowTask.TaskInvocationParametersProperty",
-        ]
-    ]:
-        """``AWS::SSM::MaintenanceWindowTask.TaskInvocationParameters``.
+    ) -> typing.Optional[typing.Union[aws_cdk.core.IResolvable, CfnMaintenanceWindowTask.TaskInvocationParametersProperty]]:
+        '''``AWS::SSM::MaintenanceWindowTask.TaskInvocationParameters``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtask.html#cfn-ssm-maintenancewindowtask-taskinvocationparameters
-        """
-        return self._values.get("task_invocation_parameters")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtask.html#cfn-ssm-maintenancewindowtask-taskinvocationparameters
+        '''
+        result = self._values.get("task_invocation_parameters")
+        return typing.cast(typing.Optional[typing.Union[aws_cdk.core.IResolvable, CfnMaintenanceWindowTask.TaskInvocationParametersProperty]], result)
 
     @builtins.property
     def task_parameters(self) -> typing.Any:
-        """``AWS::SSM::MaintenanceWindowTask.TaskParameters``.
+        '''``AWS::SSM::MaintenanceWindowTask.TaskParameters``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtask.html#cfn-ssm-maintenancewindowtask-taskparameters
-        """
-        return self._values.get("task_parameters")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtask.html#cfn-ssm-maintenancewindowtask-taskparameters
+        '''
+        result = self._values.get("task_parameters")
+        return typing.cast(typing.Any, result)
 
-    def __eq__(self, rhs) -> bool:
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
@@ -3333,30 +3256,28 @@ class CfnParameter(
     metaclass=jsii.JSIIMeta,
     jsii_type="@aws-cdk/aws-ssm.CfnParameter",
 ):
-    """A CloudFormation ``AWS::SSM::Parameter``.
+    '''A CloudFormation ``AWS::SSM::Parameter``.
 
-    see
-    :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html
-    cloudformationResource:
-    :cloudformationResource:: AWS::SSM::Parameter
-    """
+    :cloudformationResource: AWS::SSM::Parameter
+    :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html
+    '''
 
     def __init__(
         self,
         scope: aws_cdk.core.Construct,
-        id: str,
+        id: builtins.str,
         *,
-        type: str,
-        value: str,
-        allowed_pattern: typing.Optional[str] = None,
-        data_type: typing.Optional[str] = None,
-        description: typing.Optional[str] = None,
-        name: typing.Optional[str] = None,
-        policies: typing.Optional[str] = None,
+        type: builtins.str,
+        value: builtins.str,
+        allowed_pattern: typing.Optional[builtins.str] = None,
+        data_type: typing.Optional[builtins.str] = None,
+        description: typing.Optional[builtins.str] = None,
+        name: typing.Optional[builtins.str] = None,
+        policies: typing.Optional[builtins.str] = None,
         tags: typing.Any = None,
-        tier: typing.Optional[str] = None,
+        tier: typing.Optional[builtins.str] = None,
     ) -> None:
-        """Create a new ``AWS::SSM::Parameter``.
+        '''Create a new ``AWS::SSM::Parameter``.
 
         :param scope: - scope in which this resource is defined.
         :param id: - scoped id of the resource.
@@ -3369,7 +3290,7 @@ class CfnParameter(
         :param policies: ``AWS::SSM::Parameter.Policies``.
         :param tags: ``AWS::SSM::Parameter.Tags``.
         :param tier: ``AWS::SSM::Parameter.Tier``.
-        """
+        '''
         props = CfnParameterProps(
             type=type,
             value=value,
@@ -3384,203 +3305,162 @@ class CfnParameter(
 
         jsii.create(CfnParameter, self, [scope, id, props])
 
-    @jsii.member(jsii_name="fromCloudFormation")
-    @builtins.classmethod
-    def from_cloud_formation(
-        cls,
-        scope: aws_cdk.core.Construct,
-        id: str,
-        resource_attributes: typing.Any,
-        *,
-        finder: aws_cdk.core.ICfnFinder,
-    ) -> "CfnParameter":
-        """A factory method that creates a new instance of this class from an object containing the CloudFormation properties of this resource.
-
-        Used in the @aws-cdk/cloudformation-include module.
-
-        :param scope: -
-        :param id: -
-        :param resource_attributes: -
-        :param finder: The finder interface used to resolve references across the template.
-
-        stability
-        :stability: experimental
-        """
-        options = aws_cdk.core.FromCloudFormationOptions(finder=finder)
-
-        return jsii.sinvoke(
-            cls, "fromCloudFormation", [scope, id, resource_attributes, options]
-        )
-
     @jsii.member(jsii_name="inspect")
     def inspect(self, inspector: aws_cdk.core.TreeInspector) -> None:
-        """Examines the CloudFormation resource and discloses attributes.
+        '''Examines the CloudFormation resource and discloses attributes.
 
         :param inspector: - tree inspector to collect and process attributes.
-
-        stability
-        :stability: experimental
-        """
-        return jsii.invoke(self, "inspect", [inspector])
+        '''
+        return typing.cast(None, jsii.invoke(self, "inspect", [inspector]))
 
     @jsii.member(jsii_name="renderProperties")
     def _render_properties(
-        self, props: typing.Mapping[str, typing.Any]
-    ) -> typing.Mapping[str, typing.Any]:
-        """
+        self,
+        props: typing.Mapping[builtins.str, typing.Any],
+    ) -> typing.Mapping[builtins.str, typing.Any]:
+        '''
         :param props: -
-        """
-        return jsii.invoke(self, "renderProperties", [props])
+        '''
+        return typing.cast(typing.Mapping[builtins.str, typing.Any], jsii.invoke(self, "renderProperties", [props]))
 
-    @jsii.python.classproperty
+    @jsii.python.classproperty # type: ignore[misc]
     @jsii.member(jsii_name="CFN_RESOURCE_TYPE_NAME")
-    def CFN_RESOURCE_TYPE_NAME(cls) -> str:
-        """The CloudFormation resource type name for this resource class."""
-        return jsii.sget(cls, "CFN_RESOURCE_TYPE_NAME")
+    def CFN_RESOURCE_TYPE_NAME(cls) -> builtins.str:
+        '''The CloudFormation resource type name for this resource class.'''
+        return typing.cast(builtins.str, jsii.sget(cls, "CFN_RESOURCE_TYPE_NAME"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="attrType")
-    def attr_type(self) -> str:
-        """
-        cloudformationAttribute:
-        :cloudformationAttribute:: Type
-        """
-        return jsii.get(self, "attrType")
+    def attr_type(self) -> builtins.str:
+        '''
+        :cloudformationAttribute: Type
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "attrType"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="attrValue")
-    def attr_value(self) -> str:
-        """
-        cloudformationAttribute:
-        :cloudformationAttribute:: Value
-        """
-        return jsii.get(self, "attrValue")
+    def attr_value(self) -> builtins.str:
+        '''
+        :cloudformationAttribute: Value
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "attrValue"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="cfnProperties")
-    def _cfn_properties(self) -> typing.Mapping[str, typing.Any]:
-        return jsii.get(self, "cfnProperties")
+    def _cfn_properties(self) -> typing.Mapping[builtins.str, typing.Any]:
+        return typing.cast(typing.Mapping[builtins.str, typing.Any], jsii.get(self, "cfnProperties"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="tags")
     def tags(self) -> aws_cdk.core.TagManager:
-        """``AWS::SSM::Parameter.Tags``.
+        '''``AWS::SSM::Parameter.Tags``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html#cfn-ssm-parameter-tags
-        """
-        return jsii.get(self, "tags")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html#cfn-ssm-parameter-tags
+        '''
+        return typing.cast(aws_cdk.core.TagManager, jsii.get(self, "tags"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="type")
-    def type(self) -> str:
-        """``AWS::SSM::Parameter.Type``.
+    def type(self) -> builtins.str:
+        '''``AWS::SSM::Parameter.Type``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html#cfn-ssm-parameter-type
-        """
-        return jsii.get(self, "type")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html#cfn-ssm-parameter-type
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "type"))
 
     @type.setter
-    def type(self, value: str) -> None:
+    def type(self, value: builtins.str) -> None:
         jsii.set(self, "type", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="value")
-    def value(self) -> str:
-        """``AWS::SSM::Parameter.Value``.
+    def value(self) -> builtins.str:
+        '''``AWS::SSM::Parameter.Value``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html#cfn-ssm-parameter-value
-        """
-        return jsii.get(self, "value")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html#cfn-ssm-parameter-value
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "value"))
 
     @value.setter
-    def value(self, value: str) -> None:
+    def value(self, value: builtins.str) -> None:
         jsii.set(self, "value", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="allowedPattern")
-    def allowed_pattern(self) -> typing.Optional[str]:
-        """``AWS::SSM::Parameter.AllowedPattern``.
+    def allowed_pattern(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::Parameter.AllowedPattern``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html#cfn-ssm-parameter-allowedpattern
-        """
-        return jsii.get(self, "allowedPattern")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html#cfn-ssm-parameter-allowedpattern
+        '''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "allowedPattern"))
 
     @allowed_pattern.setter
-    def allowed_pattern(self, value: typing.Optional[str]) -> None:
+    def allowed_pattern(self, value: typing.Optional[builtins.str]) -> None:
         jsii.set(self, "allowedPattern", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="dataType")
-    def data_type(self) -> typing.Optional[str]:
-        """``AWS::SSM::Parameter.DataType``.
+    def data_type(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::Parameter.DataType``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html#cfn-ssm-parameter-datatype
-        """
-        return jsii.get(self, "dataType")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html#cfn-ssm-parameter-datatype
+        '''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "dataType"))
 
     @data_type.setter
-    def data_type(self, value: typing.Optional[str]) -> None:
+    def data_type(self, value: typing.Optional[builtins.str]) -> None:
         jsii.set(self, "dataType", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="description")
-    def description(self) -> typing.Optional[str]:
-        """``AWS::SSM::Parameter.Description``.
+    def description(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::Parameter.Description``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html#cfn-ssm-parameter-description
-        """
-        return jsii.get(self, "description")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html#cfn-ssm-parameter-description
+        '''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "description"))
 
     @description.setter
-    def description(self, value: typing.Optional[str]) -> None:
+    def description(self, value: typing.Optional[builtins.str]) -> None:
         jsii.set(self, "description", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="name")
-    def name(self) -> typing.Optional[str]:
-        """``AWS::SSM::Parameter.Name``.
+    def name(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::Parameter.Name``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html#cfn-ssm-parameter-name
-        """
-        return jsii.get(self, "name")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html#cfn-ssm-parameter-name
+        '''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "name"))
 
     @name.setter
-    def name(self, value: typing.Optional[str]) -> None:
+    def name(self, value: typing.Optional[builtins.str]) -> None:
         jsii.set(self, "name", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="policies")
-    def policies(self) -> typing.Optional[str]:
-        """``AWS::SSM::Parameter.Policies``.
+    def policies(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::Parameter.Policies``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html#cfn-ssm-parameter-policies
-        """
-        return jsii.get(self, "policies")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html#cfn-ssm-parameter-policies
+        '''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "policies"))
 
     @policies.setter
-    def policies(self, value: typing.Optional[str]) -> None:
+    def policies(self, value: typing.Optional[builtins.str]) -> None:
         jsii.set(self, "policies", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="tier")
-    def tier(self) -> typing.Optional[str]:
-        """``AWS::SSM::Parameter.Tier``.
+    def tier(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::Parameter.Tier``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html#cfn-ssm-parameter-tier
-        """
-        return jsii.get(self, "tier")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html#cfn-ssm-parameter-tier
+        '''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "tier"))
 
     @tier.setter
-    def tier(self, value: typing.Optional[str]) -> None:
+    def tier(self, value: typing.Optional[builtins.str]) -> None:
         jsii.set(self, "tier", value)
 
 
@@ -3603,17 +3483,17 @@ class CfnParameterProps:
     def __init__(
         self,
         *,
-        type: str,
-        value: str,
-        allowed_pattern: typing.Optional[str] = None,
-        data_type: typing.Optional[str] = None,
-        description: typing.Optional[str] = None,
-        name: typing.Optional[str] = None,
-        policies: typing.Optional[str] = None,
+        type: builtins.str,
+        value: builtins.str,
+        allowed_pattern: typing.Optional[builtins.str] = None,
+        data_type: typing.Optional[builtins.str] = None,
+        description: typing.Optional[builtins.str] = None,
+        name: typing.Optional[builtins.str] = None,
+        policies: typing.Optional[builtins.str] = None,
         tags: typing.Any = None,
-        tier: typing.Optional[str] = None,
+        tier: typing.Optional[builtins.str] = None,
     ) -> None:
-        """Properties for defining a ``AWS::SSM::Parameter``.
+        '''Properties for defining a ``AWS::SSM::Parameter``.
 
         :param type: ``AWS::SSM::Parameter.Type``.
         :param value: ``AWS::SSM::Parameter.Value``.
@@ -3625,10 +3505,9 @@ class CfnParameterProps:
         :param tags: ``AWS::SSM::Parameter.Tags``.
         :param tier: ``AWS::SSM::Parameter.Tier``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html
-        """
-        self._values = {
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html
+        '''
+        self._values: typing.Dict[str, typing.Any] = {
             "type": type,
             "value": value,
         }
@@ -3648,90 +3527,92 @@ class CfnParameterProps:
             self._values["tier"] = tier
 
     @builtins.property
-    def type(self) -> str:
-        """``AWS::SSM::Parameter.Type``.
+    def type(self) -> builtins.str:
+        '''``AWS::SSM::Parameter.Type``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html#cfn-ssm-parameter-type
-        """
-        return self._values.get("type")
-
-    @builtins.property
-    def value(self) -> str:
-        """``AWS::SSM::Parameter.Value``.
-
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html#cfn-ssm-parameter-value
-        """
-        return self._values.get("value")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html#cfn-ssm-parameter-type
+        '''
+        result = self._values.get("type")
+        assert result is not None, "Required property 'type' is missing"
+        return typing.cast(builtins.str, result)
 
     @builtins.property
-    def allowed_pattern(self) -> typing.Optional[str]:
-        """``AWS::SSM::Parameter.AllowedPattern``.
+    def value(self) -> builtins.str:
+        '''``AWS::SSM::Parameter.Value``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html#cfn-ssm-parameter-allowedpattern
-        """
-        return self._values.get("allowed_pattern")
-
-    @builtins.property
-    def data_type(self) -> typing.Optional[str]:
-        """``AWS::SSM::Parameter.DataType``.
-
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html#cfn-ssm-parameter-datatype
-        """
-        return self._values.get("data_type")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html#cfn-ssm-parameter-value
+        '''
+        result = self._values.get("value")
+        assert result is not None, "Required property 'value' is missing"
+        return typing.cast(builtins.str, result)
 
     @builtins.property
-    def description(self) -> typing.Optional[str]:
-        """``AWS::SSM::Parameter.Description``.
+    def allowed_pattern(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::Parameter.AllowedPattern``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html#cfn-ssm-parameter-description
-        """
-        return self._values.get("description")
-
-    @builtins.property
-    def name(self) -> typing.Optional[str]:
-        """``AWS::SSM::Parameter.Name``.
-
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html#cfn-ssm-parameter-name
-        """
-        return self._values.get("name")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html#cfn-ssm-parameter-allowedpattern
+        '''
+        result = self._values.get("allowed_pattern")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
-    def policies(self) -> typing.Optional[str]:
-        """``AWS::SSM::Parameter.Policies``.
+    def data_type(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::Parameter.DataType``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html#cfn-ssm-parameter-policies
-        """
-        return self._values.get("policies")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html#cfn-ssm-parameter-datatype
+        '''
+        result = self._values.get("data_type")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def description(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::Parameter.Description``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html#cfn-ssm-parameter-description
+        '''
+        result = self._values.get("description")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def name(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::Parameter.Name``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html#cfn-ssm-parameter-name
+        '''
+        result = self._values.get("name")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def policies(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::Parameter.Policies``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html#cfn-ssm-parameter-policies
+        '''
+        result = self._values.get("policies")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def tags(self) -> typing.Any:
-        """``AWS::SSM::Parameter.Tags``.
+        '''``AWS::SSM::Parameter.Tags``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html#cfn-ssm-parameter-tags
-        """
-        return self._values.get("tags")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html#cfn-ssm-parameter-tags
+        '''
+        result = self._values.get("tags")
+        return typing.cast(typing.Any, result)
 
     @builtins.property
-    def tier(self) -> typing.Optional[str]:
-        """``AWS::SSM::Parameter.Tier``.
+    def tier(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::Parameter.Tier``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html#cfn-ssm-parameter-tier
-        """
-        return self._values.get("tier")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html#cfn-ssm-parameter-tier
+        '''
+        result = self._values.get("tier")
+        return typing.cast(typing.Optional[builtins.str], result)
 
-    def __eq__(self, rhs) -> bool:
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
@@ -3746,47 +3627,32 @@ class CfnPatchBaseline(
     metaclass=jsii.JSIIMeta,
     jsii_type="@aws-cdk/aws-ssm.CfnPatchBaseline",
 ):
-    """A CloudFormation ``AWS::SSM::PatchBaseline``.
+    '''A CloudFormation ``AWS::SSM::PatchBaseline``.
 
-    see
-    :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-patchbaseline.html
-    cloudformationResource:
-    :cloudformationResource:: AWS::SSM::PatchBaseline
-    """
+    :cloudformationResource: AWS::SSM::PatchBaseline
+    :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-patchbaseline.html
+    '''
 
     def __init__(
         self,
         scope: aws_cdk.core.Construct,
-        id: str,
+        id: builtins.str,
         *,
-        name: str,
-        approval_rules: typing.Optional[
-            typing.Union[aws_cdk.core.IResolvable, "RuleGroupProperty"]
-        ] = None,
-        approved_patches: typing.Optional[typing.List[str]] = None,
-        approved_patches_compliance_level: typing.Optional[str] = None,
-        approved_patches_enable_non_security: typing.Optional[
-            typing.Union[bool, aws_cdk.core.IResolvable]
-        ] = None,
-        description: typing.Optional[str] = None,
-        global_filters: typing.Optional[
-            typing.Union[aws_cdk.core.IResolvable, "PatchFilterGroupProperty"]
-        ] = None,
-        operating_system: typing.Optional[str] = None,
-        patch_groups: typing.Optional[typing.List[str]] = None,
-        rejected_patches: typing.Optional[typing.List[str]] = None,
-        rejected_patches_action: typing.Optional[str] = None,
-        sources: typing.Optional[
-            typing.Union[
-                aws_cdk.core.IResolvable,
-                typing.List[
-                    typing.Union[aws_cdk.core.IResolvable, "PatchSourceProperty"]
-                ],
-            ]
-        ] = None,
-        tags: typing.Optional[typing.List[aws_cdk.core.CfnTag]] = None,
+        name: builtins.str,
+        approval_rules: typing.Optional[typing.Union[aws_cdk.core.IResolvable, "CfnPatchBaseline.RuleGroupProperty"]] = None,
+        approved_patches: typing.Optional[typing.Sequence[builtins.str]] = None,
+        approved_patches_compliance_level: typing.Optional[builtins.str] = None,
+        approved_patches_enable_non_security: typing.Optional[typing.Union[builtins.bool, aws_cdk.core.IResolvable]] = None,
+        description: typing.Optional[builtins.str] = None,
+        global_filters: typing.Optional[typing.Union[aws_cdk.core.IResolvable, "CfnPatchBaseline.PatchFilterGroupProperty"]] = None,
+        operating_system: typing.Optional[builtins.str] = None,
+        patch_groups: typing.Optional[typing.Sequence[builtins.str]] = None,
+        rejected_patches: typing.Optional[typing.Sequence[builtins.str]] = None,
+        rejected_patches_action: typing.Optional[builtins.str] = None,
+        sources: typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.Sequence[typing.Union[aws_cdk.core.IResolvable, "CfnPatchBaseline.PatchSourceProperty"]]]] = None,
+        tags: typing.Optional[typing.Sequence[aws_cdk.core.CfnTag]] = None,
     ) -> None:
-        """Create a new ``AWS::SSM::PatchBaseline``.
+        '''Create a new ``AWS::SSM::PatchBaseline``.
 
         :param scope: - scope in which this resource is defined.
         :param id: - scoped id of the resource.
@@ -3803,7 +3669,7 @@ class CfnPatchBaseline(
         :param rejected_patches_action: ``AWS::SSM::PatchBaseline.RejectedPatchesAction``.
         :param sources: ``AWS::SSM::PatchBaseline.Sources``.
         :param tags: ``AWS::SSM::PatchBaseline.Tags``.
-        """
+        '''
         props = CfnPatchBaselineProps(
             name=name,
             approval_rules=approval_rules,
@@ -3822,277 +3688,226 @@ class CfnPatchBaseline(
 
         jsii.create(CfnPatchBaseline, self, [scope, id, props])
 
-    @jsii.member(jsii_name="fromCloudFormation")
-    @builtins.classmethod
-    def from_cloud_formation(
-        cls,
-        scope: aws_cdk.core.Construct,
-        id: str,
-        resource_attributes: typing.Any,
-        *,
-        finder: aws_cdk.core.ICfnFinder,
-    ) -> "CfnPatchBaseline":
-        """A factory method that creates a new instance of this class from an object containing the CloudFormation properties of this resource.
-
-        Used in the @aws-cdk/cloudformation-include module.
-
-        :param scope: -
-        :param id: -
-        :param resource_attributes: -
-        :param finder: The finder interface used to resolve references across the template.
-
-        stability
-        :stability: experimental
-        """
-        options = aws_cdk.core.FromCloudFormationOptions(finder=finder)
-
-        return jsii.sinvoke(
-            cls, "fromCloudFormation", [scope, id, resource_attributes, options]
-        )
-
     @jsii.member(jsii_name="inspect")
     def inspect(self, inspector: aws_cdk.core.TreeInspector) -> None:
-        """Examines the CloudFormation resource and discloses attributes.
+        '''Examines the CloudFormation resource and discloses attributes.
 
         :param inspector: - tree inspector to collect and process attributes.
-
-        stability
-        :stability: experimental
-        """
-        return jsii.invoke(self, "inspect", [inspector])
+        '''
+        return typing.cast(None, jsii.invoke(self, "inspect", [inspector]))
 
     @jsii.member(jsii_name="renderProperties")
     def _render_properties(
-        self, props: typing.Mapping[str, typing.Any]
-    ) -> typing.Mapping[str, typing.Any]:
-        """
+        self,
+        props: typing.Mapping[builtins.str, typing.Any],
+    ) -> typing.Mapping[builtins.str, typing.Any]:
+        '''
         :param props: -
-        """
-        return jsii.invoke(self, "renderProperties", [props])
+        '''
+        return typing.cast(typing.Mapping[builtins.str, typing.Any], jsii.invoke(self, "renderProperties", [props]))
 
-    @jsii.python.classproperty
+    @jsii.python.classproperty # type: ignore[misc]
     @jsii.member(jsii_name="CFN_RESOURCE_TYPE_NAME")
-    def CFN_RESOURCE_TYPE_NAME(cls) -> str:
-        """The CloudFormation resource type name for this resource class."""
-        return jsii.sget(cls, "CFN_RESOURCE_TYPE_NAME")
+    def CFN_RESOURCE_TYPE_NAME(cls) -> builtins.str:
+        '''The CloudFormation resource type name for this resource class.'''
+        return typing.cast(builtins.str, jsii.sget(cls, "CFN_RESOURCE_TYPE_NAME"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="cfnProperties")
-    def _cfn_properties(self) -> typing.Mapping[str, typing.Any]:
-        return jsii.get(self, "cfnProperties")
+    def _cfn_properties(self) -> typing.Mapping[builtins.str, typing.Any]:
+        return typing.cast(typing.Mapping[builtins.str, typing.Any], jsii.get(self, "cfnProperties"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="tags")
     def tags(self) -> aws_cdk.core.TagManager:
-        """``AWS::SSM::PatchBaseline.Tags``.
+        '''``AWS::SSM::PatchBaseline.Tags``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-patchbaseline.html#cfn-ssm-patchbaseline-tags
-        """
-        return jsii.get(self, "tags")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-patchbaseline.html#cfn-ssm-patchbaseline-tags
+        '''
+        return typing.cast(aws_cdk.core.TagManager, jsii.get(self, "tags"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="name")
-    def name(self) -> str:
-        """``AWS::SSM::PatchBaseline.Name``.
+    def name(self) -> builtins.str:
+        '''``AWS::SSM::PatchBaseline.Name``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-patchbaseline.html#cfn-ssm-patchbaseline-name
-        """
-        return jsii.get(self, "name")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-patchbaseline.html#cfn-ssm-patchbaseline-name
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "name"))
 
     @name.setter
-    def name(self, value: str) -> None:
+    def name(self, value: builtins.str) -> None:
         jsii.set(self, "name", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="approvalRules")
     def approval_rules(
         self,
-    ) -> typing.Optional[typing.Union[aws_cdk.core.IResolvable, "RuleGroupProperty"]]:
-        """``AWS::SSM::PatchBaseline.ApprovalRules``.
+    ) -> typing.Optional[typing.Union[aws_cdk.core.IResolvable, "CfnPatchBaseline.RuleGroupProperty"]]:
+        '''``AWS::SSM::PatchBaseline.ApprovalRules``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-patchbaseline.html#cfn-ssm-patchbaseline-approvalrules
-        """
-        return jsii.get(self, "approvalRules")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-patchbaseline.html#cfn-ssm-patchbaseline-approvalrules
+        '''
+        return typing.cast(typing.Optional[typing.Union[aws_cdk.core.IResolvable, "CfnPatchBaseline.RuleGroupProperty"]], jsii.get(self, "approvalRules"))
 
     @approval_rules.setter
     def approval_rules(
         self,
-        value: typing.Optional[
-            typing.Union[aws_cdk.core.IResolvable, "RuleGroupProperty"]
-        ],
+        value: typing.Optional[typing.Union[aws_cdk.core.IResolvable, "CfnPatchBaseline.RuleGroupProperty"]],
     ) -> None:
         jsii.set(self, "approvalRules", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="approvedPatches")
-    def approved_patches(self) -> typing.Optional[typing.List[str]]:
-        """``AWS::SSM::PatchBaseline.ApprovedPatches``.
+    def approved_patches(self) -> typing.Optional[typing.List[builtins.str]]:
+        '''``AWS::SSM::PatchBaseline.ApprovedPatches``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-patchbaseline.html#cfn-ssm-patchbaseline-approvedpatches
-        """
-        return jsii.get(self, "approvedPatches")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-patchbaseline.html#cfn-ssm-patchbaseline-approvedpatches
+        '''
+        return typing.cast(typing.Optional[typing.List[builtins.str]], jsii.get(self, "approvedPatches"))
 
     @approved_patches.setter
-    def approved_patches(self, value: typing.Optional[typing.List[str]]) -> None:
+    def approved_patches(
+        self,
+        value: typing.Optional[typing.List[builtins.str]],
+    ) -> None:
         jsii.set(self, "approvedPatches", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="approvedPatchesComplianceLevel")
-    def approved_patches_compliance_level(self) -> typing.Optional[str]:
-        """``AWS::SSM::PatchBaseline.ApprovedPatchesComplianceLevel``.
+    def approved_patches_compliance_level(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::PatchBaseline.ApprovedPatchesComplianceLevel``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-patchbaseline.html#cfn-ssm-patchbaseline-approvedpatchescompliancelevel
-        """
-        return jsii.get(self, "approvedPatchesComplianceLevel")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-patchbaseline.html#cfn-ssm-patchbaseline-approvedpatchescompliancelevel
+        '''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "approvedPatchesComplianceLevel"))
 
     @approved_patches_compliance_level.setter
-    def approved_patches_compliance_level(self, value: typing.Optional[str]) -> None:
+    def approved_patches_compliance_level(
+        self,
+        value: typing.Optional[builtins.str],
+    ) -> None:
         jsii.set(self, "approvedPatchesComplianceLevel", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="approvedPatchesEnableNonSecurity")
     def approved_patches_enable_non_security(
         self,
-    ) -> typing.Optional[typing.Union[bool, aws_cdk.core.IResolvable]]:
-        """``AWS::SSM::PatchBaseline.ApprovedPatchesEnableNonSecurity``.
+    ) -> typing.Optional[typing.Union[builtins.bool, aws_cdk.core.IResolvable]]:
+        '''``AWS::SSM::PatchBaseline.ApprovedPatchesEnableNonSecurity``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-patchbaseline.html#cfn-ssm-patchbaseline-approvedpatchesenablenonsecurity
-        """
-        return jsii.get(self, "approvedPatchesEnableNonSecurity")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-patchbaseline.html#cfn-ssm-patchbaseline-approvedpatchesenablenonsecurity
+        '''
+        return typing.cast(typing.Optional[typing.Union[builtins.bool, aws_cdk.core.IResolvable]], jsii.get(self, "approvedPatchesEnableNonSecurity"))
 
     @approved_patches_enable_non_security.setter
     def approved_patches_enable_non_security(
-        self, value: typing.Optional[typing.Union[bool, aws_cdk.core.IResolvable]]
+        self,
+        value: typing.Optional[typing.Union[builtins.bool, aws_cdk.core.IResolvable]],
     ) -> None:
         jsii.set(self, "approvedPatchesEnableNonSecurity", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="description")
-    def description(self) -> typing.Optional[str]:
-        """``AWS::SSM::PatchBaseline.Description``.
+    def description(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::PatchBaseline.Description``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-patchbaseline.html#cfn-ssm-patchbaseline-description
-        """
-        return jsii.get(self, "description")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-patchbaseline.html#cfn-ssm-patchbaseline-description
+        '''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "description"))
 
     @description.setter
-    def description(self, value: typing.Optional[str]) -> None:
+    def description(self, value: typing.Optional[builtins.str]) -> None:
         jsii.set(self, "description", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="globalFilters")
     def global_filters(
         self,
-    ) -> typing.Optional[
-        typing.Union[aws_cdk.core.IResolvable, "PatchFilterGroupProperty"]
-    ]:
-        """``AWS::SSM::PatchBaseline.GlobalFilters``.
+    ) -> typing.Optional[typing.Union[aws_cdk.core.IResolvable, "CfnPatchBaseline.PatchFilterGroupProperty"]]:
+        '''``AWS::SSM::PatchBaseline.GlobalFilters``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-patchbaseline.html#cfn-ssm-patchbaseline-globalfilters
-        """
-        return jsii.get(self, "globalFilters")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-patchbaseline.html#cfn-ssm-patchbaseline-globalfilters
+        '''
+        return typing.cast(typing.Optional[typing.Union[aws_cdk.core.IResolvable, "CfnPatchBaseline.PatchFilterGroupProperty"]], jsii.get(self, "globalFilters"))
 
     @global_filters.setter
     def global_filters(
         self,
-        value: typing.Optional[
-            typing.Union[aws_cdk.core.IResolvable, "PatchFilterGroupProperty"]
-        ],
+        value: typing.Optional[typing.Union[aws_cdk.core.IResolvable, "CfnPatchBaseline.PatchFilterGroupProperty"]],
     ) -> None:
         jsii.set(self, "globalFilters", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="operatingSystem")
-    def operating_system(self) -> typing.Optional[str]:
-        """``AWS::SSM::PatchBaseline.OperatingSystem``.
+    def operating_system(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::PatchBaseline.OperatingSystem``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-patchbaseline.html#cfn-ssm-patchbaseline-operatingsystem
-        """
-        return jsii.get(self, "operatingSystem")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-patchbaseline.html#cfn-ssm-patchbaseline-operatingsystem
+        '''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "operatingSystem"))
 
     @operating_system.setter
-    def operating_system(self, value: typing.Optional[str]) -> None:
+    def operating_system(self, value: typing.Optional[builtins.str]) -> None:
         jsii.set(self, "operatingSystem", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="patchGroups")
-    def patch_groups(self) -> typing.Optional[typing.List[str]]:
-        """``AWS::SSM::PatchBaseline.PatchGroups``.
+    def patch_groups(self) -> typing.Optional[typing.List[builtins.str]]:
+        '''``AWS::SSM::PatchBaseline.PatchGroups``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-patchbaseline.html#cfn-ssm-patchbaseline-patchgroups
-        """
-        return jsii.get(self, "patchGroups")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-patchbaseline.html#cfn-ssm-patchbaseline-patchgroups
+        '''
+        return typing.cast(typing.Optional[typing.List[builtins.str]], jsii.get(self, "patchGroups"))
 
     @patch_groups.setter
-    def patch_groups(self, value: typing.Optional[typing.List[str]]) -> None:
+    def patch_groups(self, value: typing.Optional[typing.List[builtins.str]]) -> None:
         jsii.set(self, "patchGroups", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="rejectedPatches")
-    def rejected_patches(self) -> typing.Optional[typing.List[str]]:
-        """``AWS::SSM::PatchBaseline.RejectedPatches``.
+    def rejected_patches(self) -> typing.Optional[typing.List[builtins.str]]:
+        '''``AWS::SSM::PatchBaseline.RejectedPatches``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-patchbaseline.html#cfn-ssm-patchbaseline-rejectedpatches
-        """
-        return jsii.get(self, "rejectedPatches")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-patchbaseline.html#cfn-ssm-patchbaseline-rejectedpatches
+        '''
+        return typing.cast(typing.Optional[typing.List[builtins.str]], jsii.get(self, "rejectedPatches"))
 
     @rejected_patches.setter
-    def rejected_patches(self, value: typing.Optional[typing.List[str]]) -> None:
+    def rejected_patches(
+        self,
+        value: typing.Optional[typing.List[builtins.str]],
+    ) -> None:
         jsii.set(self, "rejectedPatches", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="rejectedPatchesAction")
-    def rejected_patches_action(self) -> typing.Optional[str]:
-        """``AWS::SSM::PatchBaseline.RejectedPatchesAction``.
+    def rejected_patches_action(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::PatchBaseline.RejectedPatchesAction``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-patchbaseline.html#cfn-ssm-patchbaseline-rejectedpatchesaction
-        """
-        return jsii.get(self, "rejectedPatchesAction")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-patchbaseline.html#cfn-ssm-patchbaseline-rejectedpatchesaction
+        '''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "rejectedPatchesAction"))
 
     @rejected_patches_action.setter
-    def rejected_patches_action(self, value: typing.Optional[str]) -> None:
+    def rejected_patches_action(self, value: typing.Optional[builtins.str]) -> None:
         jsii.set(self, "rejectedPatchesAction", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="sources")
     def sources(
         self,
-    ) -> typing.Optional[
-        typing.Union[
-            aws_cdk.core.IResolvable,
-            typing.List[typing.Union[aws_cdk.core.IResolvable, "PatchSourceProperty"]],
-        ]
-    ]:
-        """``AWS::SSM::PatchBaseline.Sources``.
+    ) -> typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, "CfnPatchBaseline.PatchSourceProperty"]]]]:
+        '''``AWS::SSM::PatchBaseline.Sources``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-patchbaseline.html#cfn-ssm-patchbaseline-sources
-        """
-        return jsii.get(self, "sources")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-patchbaseline.html#cfn-ssm-patchbaseline-sources
+        '''
+        return typing.cast(typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, "CfnPatchBaseline.PatchSourceProperty"]]]], jsii.get(self, "sources"))
 
     @sources.setter
     def sources(
         self,
-        value: typing.Optional[
-            typing.Union[
-                aws_cdk.core.IResolvable,
-                typing.List[
-                    typing.Union[aws_cdk.core.IResolvable, "PatchSourceProperty"]
-                ],
-            ]
-        ],
+        value: typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, "CfnPatchBaseline.PatchSourceProperty"]]]],
     ) -> None:
         jsii.set(self, "sources", value)
 
@@ -4105,52 +3920,32 @@ class CfnPatchBaseline(
         def __init__(
             self,
             *,
-            patch_filters: typing.Optional[
-                typing.Union[
-                    aws_cdk.core.IResolvable,
-                    typing.List[
-                        typing.Union[
-                            aws_cdk.core.IResolvable,
-                            "CfnPatchBaseline.PatchFilterProperty",
-                        ]
-                    ],
-                ]
-            ] = None,
+            patch_filters: typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.Sequence[typing.Union[aws_cdk.core.IResolvable, "CfnPatchBaseline.PatchFilterProperty"]]]] = None,
         ) -> None:
-            """
+            '''
             :param patch_filters: ``CfnPatchBaseline.PatchFilterGroupProperty.PatchFilters``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-patchbaseline-patchfiltergroup.html
-            """
-            self._values = {}
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-patchbaseline-patchfiltergroup.html
+            '''
+            self._values: typing.Dict[str, typing.Any] = {}
             if patch_filters is not None:
                 self._values["patch_filters"] = patch_filters
 
         @builtins.property
         def patch_filters(
             self,
-        ) -> typing.Optional[
-            typing.Union[
-                aws_cdk.core.IResolvable,
-                typing.List[
-                    typing.Union[
-                        aws_cdk.core.IResolvable, "CfnPatchBaseline.PatchFilterProperty"
-                    ]
-                ],
-            ]
-        ]:
-            """``CfnPatchBaseline.PatchFilterGroupProperty.PatchFilters``.
+        ) -> typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, "CfnPatchBaseline.PatchFilterProperty"]]]]:
+            '''``CfnPatchBaseline.PatchFilterGroupProperty.PatchFilters``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-patchbaseline-patchfiltergroup.html#cfn-ssm-patchbaseline-patchfiltergroup-patchfilters
-            """
-            return self._values.get("patch_filters")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-patchbaseline-patchfiltergroup.html#cfn-ssm-patchbaseline-patchfiltergroup-patchfilters
+            '''
+            result = self._values.get("patch_filters")
+            return typing.cast(typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, "CfnPatchBaseline.PatchFilterProperty"]]]], result)
 
-        def __eq__(self, rhs) -> bool:
+        def __eq__(self, rhs: typing.Any) -> builtins.bool:
             return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-        def __ne__(self, rhs) -> bool:
+        def __ne__(self, rhs: typing.Any) -> builtins.bool:
             return not (rhs == self)
 
         def __repr__(self) -> str:
@@ -4167,44 +3962,43 @@ class CfnPatchBaseline(
         def __init__(
             self,
             *,
-            key: typing.Optional[str] = None,
-            values: typing.Optional[typing.List[str]] = None,
+            key: typing.Optional[builtins.str] = None,
+            values: typing.Optional[typing.Sequence[builtins.str]] = None,
         ) -> None:
-            """
+            '''
             :param key: ``CfnPatchBaseline.PatchFilterProperty.Key``.
             :param values: ``CfnPatchBaseline.PatchFilterProperty.Values``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-patchbaseline-patchfilter.html
-            """
-            self._values = {}
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-patchbaseline-patchfilter.html
+            '''
+            self._values: typing.Dict[str, typing.Any] = {}
             if key is not None:
                 self._values["key"] = key
             if values is not None:
                 self._values["values"] = values
 
         @builtins.property
-        def key(self) -> typing.Optional[str]:
-            """``CfnPatchBaseline.PatchFilterProperty.Key``.
+        def key(self) -> typing.Optional[builtins.str]:
+            '''``CfnPatchBaseline.PatchFilterProperty.Key``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-patchbaseline-patchfilter.html#cfn-ssm-patchbaseline-patchfilter-key
-            """
-            return self._values.get("key")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-patchbaseline-patchfilter.html#cfn-ssm-patchbaseline-patchfilter-key
+            '''
+            result = self._values.get("key")
+            return typing.cast(typing.Optional[builtins.str], result)
 
         @builtins.property
-        def values(self) -> typing.Optional[typing.List[str]]:
-            """``CfnPatchBaseline.PatchFilterProperty.Values``.
+        def values(self) -> typing.Optional[typing.List[builtins.str]]:
+            '''``CfnPatchBaseline.PatchFilterProperty.Values``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-patchbaseline-patchfilter.html#cfn-ssm-patchbaseline-patchfilter-values
-            """
-            return self._values.get("values")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-patchbaseline-patchfilter.html#cfn-ssm-patchbaseline-patchfilter-values
+            '''
+            result = self._values.get("values")
+            return typing.cast(typing.Optional[typing.List[builtins.str]], result)
 
-        def __eq__(self, rhs) -> bool:
+        def __eq__(self, rhs: typing.Any) -> builtins.bool:
             return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-        def __ne__(self, rhs) -> bool:
+        def __ne__(self, rhs: typing.Any) -> builtins.bool:
             return not (rhs == self)
 
         def __repr__(self) -> str:
@@ -4225,19 +4019,18 @@ class CfnPatchBaseline(
         def __init__(
             self,
             *,
-            configuration: typing.Optional[str] = None,
-            name: typing.Optional[str] = None,
-            products: typing.Optional[typing.List[str]] = None,
+            configuration: typing.Optional[builtins.str] = None,
+            name: typing.Optional[builtins.str] = None,
+            products: typing.Optional[typing.Sequence[builtins.str]] = None,
         ) -> None:
-            """
+            '''
             :param configuration: ``CfnPatchBaseline.PatchSourceProperty.Configuration``.
             :param name: ``CfnPatchBaseline.PatchSourceProperty.Name``.
             :param products: ``CfnPatchBaseline.PatchSourceProperty.Products``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-patchbaseline-patchsource.html
-            """
-            self._values = {}
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-patchbaseline-patchsource.html
+            '''
+            self._values: typing.Dict[str, typing.Any] = {}
             if configuration is not None:
                 self._values["configuration"] = configuration
             if name is not None:
@@ -4246,36 +4039,36 @@ class CfnPatchBaseline(
                 self._values["products"] = products
 
         @builtins.property
-        def configuration(self) -> typing.Optional[str]:
-            """``CfnPatchBaseline.PatchSourceProperty.Configuration``.
+        def configuration(self) -> typing.Optional[builtins.str]:
+            '''``CfnPatchBaseline.PatchSourceProperty.Configuration``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-patchbaseline-patchsource.html#cfn-ssm-patchbaseline-patchsource-configuration
-            """
-            return self._values.get("configuration")
-
-        @builtins.property
-        def name(self) -> typing.Optional[str]:
-            """``CfnPatchBaseline.PatchSourceProperty.Name``.
-
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-patchbaseline-patchsource.html#cfn-ssm-patchbaseline-patchsource-name
-            """
-            return self._values.get("name")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-patchbaseline-patchsource.html#cfn-ssm-patchbaseline-patchsource-configuration
+            '''
+            result = self._values.get("configuration")
+            return typing.cast(typing.Optional[builtins.str], result)
 
         @builtins.property
-        def products(self) -> typing.Optional[typing.List[str]]:
-            """``CfnPatchBaseline.PatchSourceProperty.Products``.
+        def name(self) -> typing.Optional[builtins.str]:
+            '''``CfnPatchBaseline.PatchSourceProperty.Name``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-patchbaseline-patchsource.html#cfn-ssm-patchbaseline-patchsource-products
-            """
-            return self._values.get("products")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-patchbaseline-patchsource.html#cfn-ssm-patchbaseline-patchsource-name
+            '''
+            result = self._values.get("name")
+            return typing.cast(typing.Optional[builtins.str], result)
 
-        def __eq__(self, rhs) -> bool:
+        @builtins.property
+        def products(self) -> typing.Optional[typing.List[builtins.str]]:
+            '''``CfnPatchBaseline.PatchSourceProperty.Products``.
+
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-patchbaseline-patchsource.html#cfn-ssm-patchbaseline-patchsource-products
+            '''
+            result = self._values.get("products")
+            return typing.cast(typing.Optional[typing.List[builtins.str]], result)
+
+        def __eq__(self, rhs: typing.Any) -> builtins.bool:
             return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-        def __ne__(self, rhs) -> bool:
+        def __ne__(self, rhs: typing.Any) -> builtins.bool:
             return not (rhs == self)
 
         def __repr__(self) -> str:
@@ -4292,51 +4085,32 @@ class CfnPatchBaseline(
         def __init__(
             self,
             *,
-            patch_rules: typing.Optional[
-                typing.Union[
-                    aws_cdk.core.IResolvable,
-                    typing.List[
-                        typing.Union[
-                            aws_cdk.core.IResolvable, "CfnPatchBaseline.RuleProperty"
-                        ]
-                    ],
-                ]
-            ] = None,
+            patch_rules: typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.Sequence[typing.Union[aws_cdk.core.IResolvable, "CfnPatchBaseline.RuleProperty"]]]] = None,
         ) -> None:
-            """
+            '''
             :param patch_rules: ``CfnPatchBaseline.RuleGroupProperty.PatchRules``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-patchbaseline-rulegroup.html
-            """
-            self._values = {}
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-patchbaseline-rulegroup.html
+            '''
+            self._values: typing.Dict[str, typing.Any] = {}
             if patch_rules is not None:
                 self._values["patch_rules"] = patch_rules
 
         @builtins.property
         def patch_rules(
             self,
-        ) -> typing.Optional[
-            typing.Union[
-                aws_cdk.core.IResolvable,
-                typing.List[
-                    typing.Union[
-                        aws_cdk.core.IResolvable, "CfnPatchBaseline.RuleProperty"
-                    ]
-                ],
-            ]
-        ]:
-            """``CfnPatchBaseline.RuleGroupProperty.PatchRules``.
+        ) -> typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, "CfnPatchBaseline.RuleProperty"]]]]:
+            '''``CfnPatchBaseline.RuleGroupProperty.PatchRules``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-patchbaseline-rulegroup.html#cfn-ssm-patchbaseline-rulegroup-patchrules
-            """
-            return self._values.get("patch_rules")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-patchbaseline-rulegroup.html#cfn-ssm-patchbaseline-rulegroup-patchrules
+            '''
+            result = self._values.get("patch_rules")
+            return typing.cast(typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, "CfnPatchBaseline.RuleProperty"]]]], result)
 
-        def __eq__(self, rhs) -> bool:
+        def __eq__(self, rhs: typing.Any) -> builtins.bool:
             return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-        def __ne__(self, rhs) -> bool:
+        def __ne__(self, rhs: typing.Any) -> builtins.bool:
             return not (rhs == self)
 
         def __repr__(self) -> str:
@@ -4360,29 +4134,21 @@ class CfnPatchBaseline(
             self,
             *,
             approve_after_days: typing.Optional[jsii.Number] = None,
-            approve_until_date: typing.Optional[str] = None,
-            compliance_level: typing.Optional[str] = None,
-            enable_non_security: typing.Optional[
-                typing.Union[bool, aws_cdk.core.IResolvable]
-            ] = None,
-            patch_filter_group: typing.Optional[
-                typing.Union[
-                    aws_cdk.core.IResolvable,
-                    "CfnPatchBaseline.PatchFilterGroupProperty",
-                ]
-            ] = None,
+            approve_until_date: typing.Optional[builtins.str] = None,
+            compliance_level: typing.Optional[builtins.str] = None,
+            enable_non_security: typing.Optional[typing.Union[builtins.bool, aws_cdk.core.IResolvable]] = None,
+            patch_filter_group: typing.Optional[typing.Union[aws_cdk.core.IResolvable, "CfnPatchBaseline.PatchFilterGroupProperty"]] = None,
         ) -> None:
-            """
+            '''
             :param approve_after_days: ``CfnPatchBaseline.RuleProperty.ApproveAfterDays``.
             :param approve_until_date: ``CfnPatchBaseline.RuleProperty.ApproveUntilDate``.
             :param compliance_level: ``CfnPatchBaseline.RuleProperty.ComplianceLevel``.
             :param enable_non_security: ``CfnPatchBaseline.RuleProperty.EnableNonSecurity``.
             :param patch_filter_group: ``CfnPatchBaseline.RuleProperty.PatchFilterGroup``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-patchbaseline-rule.html
-            """
-            self._values = {}
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-patchbaseline-rule.html
+            '''
+            self._values: typing.Dict[str, typing.Any] = {}
             if approve_after_days is not None:
                 self._values["approve_after_days"] = approve_after_days
             if approve_until_date is not None:
@@ -4396,61 +4162,57 @@ class CfnPatchBaseline(
 
         @builtins.property
         def approve_after_days(self) -> typing.Optional[jsii.Number]:
-            """``CfnPatchBaseline.RuleProperty.ApproveAfterDays``.
+            '''``CfnPatchBaseline.RuleProperty.ApproveAfterDays``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-patchbaseline-rule.html#cfn-ssm-patchbaseline-rule-approveafterdays
-            """
-            return self._values.get("approve_after_days")
-
-        @builtins.property
-        def approve_until_date(self) -> typing.Optional[str]:
-            """``CfnPatchBaseline.RuleProperty.ApproveUntilDate``.
-
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-patchbaseline-rule.html#cfn-ssm-patchbaseline-rule-approveuntildate
-            """
-            return self._values.get("approve_until_date")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-patchbaseline-rule.html#cfn-ssm-patchbaseline-rule-approveafterdays
+            '''
+            result = self._values.get("approve_after_days")
+            return typing.cast(typing.Optional[jsii.Number], result)
 
         @builtins.property
-        def compliance_level(self) -> typing.Optional[str]:
-            """``CfnPatchBaseline.RuleProperty.ComplianceLevel``.
+        def approve_until_date(self) -> typing.Optional[builtins.str]:
+            '''``CfnPatchBaseline.RuleProperty.ApproveUntilDate``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-patchbaseline-rule.html#cfn-ssm-patchbaseline-rule-compliancelevel
-            """
-            return self._values.get("compliance_level")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-patchbaseline-rule.html#cfn-ssm-patchbaseline-rule-approveuntildate
+            '''
+            result = self._values.get("approve_until_date")
+            return typing.cast(typing.Optional[builtins.str], result)
+
+        @builtins.property
+        def compliance_level(self) -> typing.Optional[builtins.str]:
+            '''``CfnPatchBaseline.RuleProperty.ComplianceLevel``.
+
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-patchbaseline-rule.html#cfn-ssm-patchbaseline-rule-compliancelevel
+            '''
+            result = self._values.get("compliance_level")
+            return typing.cast(typing.Optional[builtins.str], result)
 
         @builtins.property
         def enable_non_security(
             self,
-        ) -> typing.Optional[typing.Union[bool, aws_cdk.core.IResolvable]]:
-            """``CfnPatchBaseline.RuleProperty.EnableNonSecurity``.
+        ) -> typing.Optional[typing.Union[builtins.bool, aws_cdk.core.IResolvable]]:
+            '''``CfnPatchBaseline.RuleProperty.EnableNonSecurity``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-patchbaseline-rule.html#cfn-ssm-patchbaseline-rule-enablenonsecurity
-            """
-            return self._values.get("enable_non_security")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-patchbaseline-rule.html#cfn-ssm-patchbaseline-rule-enablenonsecurity
+            '''
+            result = self._values.get("enable_non_security")
+            return typing.cast(typing.Optional[typing.Union[builtins.bool, aws_cdk.core.IResolvable]], result)
 
         @builtins.property
         def patch_filter_group(
             self,
-        ) -> typing.Optional[
-            typing.Union[
-                aws_cdk.core.IResolvable, "CfnPatchBaseline.PatchFilterGroupProperty"
-            ]
-        ]:
-            """``CfnPatchBaseline.RuleProperty.PatchFilterGroup``.
+        ) -> typing.Optional[typing.Union[aws_cdk.core.IResolvable, "CfnPatchBaseline.PatchFilterGroupProperty"]]:
+            '''``CfnPatchBaseline.RuleProperty.PatchFilterGroup``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-patchbaseline-rule.html#cfn-ssm-patchbaseline-rule-patchfiltergroup
-            """
-            return self._values.get("patch_filter_group")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-patchbaseline-rule.html#cfn-ssm-patchbaseline-rule-patchfiltergroup
+            '''
+            result = self._values.get("patch_filter_group")
+            return typing.cast(typing.Optional[typing.Union[aws_cdk.core.IResolvable, "CfnPatchBaseline.PatchFilterGroupProperty"]], result)
 
-        def __eq__(self, rhs) -> bool:
+        def __eq__(self, rhs: typing.Any) -> builtins.bool:
             return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-        def __ne__(self, rhs) -> bool:
+        def __ne__(self, rhs: typing.Any) -> builtins.bool:
             return not (rhs == self)
 
         def __repr__(self) -> str:
@@ -4482,38 +4244,21 @@ class CfnPatchBaselineProps:
     def __init__(
         self,
         *,
-        name: str,
-        approval_rules: typing.Optional[
-            typing.Union[aws_cdk.core.IResolvable, "CfnPatchBaseline.RuleGroupProperty"]
-        ] = None,
-        approved_patches: typing.Optional[typing.List[str]] = None,
-        approved_patches_compliance_level: typing.Optional[str] = None,
-        approved_patches_enable_non_security: typing.Optional[
-            typing.Union[bool, aws_cdk.core.IResolvable]
-        ] = None,
-        description: typing.Optional[str] = None,
-        global_filters: typing.Optional[
-            typing.Union[
-                aws_cdk.core.IResolvable, "CfnPatchBaseline.PatchFilterGroupProperty"
-            ]
-        ] = None,
-        operating_system: typing.Optional[str] = None,
-        patch_groups: typing.Optional[typing.List[str]] = None,
-        rejected_patches: typing.Optional[typing.List[str]] = None,
-        rejected_patches_action: typing.Optional[str] = None,
-        sources: typing.Optional[
-            typing.Union[
-                aws_cdk.core.IResolvable,
-                typing.List[
-                    typing.Union[
-                        aws_cdk.core.IResolvable, "CfnPatchBaseline.PatchSourceProperty"
-                    ]
-                ],
-            ]
-        ] = None,
-        tags: typing.Optional[typing.List[aws_cdk.core.CfnTag]] = None,
+        name: builtins.str,
+        approval_rules: typing.Optional[typing.Union[aws_cdk.core.IResolvable, CfnPatchBaseline.RuleGroupProperty]] = None,
+        approved_patches: typing.Optional[typing.Sequence[builtins.str]] = None,
+        approved_patches_compliance_level: typing.Optional[builtins.str] = None,
+        approved_patches_enable_non_security: typing.Optional[typing.Union[builtins.bool, aws_cdk.core.IResolvable]] = None,
+        description: typing.Optional[builtins.str] = None,
+        global_filters: typing.Optional[typing.Union[aws_cdk.core.IResolvable, CfnPatchBaseline.PatchFilterGroupProperty]] = None,
+        operating_system: typing.Optional[builtins.str] = None,
+        patch_groups: typing.Optional[typing.Sequence[builtins.str]] = None,
+        rejected_patches: typing.Optional[typing.Sequence[builtins.str]] = None,
+        rejected_patches_action: typing.Optional[builtins.str] = None,
+        sources: typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.Sequence[typing.Union[aws_cdk.core.IResolvable, CfnPatchBaseline.PatchSourceProperty]]]] = None,
+        tags: typing.Optional[typing.Sequence[aws_cdk.core.CfnTag]] = None,
     ) -> None:
-        """Properties for defining a ``AWS::SSM::PatchBaseline``.
+        '''Properties for defining a ``AWS::SSM::PatchBaseline``.
 
         :param name: ``AWS::SSM::PatchBaseline.Name``.
         :param approval_rules: ``AWS::SSM::PatchBaseline.ApprovalRules``.
@@ -4529,10 +4274,9 @@ class CfnPatchBaselineProps:
         :param sources: ``AWS::SSM::PatchBaseline.Sources``.
         :param tags: ``AWS::SSM::PatchBaseline.Tags``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-patchbaseline.html
-        """
-        self._values = {
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-patchbaseline.html
+        '''
+        self._values: typing.Dict[str, typing.Any] = {
             "name": name,
         }
         if approval_rules is not None:
@@ -4540,13 +4284,9 @@ class CfnPatchBaselineProps:
         if approved_patches is not None:
             self._values["approved_patches"] = approved_patches
         if approved_patches_compliance_level is not None:
-            self._values[
-                "approved_patches_compliance_level"
-            ] = approved_patches_compliance_level
+            self._values["approved_patches_compliance_level"] = approved_patches_compliance_level
         if approved_patches_enable_non_security is not None:
-            self._values[
-                "approved_patches_enable_non_security"
-            ] = approved_patches_enable_non_security
+            self._values["approved_patches_enable_non_security"] = approved_patches_enable_non_security
         if description is not None:
             self._values["description"] = description
         if global_filters is not None:
@@ -4565,149 +4305,135 @@ class CfnPatchBaselineProps:
             self._values["tags"] = tags
 
     @builtins.property
-    def name(self) -> str:
-        """``AWS::SSM::PatchBaseline.Name``.
+    def name(self) -> builtins.str:
+        '''``AWS::SSM::PatchBaseline.Name``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-patchbaseline.html#cfn-ssm-patchbaseline-name
-        """
-        return self._values.get("name")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-patchbaseline.html#cfn-ssm-patchbaseline-name
+        '''
+        result = self._values.get("name")
+        assert result is not None, "Required property 'name' is missing"
+        return typing.cast(builtins.str, result)
 
     @builtins.property
     def approval_rules(
         self,
-    ) -> typing.Optional[
-        typing.Union[aws_cdk.core.IResolvable, "CfnPatchBaseline.RuleGroupProperty"]
-    ]:
-        """``AWS::SSM::PatchBaseline.ApprovalRules``.
+    ) -> typing.Optional[typing.Union[aws_cdk.core.IResolvable, CfnPatchBaseline.RuleGroupProperty]]:
+        '''``AWS::SSM::PatchBaseline.ApprovalRules``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-patchbaseline.html#cfn-ssm-patchbaseline-approvalrules
-        """
-        return self._values.get("approval_rules")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-patchbaseline.html#cfn-ssm-patchbaseline-approvalrules
+        '''
+        result = self._values.get("approval_rules")
+        return typing.cast(typing.Optional[typing.Union[aws_cdk.core.IResolvable, CfnPatchBaseline.RuleGroupProperty]], result)
 
     @builtins.property
-    def approved_patches(self) -> typing.Optional[typing.List[str]]:
-        """``AWS::SSM::PatchBaseline.ApprovedPatches``.
+    def approved_patches(self) -> typing.Optional[typing.List[builtins.str]]:
+        '''``AWS::SSM::PatchBaseline.ApprovedPatches``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-patchbaseline.html#cfn-ssm-patchbaseline-approvedpatches
-        """
-        return self._values.get("approved_patches")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-patchbaseline.html#cfn-ssm-patchbaseline-approvedpatches
+        '''
+        result = self._values.get("approved_patches")
+        return typing.cast(typing.Optional[typing.List[builtins.str]], result)
 
     @builtins.property
-    def approved_patches_compliance_level(self) -> typing.Optional[str]:
-        """``AWS::SSM::PatchBaseline.ApprovedPatchesComplianceLevel``.
+    def approved_patches_compliance_level(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::PatchBaseline.ApprovedPatchesComplianceLevel``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-patchbaseline.html#cfn-ssm-patchbaseline-approvedpatchescompliancelevel
-        """
-        return self._values.get("approved_patches_compliance_level")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-patchbaseline.html#cfn-ssm-patchbaseline-approvedpatchescompliancelevel
+        '''
+        result = self._values.get("approved_patches_compliance_level")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def approved_patches_enable_non_security(
         self,
-    ) -> typing.Optional[typing.Union[bool, aws_cdk.core.IResolvable]]:
-        """``AWS::SSM::PatchBaseline.ApprovedPatchesEnableNonSecurity``.
+    ) -> typing.Optional[typing.Union[builtins.bool, aws_cdk.core.IResolvable]]:
+        '''``AWS::SSM::PatchBaseline.ApprovedPatchesEnableNonSecurity``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-patchbaseline.html#cfn-ssm-patchbaseline-approvedpatchesenablenonsecurity
-        """
-        return self._values.get("approved_patches_enable_non_security")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-patchbaseline.html#cfn-ssm-patchbaseline-approvedpatchesenablenonsecurity
+        '''
+        result = self._values.get("approved_patches_enable_non_security")
+        return typing.cast(typing.Optional[typing.Union[builtins.bool, aws_cdk.core.IResolvable]], result)
 
     @builtins.property
-    def description(self) -> typing.Optional[str]:
-        """``AWS::SSM::PatchBaseline.Description``.
+    def description(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::PatchBaseline.Description``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-patchbaseline.html#cfn-ssm-patchbaseline-description
-        """
-        return self._values.get("description")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-patchbaseline.html#cfn-ssm-patchbaseline-description
+        '''
+        result = self._values.get("description")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def global_filters(
         self,
-    ) -> typing.Optional[
-        typing.Union[
-            aws_cdk.core.IResolvable, "CfnPatchBaseline.PatchFilterGroupProperty"
-        ]
-    ]:
-        """``AWS::SSM::PatchBaseline.GlobalFilters``.
+    ) -> typing.Optional[typing.Union[aws_cdk.core.IResolvable, CfnPatchBaseline.PatchFilterGroupProperty]]:
+        '''``AWS::SSM::PatchBaseline.GlobalFilters``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-patchbaseline.html#cfn-ssm-patchbaseline-globalfilters
-        """
-        return self._values.get("global_filters")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-patchbaseline.html#cfn-ssm-patchbaseline-globalfilters
+        '''
+        result = self._values.get("global_filters")
+        return typing.cast(typing.Optional[typing.Union[aws_cdk.core.IResolvable, CfnPatchBaseline.PatchFilterGroupProperty]], result)
 
     @builtins.property
-    def operating_system(self) -> typing.Optional[str]:
-        """``AWS::SSM::PatchBaseline.OperatingSystem``.
+    def operating_system(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::PatchBaseline.OperatingSystem``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-patchbaseline.html#cfn-ssm-patchbaseline-operatingsystem
-        """
-        return self._values.get("operating_system")
-
-    @builtins.property
-    def patch_groups(self) -> typing.Optional[typing.List[str]]:
-        """``AWS::SSM::PatchBaseline.PatchGroups``.
-
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-patchbaseline.html#cfn-ssm-patchbaseline-patchgroups
-        """
-        return self._values.get("patch_groups")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-patchbaseline.html#cfn-ssm-patchbaseline-operatingsystem
+        '''
+        result = self._values.get("operating_system")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
-    def rejected_patches(self) -> typing.Optional[typing.List[str]]:
-        """``AWS::SSM::PatchBaseline.RejectedPatches``.
+    def patch_groups(self) -> typing.Optional[typing.List[builtins.str]]:
+        '''``AWS::SSM::PatchBaseline.PatchGroups``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-patchbaseline.html#cfn-ssm-patchbaseline-rejectedpatches
-        """
-        return self._values.get("rejected_patches")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-patchbaseline.html#cfn-ssm-patchbaseline-patchgroups
+        '''
+        result = self._values.get("patch_groups")
+        return typing.cast(typing.Optional[typing.List[builtins.str]], result)
 
     @builtins.property
-    def rejected_patches_action(self) -> typing.Optional[str]:
-        """``AWS::SSM::PatchBaseline.RejectedPatchesAction``.
+    def rejected_patches(self) -> typing.Optional[typing.List[builtins.str]]:
+        '''``AWS::SSM::PatchBaseline.RejectedPatches``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-patchbaseline.html#cfn-ssm-patchbaseline-rejectedpatchesaction
-        """
-        return self._values.get("rejected_patches_action")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-patchbaseline.html#cfn-ssm-patchbaseline-rejectedpatches
+        '''
+        result = self._values.get("rejected_patches")
+        return typing.cast(typing.Optional[typing.List[builtins.str]], result)
+
+    @builtins.property
+    def rejected_patches_action(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::PatchBaseline.RejectedPatchesAction``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-patchbaseline.html#cfn-ssm-patchbaseline-rejectedpatchesaction
+        '''
+        result = self._values.get("rejected_patches_action")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def sources(
         self,
-    ) -> typing.Optional[
-        typing.Union[
-            aws_cdk.core.IResolvable,
-            typing.List[
-                typing.Union[
-                    aws_cdk.core.IResolvable, "CfnPatchBaseline.PatchSourceProperty"
-                ]
-            ],
-        ]
-    ]:
-        """``AWS::SSM::PatchBaseline.Sources``.
+    ) -> typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, CfnPatchBaseline.PatchSourceProperty]]]]:
+        '''``AWS::SSM::PatchBaseline.Sources``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-patchbaseline.html#cfn-ssm-patchbaseline-sources
-        """
-        return self._values.get("sources")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-patchbaseline.html#cfn-ssm-patchbaseline-sources
+        '''
+        result = self._values.get("sources")
+        return typing.cast(typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, CfnPatchBaseline.PatchSourceProperty]]]], result)
 
     @builtins.property
     def tags(self) -> typing.Optional[typing.List[aws_cdk.core.CfnTag]]:
-        """``AWS::SSM::PatchBaseline.Tags``.
+        '''``AWS::SSM::PatchBaseline.Tags``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-patchbaseline.html#cfn-ssm-patchbaseline-tags
-        """
-        return self._values.get("tags")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-patchbaseline.html#cfn-ssm-patchbaseline-tags
+        '''
+        result = self._values.get("tags")
+        return typing.cast(typing.Optional[typing.List[aws_cdk.core.CfnTag]], result)
 
-    def __eq__(self, rhs) -> bool:
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
@@ -4722,34 +4448,28 @@ class CfnResourceDataSync(
     metaclass=jsii.JSIIMeta,
     jsii_type="@aws-cdk/aws-ssm.CfnResourceDataSync",
 ):
-    """A CloudFormation ``AWS::SSM::ResourceDataSync``.
+    '''A CloudFormation ``AWS::SSM::ResourceDataSync``.
 
-    see
-    :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-resourcedatasync.html
-    cloudformationResource:
-    :cloudformationResource:: AWS::SSM::ResourceDataSync
-    """
+    :cloudformationResource: AWS::SSM::ResourceDataSync
+    :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-resourcedatasync.html
+    '''
 
     def __init__(
         self,
         scope: aws_cdk.core.Construct,
-        id: str,
+        id: builtins.str,
         *,
-        sync_name: str,
-        bucket_name: typing.Optional[str] = None,
-        bucket_prefix: typing.Optional[str] = None,
-        bucket_region: typing.Optional[str] = None,
-        kms_key_arn: typing.Optional[str] = None,
-        s3_destination: typing.Optional[
-            typing.Union[aws_cdk.core.IResolvable, "S3DestinationProperty"]
-        ] = None,
-        sync_format: typing.Optional[str] = None,
-        sync_source: typing.Optional[
-            typing.Union[aws_cdk.core.IResolvable, "SyncSourceProperty"]
-        ] = None,
-        sync_type: typing.Optional[str] = None,
+        sync_name: builtins.str,
+        bucket_name: typing.Optional[builtins.str] = None,
+        bucket_prefix: typing.Optional[builtins.str] = None,
+        bucket_region: typing.Optional[builtins.str] = None,
+        kms_key_arn: typing.Optional[builtins.str] = None,
+        s3_destination: typing.Optional[typing.Union[aws_cdk.core.IResolvable, "CfnResourceDataSync.S3DestinationProperty"]] = None,
+        sync_format: typing.Optional[builtins.str] = None,
+        sync_source: typing.Optional[typing.Union[aws_cdk.core.IResolvable, "CfnResourceDataSync.SyncSourceProperty"]] = None,
+        sync_type: typing.Optional[builtins.str] = None,
     ) -> None:
-        """Create a new ``AWS::SSM::ResourceDataSync``.
+        '''Create a new ``AWS::SSM::ResourceDataSync``.
 
         :param scope: - scope in which this resource is defined.
         :param id: - scoped id of the resource.
@@ -4762,7 +4482,7 @@ class CfnResourceDataSync(
         :param sync_format: ``AWS::SSM::ResourceDataSync.SyncFormat``.
         :param sync_source: ``AWS::SSM::ResourceDataSync.SyncSource``.
         :param sync_type: ``AWS::SSM::ResourceDataSync.SyncType``.
-        """
+        '''
         props = CfnResourceDataSyncProps(
             sync_name=sync_name,
             bucket_name=bucket_name,
@@ -4777,205 +4497,168 @@ class CfnResourceDataSync(
 
         jsii.create(CfnResourceDataSync, self, [scope, id, props])
 
-    @jsii.member(jsii_name="fromCloudFormation")
-    @builtins.classmethod
-    def from_cloud_formation(
-        cls,
-        scope: aws_cdk.core.Construct,
-        id: str,
-        resource_attributes: typing.Any,
-        *,
-        finder: aws_cdk.core.ICfnFinder,
-    ) -> "CfnResourceDataSync":
-        """A factory method that creates a new instance of this class from an object containing the CloudFormation properties of this resource.
-
-        Used in the @aws-cdk/cloudformation-include module.
-
-        :param scope: -
-        :param id: -
-        :param resource_attributes: -
-        :param finder: The finder interface used to resolve references across the template.
-
-        stability
-        :stability: experimental
-        """
-        options = aws_cdk.core.FromCloudFormationOptions(finder=finder)
-
-        return jsii.sinvoke(
-            cls, "fromCloudFormation", [scope, id, resource_attributes, options]
-        )
-
     @jsii.member(jsii_name="inspect")
     def inspect(self, inspector: aws_cdk.core.TreeInspector) -> None:
-        """Examines the CloudFormation resource and discloses attributes.
+        '''Examines the CloudFormation resource and discloses attributes.
 
         :param inspector: - tree inspector to collect and process attributes.
-
-        stability
-        :stability: experimental
-        """
-        return jsii.invoke(self, "inspect", [inspector])
+        '''
+        return typing.cast(None, jsii.invoke(self, "inspect", [inspector]))
 
     @jsii.member(jsii_name="renderProperties")
     def _render_properties(
-        self, props: typing.Mapping[str, typing.Any]
-    ) -> typing.Mapping[str, typing.Any]:
-        """
+        self,
+        props: typing.Mapping[builtins.str, typing.Any],
+    ) -> typing.Mapping[builtins.str, typing.Any]:
+        '''
         :param props: -
-        """
-        return jsii.invoke(self, "renderProperties", [props])
+        '''
+        return typing.cast(typing.Mapping[builtins.str, typing.Any], jsii.invoke(self, "renderProperties", [props]))
 
-    @jsii.python.classproperty
+    @jsii.python.classproperty # type: ignore[misc]
     @jsii.member(jsii_name="CFN_RESOURCE_TYPE_NAME")
-    def CFN_RESOURCE_TYPE_NAME(cls) -> str:
-        """The CloudFormation resource type name for this resource class."""
-        return jsii.sget(cls, "CFN_RESOURCE_TYPE_NAME")
+    def CFN_RESOURCE_TYPE_NAME(cls) -> builtins.str:
+        '''The CloudFormation resource type name for this resource class.'''
+        return typing.cast(builtins.str, jsii.sget(cls, "CFN_RESOURCE_TYPE_NAME"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
+    @jsii.member(jsii_name="attrSyncName")
+    def attr_sync_name(self) -> builtins.str:
+        '''
+        :cloudformationAttribute: SyncName
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "attrSyncName"))
+
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="cfnProperties")
-    def _cfn_properties(self) -> typing.Mapping[str, typing.Any]:
-        return jsii.get(self, "cfnProperties")
+    def _cfn_properties(self) -> typing.Mapping[builtins.str, typing.Any]:
+        return typing.cast(typing.Mapping[builtins.str, typing.Any], jsii.get(self, "cfnProperties"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="syncName")
-    def sync_name(self) -> str:
-        """``AWS::SSM::ResourceDataSync.SyncName``.
+    def sync_name(self) -> builtins.str:
+        '''``AWS::SSM::ResourceDataSync.SyncName``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-resourcedatasync.html#cfn-ssm-resourcedatasync-syncname
-        """
-        return jsii.get(self, "syncName")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-resourcedatasync.html#cfn-ssm-resourcedatasync-syncname
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "syncName"))
 
     @sync_name.setter
-    def sync_name(self, value: str) -> None:
+    def sync_name(self, value: builtins.str) -> None:
         jsii.set(self, "syncName", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="bucketName")
-    def bucket_name(self) -> typing.Optional[str]:
-        """``AWS::SSM::ResourceDataSync.BucketName``.
+    def bucket_name(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::ResourceDataSync.BucketName``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-resourcedatasync.html#cfn-ssm-resourcedatasync-bucketname
-        """
-        return jsii.get(self, "bucketName")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-resourcedatasync.html#cfn-ssm-resourcedatasync-bucketname
+        '''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "bucketName"))
 
     @bucket_name.setter
-    def bucket_name(self, value: typing.Optional[str]) -> None:
+    def bucket_name(self, value: typing.Optional[builtins.str]) -> None:
         jsii.set(self, "bucketName", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="bucketPrefix")
-    def bucket_prefix(self) -> typing.Optional[str]:
-        """``AWS::SSM::ResourceDataSync.BucketPrefix``.
+    def bucket_prefix(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::ResourceDataSync.BucketPrefix``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-resourcedatasync.html#cfn-ssm-resourcedatasync-bucketprefix
-        """
-        return jsii.get(self, "bucketPrefix")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-resourcedatasync.html#cfn-ssm-resourcedatasync-bucketprefix
+        '''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "bucketPrefix"))
 
     @bucket_prefix.setter
-    def bucket_prefix(self, value: typing.Optional[str]) -> None:
+    def bucket_prefix(self, value: typing.Optional[builtins.str]) -> None:
         jsii.set(self, "bucketPrefix", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="bucketRegion")
-    def bucket_region(self) -> typing.Optional[str]:
-        """``AWS::SSM::ResourceDataSync.BucketRegion``.
+    def bucket_region(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::ResourceDataSync.BucketRegion``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-resourcedatasync.html#cfn-ssm-resourcedatasync-bucketregion
-        """
-        return jsii.get(self, "bucketRegion")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-resourcedatasync.html#cfn-ssm-resourcedatasync-bucketregion
+        '''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "bucketRegion"))
 
     @bucket_region.setter
-    def bucket_region(self, value: typing.Optional[str]) -> None:
+    def bucket_region(self, value: typing.Optional[builtins.str]) -> None:
         jsii.set(self, "bucketRegion", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="kmsKeyArn")
-    def kms_key_arn(self) -> typing.Optional[str]:
-        """``AWS::SSM::ResourceDataSync.KMSKeyArn``.
+    def kms_key_arn(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::ResourceDataSync.KMSKeyArn``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-resourcedatasync.html#cfn-ssm-resourcedatasync-kmskeyarn
-        """
-        return jsii.get(self, "kmsKeyArn")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-resourcedatasync.html#cfn-ssm-resourcedatasync-kmskeyarn
+        '''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "kmsKeyArn"))
 
     @kms_key_arn.setter
-    def kms_key_arn(self, value: typing.Optional[str]) -> None:
+    def kms_key_arn(self, value: typing.Optional[builtins.str]) -> None:
         jsii.set(self, "kmsKeyArn", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="s3Destination")
     def s3_destination(
         self,
-    ) -> typing.Optional[
-        typing.Union[aws_cdk.core.IResolvable, "S3DestinationProperty"]
-    ]:
-        """``AWS::SSM::ResourceDataSync.S3Destination``.
+    ) -> typing.Optional[typing.Union[aws_cdk.core.IResolvable, "CfnResourceDataSync.S3DestinationProperty"]]:
+        '''``AWS::SSM::ResourceDataSync.S3Destination``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-resourcedatasync.html#cfn-ssm-resourcedatasync-s3destination
-        """
-        return jsii.get(self, "s3Destination")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-resourcedatasync.html#cfn-ssm-resourcedatasync-s3destination
+        '''
+        return typing.cast(typing.Optional[typing.Union[aws_cdk.core.IResolvable, "CfnResourceDataSync.S3DestinationProperty"]], jsii.get(self, "s3Destination"))
 
     @s3_destination.setter
     def s3_destination(
         self,
-        value: typing.Optional[
-            typing.Union[aws_cdk.core.IResolvable, "S3DestinationProperty"]
-        ],
+        value: typing.Optional[typing.Union[aws_cdk.core.IResolvable, "CfnResourceDataSync.S3DestinationProperty"]],
     ) -> None:
         jsii.set(self, "s3Destination", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="syncFormat")
-    def sync_format(self) -> typing.Optional[str]:
-        """``AWS::SSM::ResourceDataSync.SyncFormat``.
+    def sync_format(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::ResourceDataSync.SyncFormat``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-resourcedatasync.html#cfn-ssm-resourcedatasync-syncformat
-        """
-        return jsii.get(self, "syncFormat")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-resourcedatasync.html#cfn-ssm-resourcedatasync-syncformat
+        '''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "syncFormat"))
 
     @sync_format.setter
-    def sync_format(self, value: typing.Optional[str]) -> None:
+    def sync_format(self, value: typing.Optional[builtins.str]) -> None:
         jsii.set(self, "syncFormat", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="syncSource")
     def sync_source(
         self,
-    ) -> typing.Optional[typing.Union[aws_cdk.core.IResolvable, "SyncSourceProperty"]]:
-        """``AWS::SSM::ResourceDataSync.SyncSource``.
+    ) -> typing.Optional[typing.Union[aws_cdk.core.IResolvable, "CfnResourceDataSync.SyncSourceProperty"]]:
+        '''``AWS::SSM::ResourceDataSync.SyncSource``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-resourcedatasync.html#cfn-ssm-resourcedatasync-syncsource
-        """
-        return jsii.get(self, "syncSource")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-resourcedatasync.html#cfn-ssm-resourcedatasync-syncsource
+        '''
+        return typing.cast(typing.Optional[typing.Union[aws_cdk.core.IResolvable, "CfnResourceDataSync.SyncSourceProperty"]], jsii.get(self, "syncSource"))
 
     @sync_source.setter
     def sync_source(
         self,
-        value: typing.Optional[
-            typing.Union[aws_cdk.core.IResolvable, "SyncSourceProperty"]
-        ],
+        value: typing.Optional[typing.Union[aws_cdk.core.IResolvable, "CfnResourceDataSync.SyncSourceProperty"]],
     ) -> None:
         jsii.set(self, "syncSource", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="syncType")
-    def sync_type(self) -> typing.Optional[str]:
-        """``AWS::SSM::ResourceDataSync.SyncType``.
+    def sync_type(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::ResourceDataSync.SyncType``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-resourcedatasync.html#cfn-ssm-resourcedatasync-synctype
-        """
-        return jsii.get(self, "syncType")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-resourcedatasync.html#cfn-ssm-resourcedatasync-synctype
+        '''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "syncType"))
 
     @sync_type.setter
-    def sync_type(self, value: typing.Optional[str]) -> None:
+    def sync_type(self, value: typing.Optional[builtins.str]) -> None:
         jsii.set(self, "syncType", value)
 
     @jsii.data_type(
@@ -4990,44 +4673,44 @@ class CfnResourceDataSync(
         def __init__(
             self,
             *,
-            organization_source_type: str,
-            organizational_units: typing.Optional[typing.List[str]] = None,
+            organization_source_type: builtins.str,
+            organizational_units: typing.Optional[typing.Sequence[builtins.str]] = None,
         ) -> None:
-            """
+            '''
             :param organization_source_type: ``CfnResourceDataSync.AwsOrganizationsSourceProperty.OrganizationSourceType``.
             :param organizational_units: ``CfnResourceDataSync.AwsOrganizationsSourceProperty.OrganizationalUnits``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-resourcedatasync-awsorganizationssource.html
-            """
-            self._values = {
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-resourcedatasync-awsorganizationssource.html
+            '''
+            self._values: typing.Dict[str, typing.Any] = {
                 "organization_source_type": organization_source_type,
             }
             if organizational_units is not None:
                 self._values["organizational_units"] = organizational_units
 
         @builtins.property
-        def organization_source_type(self) -> str:
-            """``CfnResourceDataSync.AwsOrganizationsSourceProperty.OrganizationSourceType``.
+        def organization_source_type(self) -> builtins.str:
+            '''``CfnResourceDataSync.AwsOrganizationsSourceProperty.OrganizationSourceType``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-resourcedatasync-awsorganizationssource.html#cfn-ssm-resourcedatasync-awsorganizationssource-organizationsourcetype
-            """
-            return self._values.get("organization_source_type")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-resourcedatasync-awsorganizationssource.html#cfn-ssm-resourcedatasync-awsorganizationssource-organizationsourcetype
+            '''
+            result = self._values.get("organization_source_type")
+            assert result is not None, "Required property 'organization_source_type' is missing"
+            return typing.cast(builtins.str, result)
 
         @builtins.property
-        def organizational_units(self) -> typing.Optional[typing.List[str]]:
-            """``CfnResourceDataSync.AwsOrganizationsSourceProperty.OrganizationalUnits``.
+        def organizational_units(self) -> typing.Optional[typing.List[builtins.str]]:
+            '''``CfnResourceDataSync.AwsOrganizationsSourceProperty.OrganizationalUnits``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-resourcedatasync-awsorganizationssource.html#cfn-ssm-resourcedatasync-awsorganizationssource-organizationalunits
-            """
-            return self._values.get("organizational_units")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-resourcedatasync-awsorganizationssource.html#cfn-ssm-resourcedatasync-awsorganizationssource-organizationalunits
+            '''
+            result = self._values.get("organizational_units")
+            return typing.cast(typing.Optional[typing.List[builtins.str]], result)
 
-        def __eq__(self, rhs) -> bool:
+        def __eq__(self, rhs: typing.Any) -> builtins.bool:
             return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-        def __ne__(self, rhs) -> bool:
+        def __ne__(self, rhs: typing.Any) -> builtins.bool:
             return not (rhs == self)
 
         def __repr__(self) -> str:
@@ -5050,23 +4733,22 @@ class CfnResourceDataSync(
         def __init__(
             self,
             *,
-            bucket_name: str,
-            bucket_region: str,
-            sync_format: str,
-            bucket_prefix: typing.Optional[str] = None,
-            kms_key_arn: typing.Optional[str] = None,
+            bucket_name: builtins.str,
+            bucket_region: builtins.str,
+            sync_format: builtins.str,
+            bucket_prefix: typing.Optional[builtins.str] = None,
+            kms_key_arn: typing.Optional[builtins.str] = None,
         ) -> None:
-            """
+            '''
             :param bucket_name: ``CfnResourceDataSync.S3DestinationProperty.BucketName``.
             :param bucket_region: ``CfnResourceDataSync.S3DestinationProperty.BucketRegion``.
             :param sync_format: ``CfnResourceDataSync.S3DestinationProperty.SyncFormat``.
             :param bucket_prefix: ``CfnResourceDataSync.S3DestinationProperty.BucketPrefix``.
             :param kms_key_arn: ``CfnResourceDataSync.S3DestinationProperty.KMSKeyArn``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-resourcedatasync-s3destination.html
-            """
-            self._values = {
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-resourcedatasync-s3destination.html
+            '''
+            self._values: typing.Dict[str, typing.Any] = {
                 "bucket_name": bucket_name,
                 "bucket_region": bucket_region,
                 "sync_format": sync_format,
@@ -5077,54 +4759,57 @@ class CfnResourceDataSync(
                 self._values["kms_key_arn"] = kms_key_arn
 
         @builtins.property
-        def bucket_name(self) -> str:
-            """``CfnResourceDataSync.S3DestinationProperty.BucketName``.
+        def bucket_name(self) -> builtins.str:
+            '''``CfnResourceDataSync.S3DestinationProperty.BucketName``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-resourcedatasync-s3destination.html#cfn-ssm-resourcedatasync-s3destination-bucketname
-            """
-            return self._values.get("bucket_name")
-
-        @builtins.property
-        def bucket_region(self) -> str:
-            """``CfnResourceDataSync.S3DestinationProperty.BucketRegion``.
-
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-resourcedatasync-s3destination.html#cfn-ssm-resourcedatasync-s3destination-bucketregion
-            """
-            return self._values.get("bucket_region")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-resourcedatasync-s3destination.html#cfn-ssm-resourcedatasync-s3destination-bucketname
+            '''
+            result = self._values.get("bucket_name")
+            assert result is not None, "Required property 'bucket_name' is missing"
+            return typing.cast(builtins.str, result)
 
         @builtins.property
-        def sync_format(self) -> str:
-            """``CfnResourceDataSync.S3DestinationProperty.SyncFormat``.
+        def bucket_region(self) -> builtins.str:
+            '''``CfnResourceDataSync.S3DestinationProperty.BucketRegion``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-resourcedatasync-s3destination.html#cfn-ssm-resourcedatasync-s3destination-syncformat
-            """
-            return self._values.get("sync_format")
-
-        @builtins.property
-        def bucket_prefix(self) -> typing.Optional[str]:
-            """``CfnResourceDataSync.S3DestinationProperty.BucketPrefix``.
-
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-resourcedatasync-s3destination.html#cfn-ssm-resourcedatasync-s3destination-bucketprefix
-            """
-            return self._values.get("bucket_prefix")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-resourcedatasync-s3destination.html#cfn-ssm-resourcedatasync-s3destination-bucketregion
+            '''
+            result = self._values.get("bucket_region")
+            assert result is not None, "Required property 'bucket_region' is missing"
+            return typing.cast(builtins.str, result)
 
         @builtins.property
-        def kms_key_arn(self) -> typing.Optional[str]:
-            """``CfnResourceDataSync.S3DestinationProperty.KMSKeyArn``.
+        def sync_format(self) -> builtins.str:
+            '''``CfnResourceDataSync.S3DestinationProperty.SyncFormat``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-resourcedatasync-s3destination.html#cfn-ssm-resourcedatasync-s3destination-kmskeyarn
-            """
-            return self._values.get("kms_key_arn")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-resourcedatasync-s3destination.html#cfn-ssm-resourcedatasync-s3destination-syncformat
+            '''
+            result = self._values.get("sync_format")
+            assert result is not None, "Required property 'sync_format' is missing"
+            return typing.cast(builtins.str, result)
 
-        def __eq__(self, rhs) -> bool:
+        @builtins.property
+        def bucket_prefix(self) -> typing.Optional[builtins.str]:
+            '''``CfnResourceDataSync.S3DestinationProperty.BucketPrefix``.
+
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-resourcedatasync-s3destination.html#cfn-ssm-resourcedatasync-s3destination-bucketprefix
+            '''
+            result = self._values.get("bucket_prefix")
+            return typing.cast(typing.Optional[builtins.str], result)
+
+        @builtins.property
+        def kms_key_arn(self) -> typing.Optional[builtins.str]:
+            '''``CfnResourceDataSync.S3DestinationProperty.KMSKeyArn``.
+
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-resourcedatasync-s3destination.html#cfn-ssm-resourcedatasync-s3destination-kmskeyarn
+            '''
+            result = self._values.get("kms_key_arn")
+            return typing.cast(typing.Optional[builtins.str], result)
+
+        def __eq__(self, rhs: typing.Any) -> builtins.bool:
             return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-        def __ne__(self, rhs) -> bool:
+        def __ne__(self, rhs: typing.Any) -> builtins.bool:
             return not (rhs == self)
 
         def __repr__(self) -> str:
@@ -5146,28 +4831,20 @@ class CfnResourceDataSync(
         def __init__(
             self,
             *,
-            source_regions: typing.List[str],
-            source_type: str,
-            aws_organizations_source: typing.Optional[
-                typing.Union[
-                    aws_cdk.core.IResolvable,
-                    "CfnResourceDataSync.AwsOrganizationsSourceProperty",
-                ]
-            ] = None,
-            include_future_regions: typing.Optional[
-                typing.Union[bool, aws_cdk.core.IResolvable]
-            ] = None,
+            source_regions: typing.Sequence[builtins.str],
+            source_type: builtins.str,
+            aws_organizations_source: typing.Optional[typing.Union[aws_cdk.core.IResolvable, "CfnResourceDataSync.AwsOrganizationsSourceProperty"]] = None,
+            include_future_regions: typing.Optional[typing.Union[builtins.bool, aws_cdk.core.IResolvable]] = None,
         ) -> None:
-            """
+            '''
             :param source_regions: ``CfnResourceDataSync.SyncSourceProperty.SourceRegions``.
             :param source_type: ``CfnResourceDataSync.SyncSourceProperty.SourceType``.
             :param aws_organizations_source: ``CfnResourceDataSync.SyncSourceProperty.AwsOrganizationsSource``.
             :param include_future_regions: ``CfnResourceDataSync.SyncSourceProperty.IncludeFutureRegions``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-resourcedatasync-syncsource.html
-            """
-            self._values = {
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-resourcedatasync-syncsource.html
+            '''
+            self._values: typing.Dict[str, typing.Any] = {
                 "source_regions": source_regions,
                 "source_type": source_type,
             }
@@ -5177,54 +4854,51 @@ class CfnResourceDataSync(
                 self._values["include_future_regions"] = include_future_regions
 
         @builtins.property
-        def source_regions(self) -> typing.List[str]:
-            """``CfnResourceDataSync.SyncSourceProperty.SourceRegions``.
+        def source_regions(self) -> typing.List[builtins.str]:
+            '''``CfnResourceDataSync.SyncSourceProperty.SourceRegions``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-resourcedatasync-syncsource.html#cfn-ssm-resourcedatasync-syncsource-sourceregions
-            """
-            return self._values.get("source_regions")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-resourcedatasync-syncsource.html#cfn-ssm-resourcedatasync-syncsource-sourceregions
+            '''
+            result = self._values.get("source_regions")
+            assert result is not None, "Required property 'source_regions' is missing"
+            return typing.cast(typing.List[builtins.str], result)
 
         @builtins.property
-        def source_type(self) -> str:
-            """``CfnResourceDataSync.SyncSourceProperty.SourceType``.
+        def source_type(self) -> builtins.str:
+            '''``CfnResourceDataSync.SyncSourceProperty.SourceType``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-resourcedatasync-syncsource.html#cfn-ssm-resourcedatasync-syncsource-sourcetype
-            """
-            return self._values.get("source_type")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-resourcedatasync-syncsource.html#cfn-ssm-resourcedatasync-syncsource-sourcetype
+            '''
+            result = self._values.get("source_type")
+            assert result is not None, "Required property 'source_type' is missing"
+            return typing.cast(builtins.str, result)
 
         @builtins.property
         def aws_organizations_source(
             self,
-        ) -> typing.Optional[
-            typing.Union[
-                aws_cdk.core.IResolvable,
-                "CfnResourceDataSync.AwsOrganizationsSourceProperty",
-            ]
-        ]:
-            """``CfnResourceDataSync.SyncSourceProperty.AwsOrganizationsSource``.
+        ) -> typing.Optional[typing.Union[aws_cdk.core.IResolvable, "CfnResourceDataSync.AwsOrganizationsSourceProperty"]]:
+            '''``CfnResourceDataSync.SyncSourceProperty.AwsOrganizationsSource``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-resourcedatasync-syncsource.html#cfn-ssm-resourcedatasync-syncsource-awsorganizationssource
-            """
-            return self._values.get("aws_organizations_source")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-resourcedatasync-syncsource.html#cfn-ssm-resourcedatasync-syncsource-awsorganizationssource
+            '''
+            result = self._values.get("aws_organizations_source")
+            return typing.cast(typing.Optional[typing.Union[aws_cdk.core.IResolvable, "CfnResourceDataSync.AwsOrganizationsSourceProperty"]], result)
 
         @builtins.property
         def include_future_regions(
             self,
-        ) -> typing.Optional[typing.Union[bool, aws_cdk.core.IResolvable]]:
-            """``CfnResourceDataSync.SyncSourceProperty.IncludeFutureRegions``.
+        ) -> typing.Optional[typing.Union[builtins.bool, aws_cdk.core.IResolvable]]:
+            '''``CfnResourceDataSync.SyncSourceProperty.IncludeFutureRegions``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-resourcedatasync-syncsource.html#cfn-ssm-resourcedatasync-syncsource-includefutureregions
-            """
-            return self._values.get("include_future_regions")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-resourcedatasync-syncsource.html#cfn-ssm-resourcedatasync-syncsource-includefutureregions
+            '''
+            result = self._values.get("include_future_regions")
+            return typing.cast(typing.Optional[typing.Union[builtins.bool, aws_cdk.core.IResolvable]], result)
 
-        def __eq__(self, rhs) -> bool:
+        def __eq__(self, rhs: typing.Any) -> builtins.bool:
             return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-        def __ne__(self, rhs) -> bool:
+        def __ne__(self, rhs: typing.Any) -> builtins.bool:
             return not (rhs == self)
 
         def __repr__(self) -> str:
@@ -5252,25 +4926,17 @@ class CfnResourceDataSyncProps:
     def __init__(
         self,
         *,
-        sync_name: str,
-        bucket_name: typing.Optional[str] = None,
-        bucket_prefix: typing.Optional[str] = None,
-        bucket_region: typing.Optional[str] = None,
-        kms_key_arn: typing.Optional[str] = None,
-        s3_destination: typing.Optional[
-            typing.Union[
-                aws_cdk.core.IResolvable, "CfnResourceDataSync.S3DestinationProperty"
-            ]
-        ] = None,
-        sync_format: typing.Optional[str] = None,
-        sync_source: typing.Optional[
-            typing.Union[
-                aws_cdk.core.IResolvable, "CfnResourceDataSync.SyncSourceProperty"
-            ]
-        ] = None,
-        sync_type: typing.Optional[str] = None,
+        sync_name: builtins.str,
+        bucket_name: typing.Optional[builtins.str] = None,
+        bucket_prefix: typing.Optional[builtins.str] = None,
+        bucket_region: typing.Optional[builtins.str] = None,
+        kms_key_arn: typing.Optional[builtins.str] = None,
+        s3_destination: typing.Optional[typing.Union[aws_cdk.core.IResolvable, CfnResourceDataSync.S3DestinationProperty]] = None,
+        sync_format: typing.Optional[builtins.str] = None,
+        sync_source: typing.Optional[typing.Union[aws_cdk.core.IResolvable, CfnResourceDataSync.SyncSourceProperty]] = None,
+        sync_type: typing.Optional[builtins.str] = None,
     ) -> None:
-        """Properties for defining a ``AWS::SSM::ResourceDataSync``.
+        '''Properties for defining a ``AWS::SSM::ResourceDataSync``.
 
         :param sync_name: ``AWS::SSM::ResourceDataSync.SyncName``.
         :param bucket_name: ``AWS::SSM::ResourceDataSync.BucketName``.
@@ -5282,10 +4948,9 @@ class CfnResourceDataSyncProps:
         :param sync_source: ``AWS::SSM::ResourceDataSync.SyncSource``.
         :param sync_type: ``AWS::SSM::ResourceDataSync.SyncType``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-resourcedatasync.html
-        """
-        self._values = {
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-resourcedatasync.html
+        '''
+        self._values: typing.Dict[str, typing.Any] = {
             "sync_name": sync_name,
         }
         if bucket_name is not None:
@@ -5306,100 +4971,95 @@ class CfnResourceDataSyncProps:
             self._values["sync_type"] = sync_type
 
     @builtins.property
-    def sync_name(self) -> str:
-        """``AWS::SSM::ResourceDataSync.SyncName``.
+    def sync_name(self) -> builtins.str:
+        '''``AWS::SSM::ResourceDataSync.SyncName``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-resourcedatasync.html#cfn-ssm-resourcedatasync-syncname
-        """
-        return self._values.get("sync_name")
-
-    @builtins.property
-    def bucket_name(self) -> typing.Optional[str]:
-        """``AWS::SSM::ResourceDataSync.BucketName``.
-
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-resourcedatasync.html#cfn-ssm-resourcedatasync-bucketname
-        """
-        return self._values.get("bucket_name")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-resourcedatasync.html#cfn-ssm-resourcedatasync-syncname
+        '''
+        result = self._values.get("sync_name")
+        assert result is not None, "Required property 'sync_name' is missing"
+        return typing.cast(builtins.str, result)
 
     @builtins.property
-    def bucket_prefix(self) -> typing.Optional[str]:
-        """``AWS::SSM::ResourceDataSync.BucketPrefix``.
+    def bucket_name(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::ResourceDataSync.BucketName``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-resourcedatasync.html#cfn-ssm-resourcedatasync-bucketprefix
-        """
-        return self._values.get("bucket_prefix")
-
-    @builtins.property
-    def bucket_region(self) -> typing.Optional[str]:
-        """``AWS::SSM::ResourceDataSync.BucketRegion``.
-
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-resourcedatasync.html#cfn-ssm-resourcedatasync-bucketregion
-        """
-        return self._values.get("bucket_region")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-resourcedatasync.html#cfn-ssm-resourcedatasync-bucketname
+        '''
+        result = self._values.get("bucket_name")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
-    def kms_key_arn(self) -> typing.Optional[str]:
-        """``AWS::SSM::ResourceDataSync.KMSKeyArn``.
+    def bucket_prefix(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::ResourceDataSync.BucketPrefix``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-resourcedatasync.html#cfn-ssm-resourcedatasync-kmskeyarn
-        """
-        return self._values.get("kms_key_arn")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-resourcedatasync.html#cfn-ssm-resourcedatasync-bucketprefix
+        '''
+        result = self._values.get("bucket_prefix")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def bucket_region(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::ResourceDataSync.BucketRegion``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-resourcedatasync.html#cfn-ssm-resourcedatasync-bucketregion
+        '''
+        result = self._values.get("bucket_region")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def kms_key_arn(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::ResourceDataSync.KMSKeyArn``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-resourcedatasync.html#cfn-ssm-resourcedatasync-kmskeyarn
+        '''
+        result = self._values.get("kms_key_arn")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def s3_destination(
         self,
-    ) -> typing.Optional[
-        typing.Union[
-            aws_cdk.core.IResolvable, "CfnResourceDataSync.S3DestinationProperty"
-        ]
-    ]:
-        """``AWS::SSM::ResourceDataSync.S3Destination``.
+    ) -> typing.Optional[typing.Union[aws_cdk.core.IResolvable, CfnResourceDataSync.S3DestinationProperty]]:
+        '''``AWS::SSM::ResourceDataSync.S3Destination``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-resourcedatasync.html#cfn-ssm-resourcedatasync-s3destination
-        """
-        return self._values.get("s3_destination")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-resourcedatasync.html#cfn-ssm-resourcedatasync-s3destination
+        '''
+        result = self._values.get("s3_destination")
+        return typing.cast(typing.Optional[typing.Union[aws_cdk.core.IResolvable, CfnResourceDataSync.S3DestinationProperty]], result)
 
     @builtins.property
-    def sync_format(self) -> typing.Optional[str]:
-        """``AWS::SSM::ResourceDataSync.SyncFormat``.
+    def sync_format(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::ResourceDataSync.SyncFormat``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-resourcedatasync.html#cfn-ssm-resourcedatasync-syncformat
-        """
-        return self._values.get("sync_format")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-resourcedatasync.html#cfn-ssm-resourcedatasync-syncformat
+        '''
+        result = self._values.get("sync_format")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def sync_source(
         self,
-    ) -> typing.Optional[
-        typing.Union[aws_cdk.core.IResolvable, "CfnResourceDataSync.SyncSourceProperty"]
-    ]:
-        """``AWS::SSM::ResourceDataSync.SyncSource``.
+    ) -> typing.Optional[typing.Union[aws_cdk.core.IResolvable, CfnResourceDataSync.SyncSourceProperty]]:
+        '''``AWS::SSM::ResourceDataSync.SyncSource``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-resourcedatasync.html#cfn-ssm-resourcedatasync-syncsource
-        """
-        return self._values.get("sync_source")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-resourcedatasync.html#cfn-ssm-resourcedatasync-syncsource
+        '''
+        result = self._values.get("sync_source")
+        return typing.cast(typing.Optional[typing.Union[aws_cdk.core.IResolvable, CfnResourceDataSync.SyncSourceProperty]], result)
 
     @builtins.property
-    def sync_type(self) -> typing.Optional[str]:
-        """``AWS::SSM::ResourceDataSync.SyncType``.
+    def sync_type(self) -> typing.Optional[builtins.str]:
+        '''``AWS::SSM::ResourceDataSync.SyncType``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-resourcedatasync.html#cfn-ssm-resourcedatasync-synctype
-        """
-        return self._values.get("sync_type")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-resourcedatasync.html#cfn-ssm-resourcedatasync-synctype
+        '''
+        result = self._values.get("sync_type")
+        return typing.cast(typing.Optional[builtins.str], result)
 
-    def __eq__(self, rhs) -> bool:
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
@@ -5415,31 +5075,36 @@ class CfnResourceDataSyncProps:
 )
 class CommonStringParameterAttributes:
     def __init__(
-        self, *, parameter_name: str, simple_name: typing.Optional[bool] = None
+        self,
+        *,
+        parameter_name: builtins.str,
+        simple_name: typing.Optional[builtins.bool] = None,
     ) -> None:
-        """Common attributes for string parameters.
+        '''Common attributes for string parameters.
 
         :param parameter_name: The name of the parameter store value. This value can be a token or a concrete string. If it is a concrete string and includes "/" it must also be prefixed with a "/" (fully-qualified).
         :param simple_name: Indicates of the parameter name is a simple name (i.e. does not include "/" separators). This is only required only if ``parameterName`` is a token, which means we are unable to detect if the name is simple or "path-like" for the purpose of rendering SSM parameter ARNs. If ``parameterName`` is not specified, ``simpleName`` must be ``true`` (or undefined) since the name generated by AWS CloudFormation is always a simple name. Default: - auto-detect based on ``parameterName``
-        """
-        self._values = {
+        '''
+        self._values: typing.Dict[str, typing.Any] = {
             "parameter_name": parameter_name,
         }
         if simple_name is not None:
             self._values["simple_name"] = simple_name
 
     @builtins.property
-    def parameter_name(self) -> str:
-        """The name of the parameter store value.
+    def parameter_name(self) -> builtins.str:
+        '''The name of the parameter store value.
 
         This value can be a token or a concrete string. If it is a concrete string
         and includes "/" it must also be prefixed with a "/" (fully-qualified).
-        """
-        return self._values.get("parameter_name")
+        '''
+        result = self._values.get("parameter_name")
+        assert result is not None, "Required property 'parameter_name' is missing"
+        return typing.cast(builtins.str, result)
 
     @builtins.property
-    def simple_name(self) -> typing.Optional[bool]:
-        """Indicates of the parameter name is a simple name (i.e. does not include "/" separators).
+    def simple_name(self) -> typing.Optional[builtins.bool]:
+        '''Indicates of the parameter name is a simple name (i.e. does not include "/" separators).
 
         This is only required only if ``parameterName`` is a token, which means we
         are unable to detect if the name is simple or "path-like" for the purpose
@@ -5449,15 +5114,15 @@ class CommonStringParameterAttributes:
         undefined) since the name generated by AWS CloudFormation is always a
         simple name.
 
-        default
         :default: - auto-detect based on ``parameterName``
-        """
-        return self._values.get("simple_name")
+        '''
+        result = self._values.get("simple_name")
+        return typing.cast(typing.Optional[builtins.bool], result)
 
-    def __eq__(self, rhs) -> bool:
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
@@ -5467,190 +5132,183 @@ class CommonStringParameterAttributes:
 
 
 @jsii.interface(jsii_type="@aws-cdk/aws-ssm.IParameter")
-class IParameter(aws_cdk.core.IResource, jsii.compat.Protocol):
-    """An SSM Parameter reference."""
+class IParameter(aws_cdk.core.IResource, typing_extensions.Protocol):
+    '''An SSM Parameter reference.'''
 
-    @builtins.staticmethod
-    def __jsii_proxy_class__():
-        return _IParameterProxy
-
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="parameterArn")
-    def parameter_arn(self) -> str:
-        """The ARN of the SSM Parameter resource.
+    def parameter_arn(self) -> builtins.str:
+        '''The ARN of the SSM Parameter resource.
 
-        attribute:
-        :attribute:: true
-        """
+        :attribute: true
+        '''
         ...
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="parameterName")
-    def parameter_name(self) -> str:
-        """The name of the SSM Parameter resource.
+    def parameter_name(self) -> builtins.str:
+        '''The name of the SSM Parameter resource.
 
-        attribute:
-        :attribute:: true
-        """
+        :attribute: true
+        '''
         ...
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="parameterType")
-    def parameter_type(self) -> str:
-        """The type of the SSM Parameter resource.
+    def parameter_type(self) -> builtins.str:
+        '''The type of the SSM Parameter resource.
 
-        attribute:
-        :attribute:: true
-        """
+        :attribute: true
+        '''
         ...
 
     @jsii.member(jsii_name="grantRead")
     def grant_read(self, grantee: aws_cdk.aws_iam.IGrantable) -> aws_cdk.aws_iam.Grant:
-        """Grants read (DescribeParameter, GetParameter, GetParameterHistory) permissions on the SSM Parameter.
+        '''Grants read (DescribeParameter, GetParameter, GetParameterHistory) permissions on the SSM Parameter.
 
         :param grantee: the role to be granted read-only access to the parameter.
-        """
+        '''
         ...
 
     @jsii.member(jsii_name="grantWrite")
     def grant_write(self, grantee: aws_cdk.aws_iam.IGrantable) -> aws_cdk.aws_iam.Grant:
-        """Grants write (PutParameter) permissions on the SSM Parameter.
+        '''Grants write (PutParameter) permissions on the SSM Parameter.
 
         :param grantee: the role to be granted write access to the parameter.
-        """
+        '''
         ...
 
 
-class _IParameterProxy(jsii.proxy_for(aws_cdk.core.IResource)):
-    """An SSM Parameter reference."""
+class _IParameterProxy(
+    jsii.proxy_for(aws_cdk.core.IResource) # type: ignore[misc]
+):
+    '''An SSM Parameter reference.'''
 
-    __jsii_type__ = "@aws-cdk/aws-ssm.IParameter"
+    __jsii_type__: typing.ClassVar[str] = "@aws-cdk/aws-ssm.IParameter"
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="parameterArn")
-    def parameter_arn(self) -> str:
-        """The ARN of the SSM Parameter resource.
+    def parameter_arn(self) -> builtins.str:
+        '''The ARN of the SSM Parameter resource.
 
-        attribute:
-        :attribute:: true
-        """
-        return jsii.get(self, "parameterArn")
+        :attribute: true
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "parameterArn"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="parameterName")
-    def parameter_name(self) -> str:
-        """The name of the SSM Parameter resource.
+    def parameter_name(self) -> builtins.str:
+        '''The name of the SSM Parameter resource.
 
-        attribute:
-        :attribute:: true
-        """
-        return jsii.get(self, "parameterName")
+        :attribute: true
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "parameterName"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="parameterType")
-    def parameter_type(self) -> str:
-        """The type of the SSM Parameter resource.
+    def parameter_type(self) -> builtins.str:
+        '''The type of the SSM Parameter resource.
 
-        attribute:
-        :attribute:: true
-        """
-        return jsii.get(self, "parameterType")
+        :attribute: true
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "parameterType"))
 
     @jsii.member(jsii_name="grantRead")
     def grant_read(self, grantee: aws_cdk.aws_iam.IGrantable) -> aws_cdk.aws_iam.Grant:
-        """Grants read (DescribeParameter, GetParameter, GetParameterHistory) permissions on the SSM Parameter.
+        '''Grants read (DescribeParameter, GetParameter, GetParameterHistory) permissions on the SSM Parameter.
 
         :param grantee: the role to be granted read-only access to the parameter.
-        """
-        return jsii.invoke(self, "grantRead", [grantee])
+        '''
+        return typing.cast(aws_cdk.aws_iam.Grant, jsii.invoke(self, "grantRead", [grantee]))
 
     @jsii.member(jsii_name="grantWrite")
     def grant_write(self, grantee: aws_cdk.aws_iam.IGrantable) -> aws_cdk.aws_iam.Grant:
-        """Grants write (PutParameter) permissions on the SSM Parameter.
+        '''Grants write (PutParameter) permissions on the SSM Parameter.
 
         :param grantee: the role to be granted write access to the parameter.
-        """
-        return jsii.invoke(self, "grantWrite", [grantee])
+        '''
+        return typing.cast(aws_cdk.aws_iam.Grant, jsii.invoke(self, "grantWrite", [grantee]))
+
+# Adding a "__jsii_proxy_class__(): typing.Type" function to the interface
+typing.cast(typing.Any, IParameter).__jsii_proxy_class__ = lambda : _IParameterProxy
 
 
 @jsii.interface(jsii_type="@aws-cdk/aws-ssm.IStringListParameter")
-class IStringListParameter(IParameter, jsii.compat.Protocol):
-    """A StringList SSM Parameter."""
+class IStringListParameter(IParameter, typing_extensions.Protocol):
+    '''A StringList SSM Parameter.'''
 
-    @builtins.staticmethod
-    def __jsii_proxy_class__():
-        return _IStringListParameterProxy
-
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="stringListValue")
-    def string_list_value(self) -> typing.List[str]:
-        """The parameter value.
+    def string_list_value(self) -> typing.List[builtins.str]:
+        '''The parameter value.
 
         Value must not nest another parameter. Do not use {{}} in the value. Values in the array
         cannot contain commas (``,``).
 
-        attribute:
-        :attribute:: Value
-        """
+        :attribute: Value
+        '''
         ...
 
 
-class _IStringListParameterProxy(jsii.proxy_for(IParameter)):
-    """A StringList SSM Parameter."""
+class _IStringListParameterProxy(
+    jsii.proxy_for(IParameter) # type: ignore[misc]
+):
+    '''A StringList SSM Parameter.'''
 
-    __jsii_type__ = "@aws-cdk/aws-ssm.IStringListParameter"
+    __jsii_type__: typing.ClassVar[str] = "@aws-cdk/aws-ssm.IStringListParameter"
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="stringListValue")
-    def string_list_value(self) -> typing.List[str]:
-        """The parameter value.
+    def string_list_value(self) -> typing.List[builtins.str]:
+        '''The parameter value.
 
         Value must not nest another parameter. Do not use {{}} in the value. Values in the array
         cannot contain commas (``,``).
 
-        attribute:
-        :attribute:: Value
-        """
-        return jsii.get(self, "stringListValue")
+        :attribute: Value
+        '''
+        return typing.cast(typing.List[builtins.str], jsii.get(self, "stringListValue"))
+
+# Adding a "__jsii_proxy_class__(): typing.Type" function to the interface
+typing.cast(typing.Any, IStringListParameter).__jsii_proxy_class__ = lambda : _IStringListParameterProxy
 
 
 @jsii.interface(jsii_type="@aws-cdk/aws-ssm.IStringParameter")
-class IStringParameter(IParameter, jsii.compat.Protocol):
-    """A String SSM Parameter."""
+class IStringParameter(IParameter, typing_extensions.Protocol):
+    '''A String SSM Parameter.'''
 
-    @builtins.staticmethod
-    def __jsii_proxy_class__():
-        return _IStringParameterProxy
-
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="stringValue")
-    def string_value(self) -> str:
-        """The parameter value.
+    def string_value(self) -> builtins.str:
+        '''The parameter value.
 
         Value must not nest another parameter. Do not use {{}} in the value.
 
-        attribute:
-        :attribute:: Value
-        """
+        :attribute: Value
+        '''
         ...
 
 
-class _IStringParameterProxy(jsii.proxy_for(IParameter)):
-    """A String SSM Parameter."""
+class _IStringParameterProxy(
+    jsii.proxy_for(IParameter) # type: ignore[misc]
+):
+    '''A String SSM Parameter.'''
 
-    __jsii_type__ = "@aws-cdk/aws-ssm.IStringParameter"
+    __jsii_type__: typing.ClassVar[str] = "@aws-cdk/aws-ssm.IStringParameter"
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="stringValue")
-    def string_value(self) -> str:
-        """The parameter value.
+    def string_value(self) -> builtins.str:
+        '''The parameter value.
 
         Value must not nest another parameter. Do not use {{}} in the value.
 
-        attribute:
-        :attribute:: Value
-        """
-        return jsii.get(self, "stringValue")
+        :attribute: Value
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "stringValue"))
+
+# Adding a "__jsii_proxy_class__(): typing.Type" function to the interface
+typing.cast(typing.Any, IStringParameter).__jsii_proxy_class__ = lambda : _IStringParameterProxy
 
 
 @jsii.data_type(
@@ -5668,21 +5326,21 @@ class ParameterOptions:
     def __init__(
         self,
         *,
-        allowed_pattern: typing.Optional[str] = None,
-        description: typing.Optional[str] = None,
-        parameter_name: typing.Optional[str] = None,
-        simple_name: typing.Optional[bool] = None,
+        allowed_pattern: typing.Optional[builtins.str] = None,
+        description: typing.Optional[builtins.str] = None,
+        parameter_name: typing.Optional[builtins.str] = None,
+        simple_name: typing.Optional[builtins.bool] = None,
         tier: typing.Optional["ParameterTier"] = None,
     ) -> None:
-        """Properties needed to create a new SSM Parameter.
+        '''Properties needed to create a new SSM Parameter.
 
-        :param allowed_pattern: A regular expression used to validate the parameter value. For example, for String types with values restricted to numbers, you can specify the following: ``^\d+$`` Default: no validation is performed
+        :param allowed_pattern: A regular expression used to validate the parameter value. For example, for String types with values restricted to numbers, you can specify the following: ``^\\d+$`` Default: no validation is performed
         :param description: Information about the parameter that you want to add to the system. Default: none
         :param parameter_name: The name of the parameter. Default: - a name will be generated by CloudFormation
         :param simple_name: Indicates of the parameter name is a simple name (i.e. does not include "/" separators). This is only required only if ``parameterName`` is a token, which means we are unable to detect if the name is simple or "path-like" for the purpose of rendering SSM parameter ARNs. If ``parameterName`` is not specified, ``simpleName`` must be ``true`` (or undefined) since the name generated by AWS CloudFormation is always a simple name. Default: - auto-detect based on ``parameterName``
         :param tier: The tier of the string parameter. Default: - undefined
-        """
-        self._values = {}
+        '''
+        self._values: typing.Dict[str, typing.Any] = {}
         if allowed_pattern is not None:
             self._values["allowed_pattern"] = allowed_pattern
         if description is not None:
@@ -5695,38 +5353,38 @@ class ParameterOptions:
             self._values["tier"] = tier
 
     @builtins.property
-    def allowed_pattern(self) -> typing.Optional[str]:
-        """A regular expression used to validate the parameter value.
+    def allowed_pattern(self) -> typing.Optional[builtins.str]:
+        '''A regular expression used to validate the parameter value.
 
         For example, for String types with values restricted to
-        numbers, you can specify the following: ``^\d+$``
+        numbers, you can specify the following: ``^\\d+$``
 
-        default
         :default: no validation is performed
-        """
-        return self._values.get("allowed_pattern")
+        '''
+        result = self._values.get("allowed_pattern")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
-    def description(self) -> typing.Optional[str]:
-        """Information about the parameter that you want to add to the system.
+    def description(self) -> typing.Optional[builtins.str]:
+        '''Information about the parameter that you want to add to the system.
 
-        default
         :default: none
-        """
-        return self._values.get("description")
+        '''
+        result = self._values.get("description")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
-    def parameter_name(self) -> typing.Optional[str]:
-        """The name of the parameter.
+    def parameter_name(self) -> typing.Optional[builtins.str]:
+        '''The name of the parameter.
 
-        default
         :default: - a name will be generated by CloudFormation
-        """
-        return self._values.get("parameter_name")
+        '''
+        result = self._values.get("parameter_name")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
-    def simple_name(self) -> typing.Optional[bool]:
-        """Indicates of the parameter name is a simple name (i.e. does not include "/" separators).
+    def simple_name(self) -> typing.Optional[builtins.bool]:
+        '''Indicates of the parameter name is a simple name (i.e. does not include "/" separators).
 
         This is only required only if ``parameterName`` is a token, which means we
         are unable to detect if the name is simple or "path-like" for the purpose
@@ -5736,24 +5394,24 @@ class ParameterOptions:
         undefined) since the name generated by AWS CloudFormation is always a
         simple name.
 
-        default
         :default: - auto-detect based on ``parameterName``
-        """
-        return self._values.get("simple_name")
+        '''
+        result = self._values.get("simple_name")
+        return typing.cast(typing.Optional[builtins.bool], result)
 
     @builtins.property
     def tier(self) -> typing.Optional["ParameterTier"]:
-        """The tier of the string parameter.
+        '''The tier of the string parameter.
 
-        default
         :default: - undefined
-        """
-        return self._values.get("tier")
+        '''
+        result = self._values.get("tier")
+        return typing.cast(typing.Optional["ParameterTier"], result)
 
-    def __eq__(self, rhs) -> bool:
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
@@ -5764,28 +5422,28 @@ class ParameterOptions:
 
 @jsii.enum(jsii_type="@aws-cdk/aws-ssm.ParameterTier")
 class ParameterTier(enum.Enum):
-    """SSM parameter tier."""
+    '''SSM parameter tier.'''
 
     ADVANCED = "ADVANCED"
-    """String."""
+    '''String.'''
     INTELLIGENT_TIERING = "INTELLIGENT_TIERING"
-    """String."""
+    '''String.'''
     STANDARD = "STANDARD"
-    """String."""
+    '''String.'''
 
 
 @jsii.enum(jsii_type="@aws-cdk/aws-ssm.ParameterType")
 class ParameterType(enum.Enum):
-    """SSM parameter type."""
+    '''SSM parameter type.'''
 
     STRING = "STRING"
-    """String."""
+    '''String.'''
     SECURE_STRING = "SECURE_STRING"
-    """Secure String Parameter Store uses an AWS Key Management Service (KMS) customer master key (CMK) to encrypt the parameter value."""
+    '''Secure String Parameter Store uses an AWS Key Management Service (KMS) customer master key (CMK) to encrypt the parameter value.'''
     STRING_LIST = "STRING_LIST"
-    """String List."""
+    '''String List.'''
     AWS_EC2_IMAGE_ID = "AWS_EC2_IMAGE_ID"
-    """An Amazon EC2 image ID, such as ami-0ff8a91507f77f867."""
+    '''An Amazon EC2 image ID, such as ami-0ff8a91507f77f867.'''
 
 
 @jsii.data_type(
@@ -5802,19 +5460,19 @@ class SecureStringParameterAttributes(CommonStringParameterAttributes):
     def __init__(
         self,
         *,
-        parameter_name: str,
-        simple_name: typing.Optional[bool] = None,
+        parameter_name: builtins.str,
+        simple_name: typing.Optional[builtins.bool] = None,
         version: jsii.Number,
         encryption_key: typing.Optional[aws_cdk.aws_kms.IKey] = None,
     ) -> None:
-        """Attributes for secure string parameters.
+        '''Attributes for secure string parameters.
 
         :param parameter_name: The name of the parameter store value. This value can be a token or a concrete string. If it is a concrete string and includes "/" it must also be prefixed with a "/" (fully-qualified).
         :param simple_name: Indicates of the parameter name is a simple name (i.e. does not include "/" separators). This is only required only if ``parameterName`` is a token, which means we are unable to detect if the name is simple or "path-like" for the purpose of rendering SSM parameter ARNs. If ``parameterName`` is not specified, ``simpleName`` must be ``true`` (or undefined) since the name generated by AWS CloudFormation is always a simple name. Default: - auto-detect based on ``parameterName``
         :param version: The version number of the value you wish to retrieve. This is required for secure strings.
         :param encryption_key: The encryption key that is used to encrypt this parameter. Default: - default master key
-        """
-        self._values = {
+        '''
+        self._values: typing.Dict[str, typing.Any] = {
             "parameter_name": parameter_name,
             "version": version,
         }
@@ -5824,17 +5482,19 @@ class SecureStringParameterAttributes(CommonStringParameterAttributes):
             self._values["encryption_key"] = encryption_key
 
     @builtins.property
-    def parameter_name(self) -> str:
-        """The name of the parameter store value.
+    def parameter_name(self) -> builtins.str:
+        '''The name of the parameter store value.
 
         This value can be a token or a concrete string. If it is a concrete string
         and includes "/" it must also be prefixed with a "/" (fully-qualified).
-        """
-        return self._values.get("parameter_name")
+        '''
+        result = self._values.get("parameter_name")
+        assert result is not None, "Required property 'parameter_name' is missing"
+        return typing.cast(builtins.str, result)
 
     @builtins.property
-    def simple_name(self) -> typing.Optional[bool]:
-        """Indicates of the parameter name is a simple name (i.e. does not include "/" separators).
+    def simple_name(self) -> typing.Optional[builtins.bool]:
+        '''Indicates of the parameter name is a simple name (i.e. does not include "/" separators).
 
         This is only required only if ``parameterName`` is a token, which means we
         are unable to detect if the name is simple or "path-like" for the purpose
@@ -5844,32 +5504,34 @@ class SecureStringParameterAttributes(CommonStringParameterAttributes):
         undefined) since the name generated by AWS CloudFormation is always a
         simple name.
 
-        default
         :default: - auto-detect based on ``parameterName``
-        """
-        return self._values.get("simple_name")
+        '''
+        result = self._values.get("simple_name")
+        return typing.cast(typing.Optional[builtins.bool], result)
 
     @builtins.property
     def version(self) -> jsii.Number:
-        """The version number of the value you wish to retrieve.
+        '''The version number of the value you wish to retrieve.
 
         This is required for secure strings.
-        """
-        return self._values.get("version")
+        '''
+        result = self._values.get("version")
+        assert result is not None, "Required property 'version' is missing"
+        return typing.cast(jsii.Number, result)
 
     @builtins.property
     def encryption_key(self) -> typing.Optional[aws_cdk.aws_kms.IKey]:
-        """The encryption key that is used to encrypt this parameter.
+        '''The encryption key that is used to encrypt this parameter.
 
-        default
         :default: - default master key
-        """
-        return self._values.get("encryption_key")
+        '''
+        result = self._values.get("encryption_key")
+        return typing.cast(typing.Optional[aws_cdk.aws_kms.IKey], result)
 
-    def __eq__(self, rhs) -> bool:
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
@@ -5884,34 +5546,33 @@ class StringListParameter(
     metaclass=jsii.JSIIMeta,
     jsii_type="@aws-cdk/aws-ssm.StringListParameter",
 ):
-    """Creates a new StringList SSM Parameter.
+    '''Creates a new StringList SSM Parameter.
 
-    resource:
-    :resource:: AWS::SSM::Parameter
-    """
+    :resource: AWS::SSM::Parameter
+    '''
 
     def __init__(
         self,
-        scope: aws_cdk.core.Construct,
-        id: str,
+        scope: constructs.Construct,
+        id: builtins.str,
         *,
-        string_list_value: typing.List[str],
-        allowed_pattern: typing.Optional[str] = None,
-        description: typing.Optional[str] = None,
-        parameter_name: typing.Optional[str] = None,
-        simple_name: typing.Optional[bool] = None,
-        tier: typing.Optional["ParameterTier"] = None,
+        string_list_value: typing.Sequence[builtins.str],
+        allowed_pattern: typing.Optional[builtins.str] = None,
+        description: typing.Optional[builtins.str] = None,
+        parameter_name: typing.Optional[builtins.str] = None,
+        simple_name: typing.Optional[builtins.bool] = None,
+        tier: typing.Optional[ParameterTier] = None,
     ) -> None:
-        """
+        '''
         :param scope: -
         :param id: -
         :param string_list_value: The values of the parameter. It may not reference another parameter and ``{{}}`` cannot be used in the value.
-        :param allowed_pattern: A regular expression used to validate the parameter value. For example, for String types with values restricted to numbers, you can specify the following: ``^\d+$`` Default: no validation is performed
+        :param allowed_pattern: A regular expression used to validate the parameter value. For example, for String types with values restricted to numbers, you can specify the following: ``^\\d+$`` Default: no validation is performed
         :param description: Information about the parameter that you want to add to the system. Default: none
         :param parameter_name: The name of the parameter. Default: - a name will be generated by CloudFormation
         :param simple_name: Indicates of the parameter name is a simple name (i.e. does not include "/" separators). This is only required only if ``parameterName`` is a token, which means we are unable to detect if the name is simple or "path-like" for the purpose of rendering SSM parameter ARNs. If ``parameterName`` is not specified, ``simpleName`` must be ``true`` (or undefined) since the name generated by AWS CloudFormation is always a simple name. Default: - auto-detect based on ``parameterName``
         :param tier: The tier of the string parameter. Default: - undefined
-        """
+        '''
         props = StringListParameterProps(
             string_list_value=string_list_value,
             allowed_pattern=allowed_pattern,
@@ -5923,75 +5584,76 @@ class StringListParameter(
 
         jsii.create(StringListParameter, self, [scope, id, props])
 
-    @jsii.member(jsii_name="fromStringListParameterName")
+    @jsii.member(jsii_name="fromStringListParameterName") # type: ignore[misc]
     @builtins.classmethod
     def from_string_list_parameter_name(
-        cls, scope: aws_cdk.core.Construct, id: str, string_list_parameter_name: str
-    ) -> "IStringListParameter":
-        """Imports an external parameter of type string list.
+        cls,
+        scope: constructs.Construct,
+        id: builtins.str,
+        string_list_parameter_name: builtins.str,
+    ) -> IStringListParameter:
+        '''Imports an external parameter of type string list.
 
         Returns a token and should not be parsed.
 
         :param scope: -
         :param id: -
         :param string_list_parameter_name: -
-        """
-        return jsii.sinvoke(
-            cls, "fromStringListParameterName", [scope, id, string_list_parameter_name]
-        )
+        '''
+        return typing.cast(IStringListParameter, jsii.sinvoke(cls, "fromStringListParameterName", [scope, id, string_list_parameter_name]))
 
     @jsii.member(jsii_name="grantRead")
     def grant_read(self, grantee: aws_cdk.aws_iam.IGrantable) -> aws_cdk.aws_iam.Grant:
-        """Grants read (DescribeParameter, GetParameter, GetParameterHistory) permissions on the SSM Parameter.
+        '''Grants read (DescribeParameter, GetParameter, GetParameterHistory) permissions on the SSM Parameter.
 
         :param grantee: -
-        """
-        return jsii.invoke(self, "grantRead", [grantee])
+        '''
+        return typing.cast(aws_cdk.aws_iam.Grant, jsii.invoke(self, "grantRead", [grantee]))
 
     @jsii.member(jsii_name="grantWrite")
     def grant_write(self, grantee: aws_cdk.aws_iam.IGrantable) -> aws_cdk.aws_iam.Grant:
-        """Grants write (PutParameter) permissions on the SSM Parameter.
+        '''Grants write (PutParameter) permissions on the SSM Parameter.
 
         :param grantee: -
-        """
-        return jsii.invoke(self, "grantWrite", [grantee])
+        '''
+        return typing.cast(aws_cdk.aws_iam.Grant, jsii.invoke(self, "grantWrite", [grantee]))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="parameterArn")
-    def parameter_arn(self) -> str:
-        """The ARN of the SSM Parameter resource."""
-        return jsii.get(self, "parameterArn")
+    def parameter_arn(self) -> builtins.str:
+        '''The ARN of the SSM Parameter resource.'''
+        return typing.cast(builtins.str, jsii.get(self, "parameterArn"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="parameterName")
-    def parameter_name(self) -> str:
-        """The name of the SSM Parameter resource."""
-        return jsii.get(self, "parameterName")
+    def parameter_name(self) -> builtins.str:
+        '''The name of the SSM Parameter resource.'''
+        return typing.cast(builtins.str, jsii.get(self, "parameterName"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="parameterType")
-    def parameter_type(self) -> str:
-        """The type of the SSM Parameter resource."""
-        return jsii.get(self, "parameterType")
+    def parameter_type(self) -> builtins.str:
+        '''The type of the SSM Parameter resource.'''
+        return typing.cast(builtins.str, jsii.get(self, "parameterType"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="stringListValue")
-    def string_list_value(self) -> typing.List[str]:
-        """The parameter value.
+    def string_list_value(self) -> typing.List[builtins.str]:
+        '''The parameter value.
 
         Value must not nest another parameter. Do not use {{}} in the value. Values in the array
         cannot contain commas (``,``).
-        """
-        return jsii.get(self, "stringListValue")
+        '''
+        return typing.cast(typing.List[builtins.str], jsii.get(self, "stringListValue"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="encryptionKey")
     def encryption_key(self) -> typing.Optional[aws_cdk.aws_kms.IKey]:
-        """The encryption key that is used to encrypt this parameter.
+        '''The encryption key that is used to encrypt this parameter.
 
         - @default - default master key
-        """
-        return jsii.get(self, "encryptionKey")
+        '''
+        return typing.cast(typing.Optional[aws_cdk.aws_kms.IKey], jsii.get(self, "encryptionKey"))
 
 
 @jsii.data_type(
@@ -6010,23 +5672,23 @@ class StringListParameterProps(ParameterOptions):
     def __init__(
         self,
         *,
-        allowed_pattern: typing.Optional[str] = None,
-        description: typing.Optional[str] = None,
-        parameter_name: typing.Optional[str] = None,
-        simple_name: typing.Optional[bool] = None,
-        tier: typing.Optional["ParameterTier"] = None,
-        string_list_value: typing.List[str],
+        allowed_pattern: typing.Optional[builtins.str] = None,
+        description: typing.Optional[builtins.str] = None,
+        parameter_name: typing.Optional[builtins.str] = None,
+        simple_name: typing.Optional[builtins.bool] = None,
+        tier: typing.Optional[ParameterTier] = None,
+        string_list_value: typing.Sequence[builtins.str],
     ) -> None:
-        """Properties needed to create a StringList SSM Parameter.
+        '''Properties needed to create a StringList SSM Parameter.
 
-        :param allowed_pattern: A regular expression used to validate the parameter value. For example, for String types with values restricted to numbers, you can specify the following: ``^\d+$`` Default: no validation is performed
+        :param allowed_pattern: A regular expression used to validate the parameter value. For example, for String types with values restricted to numbers, you can specify the following: ``^\\d+$`` Default: no validation is performed
         :param description: Information about the parameter that you want to add to the system. Default: none
         :param parameter_name: The name of the parameter. Default: - a name will be generated by CloudFormation
         :param simple_name: Indicates of the parameter name is a simple name (i.e. does not include "/" separators). This is only required only if ``parameterName`` is a token, which means we are unable to detect if the name is simple or "path-like" for the purpose of rendering SSM parameter ARNs. If ``parameterName`` is not specified, ``simpleName`` must be ``true`` (or undefined) since the name generated by AWS CloudFormation is always a simple name. Default: - auto-detect based on ``parameterName``
         :param tier: The tier of the string parameter. Default: - undefined
         :param string_list_value: The values of the parameter. It may not reference another parameter and ``{{}}`` cannot be used in the value.
-        """
-        self._values = {
+        '''
+        self._values: typing.Dict[str, typing.Any] = {
             "string_list_value": string_list_value,
         }
         if allowed_pattern is not None:
@@ -6041,38 +5703,38 @@ class StringListParameterProps(ParameterOptions):
             self._values["tier"] = tier
 
     @builtins.property
-    def allowed_pattern(self) -> typing.Optional[str]:
-        """A regular expression used to validate the parameter value.
+    def allowed_pattern(self) -> typing.Optional[builtins.str]:
+        '''A regular expression used to validate the parameter value.
 
         For example, for String types with values restricted to
-        numbers, you can specify the following: ``^\d+$``
+        numbers, you can specify the following: ``^\\d+$``
 
-        default
         :default: no validation is performed
-        """
-        return self._values.get("allowed_pattern")
+        '''
+        result = self._values.get("allowed_pattern")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
-    def description(self) -> typing.Optional[str]:
-        """Information about the parameter that you want to add to the system.
+    def description(self) -> typing.Optional[builtins.str]:
+        '''Information about the parameter that you want to add to the system.
 
-        default
         :default: none
-        """
-        return self._values.get("description")
+        '''
+        result = self._values.get("description")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
-    def parameter_name(self) -> typing.Optional[str]:
-        """The name of the parameter.
+    def parameter_name(self) -> typing.Optional[builtins.str]:
+        '''The name of the parameter.
 
-        default
         :default: - a name will be generated by CloudFormation
-        """
-        return self._values.get("parameter_name")
+        '''
+        result = self._values.get("parameter_name")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
-    def simple_name(self) -> typing.Optional[bool]:
-        """Indicates of the parameter name is a simple name (i.e. does not include "/" separators).
+    def simple_name(self) -> typing.Optional[builtins.bool]:
+        '''Indicates of the parameter name is a simple name (i.e. does not include "/" separators).
 
         This is only required only if ``parameterName`` is a token, which means we
         are unable to detect if the name is simple or "path-like" for the purpose
@@ -6082,32 +5744,34 @@ class StringListParameterProps(ParameterOptions):
         undefined) since the name generated by AWS CloudFormation is always a
         simple name.
 
-        default
         :default: - auto-detect based on ``parameterName``
-        """
-        return self._values.get("simple_name")
+        '''
+        result = self._values.get("simple_name")
+        return typing.cast(typing.Optional[builtins.bool], result)
 
     @builtins.property
-    def tier(self) -> typing.Optional["ParameterTier"]:
-        """The tier of the string parameter.
+    def tier(self) -> typing.Optional[ParameterTier]:
+        '''The tier of the string parameter.
 
-        default
         :default: - undefined
-        """
-        return self._values.get("tier")
+        '''
+        result = self._values.get("tier")
+        return typing.cast(typing.Optional[ParameterTier], result)
 
     @builtins.property
-    def string_list_value(self) -> typing.List[str]:
-        """The values of the parameter.
+    def string_list_value(self) -> typing.List[builtins.str]:
+        '''The values of the parameter.
 
         It may not reference another parameter and ``{{}}`` cannot be used in the value.
-        """
-        return self._values.get("string_list_value")
+        '''
+        result = self._values.get("string_list_value")
+        assert result is not None, "Required property 'string_list_value' is missing"
+        return typing.cast(typing.List[builtins.str], result)
 
-    def __eq__(self, rhs) -> bool:
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
@@ -6122,36 +5786,35 @@ class StringParameter(
     metaclass=jsii.JSIIMeta,
     jsii_type="@aws-cdk/aws-ssm.StringParameter",
 ):
-    """Creates a new String SSM Parameter.
+    '''Creates a new String SSM Parameter.
 
-    resource:
-    :resource:: AWS::SSM::Parameter
-    """
+    :resource: AWS::SSM::Parameter
+    '''
 
     def __init__(
         self,
-        scope: aws_cdk.core.Construct,
-        id: str,
+        scope: constructs.Construct,
+        id: builtins.str,
         *,
-        string_value: str,
-        type: typing.Optional["ParameterType"] = None,
-        allowed_pattern: typing.Optional[str] = None,
-        description: typing.Optional[str] = None,
-        parameter_name: typing.Optional[str] = None,
-        simple_name: typing.Optional[bool] = None,
-        tier: typing.Optional["ParameterTier"] = None,
+        string_value: builtins.str,
+        type: typing.Optional[ParameterType] = None,
+        allowed_pattern: typing.Optional[builtins.str] = None,
+        description: typing.Optional[builtins.str] = None,
+        parameter_name: typing.Optional[builtins.str] = None,
+        simple_name: typing.Optional[builtins.bool] = None,
+        tier: typing.Optional[ParameterTier] = None,
     ) -> None:
-        """
+        '''
         :param scope: -
         :param id: -
         :param string_value: The value of the parameter. It may not reference another parameter and ``{{}}`` cannot be used in the value.
         :param type: The type of the string parameter. Default: ParameterType.STRING
-        :param allowed_pattern: A regular expression used to validate the parameter value. For example, for String types with values restricted to numbers, you can specify the following: ``^\d+$`` Default: no validation is performed
+        :param allowed_pattern: A regular expression used to validate the parameter value. For example, for String types with values restricted to numbers, you can specify the following: ``^\\d+$`` Default: no validation is performed
         :param description: Information about the parameter that you want to add to the system. Default: none
         :param parameter_name: The name of the parameter. Default: - a name will be generated by CloudFormation
         :param simple_name: Indicates of the parameter name is a simple name (i.e. does not include "/" separators). This is only required only if ``parameterName`` is a token, which means we are unable to detect if the name is simple or "path-like" for the purpose of rendering SSM parameter ARNs. If ``parameterName`` is not specified, ``simpleName`` must be ``true`` (or undefined) since the name generated by AWS CloudFormation is always a simple name. Default: - auto-detect based on ``parameterName``
         :param tier: The tier of the string parameter. Default: - undefined
-        """
+        '''
         props = StringParameterProps(
             string_value=string_value,
             type=type,
@@ -6164,19 +5827,19 @@ class StringParameter(
 
         jsii.create(StringParameter, self, [scope, id, props])
 
-    @jsii.member(jsii_name="fromSecureStringParameterAttributes")
+    @jsii.member(jsii_name="fromSecureStringParameterAttributes") # type: ignore[misc]
     @builtins.classmethod
     def from_secure_string_parameter_attributes(
         cls,
-        scope: aws_cdk.core.Construct,
-        id: str,
+        scope: constructs.Construct,
+        id: builtins.str,
         *,
         version: jsii.Number,
         encryption_key: typing.Optional[aws_cdk.aws_kms.IKey] = None,
-        parameter_name: str,
-        simple_name: typing.Optional[bool] = None,
-    ) -> "IStringParameter":
-        """Imports a secure string parameter from the SSM parameter store.
+        parameter_name: builtins.str,
+        simple_name: typing.Optional[builtins.bool] = None,
+    ) -> IStringParameter:
+        '''Imports a secure string parameter from the SSM parameter store.
 
         :param scope: -
         :param id: -
@@ -6184,7 +5847,7 @@ class StringParameter(
         :param encryption_key: The encryption key that is used to encrypt this parameter. Default: - default master key
         :param parameter_name: The name of the parameter store value. This value can be a token or a concrete string. If it is a concrete string and includes "/" it must also be prefixed with a "/" (fully-qualified).
         :param simple_name: Indicates of the parameter name is a simple name (i.e. does not include "/" separators). This is only required only if ``parameterName`` is a token, which means we are unable to detect if the name is simple or "path-like" for the purpose of rendering SSM parameter ARNs. If ``parameterName`` is not specified, ``simpleName`` must be ``true`` (or undefined) since the name generated by AWS CloudFormation is always a simple name. Default: - auto-detect based on ``parameterName``
-        """
+        '''
         attrs = SecureStringParameterAttributes(
             version=version,
             encryption_key=encryption_key,
@@ -6192,23 +5855,21 @@ class StringParameter(
             simple_name=simple_name,
         )
 
-        return jsii.sinvoke(
-            cls, "fromSecureStringParameterAttributes", [scope, id, attrs]
-        )
+        return typing.cast(IStringParameter, jsii.sinvoke(cls, "fromSecureStringParameterAttributes", [scope, id, attrs]))
 
-    @jsii.member(jsii_name="fromStringParameterAttributes")
+    @jsii.member(jsii_name="fromStringParameterAttributes") # type: ignore[misc]
     @builtins.classmethod
     def from_string_parameter_attributes(
         cls,
-        scope: aws_cdk.core.Construct,
-        id: str,
+        scope: constructs.Construct,
+        id: builtins.str,
         *,
-        type: typing.Optional["ParameterType"] = None,
+        type: typing.Optional[ParameterType] = None,
         version: typing.Optional[jsii.Number] = None,
-        parameter_name: str,
-        simple_name: typing.Optional[bool] = None,
-    ) -> "IStringParameter":
-        """Imports an external string parameter with name and optional version.
+        parameter_name: builtins.str,
+        simple_name: typing.Optional[builtins.bool] = None,
+    ) -> IStringParameter:
+        '''Imports an external string parameter with name and optional version.
 
         :param scope: -
         :param id: -
@@ -6216,7 +5877,7 @@ class StringParameter(
         :param version: The version number of the value you wish to retrieve. Default: The latest version will be retrieved.
         :param parameter_name: The name of the parameter store value. This value can be a token or a concrete string. If it is a concrete string and includes "/" it must also be prefixed with a "/" (fully-qualified).
         :param simple_name: Indicates of the parameter name is a simple name (i.e. does not include "/" separators). This is only required only if ``parameterName`` is a token, which means we are unable to detect if the name is simple or "path-like" for the purpose of rendering SSM parameter ARNs. If ``parameterName`` is not specified, ``simpleName`` must be ``true`` (or undefined) since the name generated by AWS CloudFormation is always a simple name. Default: - auto-detect based on ``parameterName``
-        """
+        '''
         attrs = StringParameterAttributes(
             type=type,
             version=version,
@@ -6224,142 +5885,142 @@ class StringParameter(
             simple_name=simple_name,
         )
 
-        return jsii.sinvoke(cls, "fromStringParameterAttributes", [scope, id, attrs])
+        return typing.cast(IStringParameter, jsii.sinvoke(cls, "fromStringParameterAttributes", [scope, id, attrs]))
 
-    @jsii.member(jsii_name="fromStringParameterName")
+    @jsii.member(jsii_name="fromStringParameterName") # type: ignore[misc]
     @builtins.classmethod
     def from_string_parameter_name(
-        cls, scope: aws_cdk.core.Construct, id: str, string_parameter_name: str
-    ) -> "IStringParameter":
-        """Imports an external string parameter by name.
+        cls,
+        scope: constructs.Construct,
+        id: builtins.str,
+        string_parameter_name: builtins.str,
+    ) -> IStringParameter:
+        '''Imports an external string parameter by name.
 
         :param scope: -
         :param id: -
         :param string_parameter_name: -
-        """
-        return jsii.sinvoke(
-            cls, "fromStringParameterName", [scope, id, string_parameter_name]
-        )
+        '''
+        return typing.cast(IStringParameter, jsii.sinvoke(cls, "fromStringParameterName", [scope, id, string_parameter_name]))
 
-    @jsii.member(jsii_name="valueForSecureStringParameter")
+    @jsii.member(jsii_name="valueForSecureStringParameter") # type: ignore[misc]
     @builtins.classmethod
     def value_for_secure_string_parameter(
-        cls, scope: aws_cdk.core.Construct, parameter_name: str, version: jsii.Number
-    ) -> str:
-        """Returns a token that will resolve (during deployment).
+        cls,
+        scope: constructs.Construct,
+        parameter_name: builtins.str,
+        version: jsii.Number,
+    ) -> builtins.str:
+        '''Returns a token that will resolve (during deployment).
 
         :param scope: Some scope within a stack.
         :param parameter_name: The name of the SSM parameter.
         :param version: The parameter version (required for secure strings).
-        """
-        return jsii.sinvoke(
-            cls, "valueForSecureStringParameter", [scope, parameter_name, version]
-        )
+        '''
+        return typing.cast(builtins.str, jsii.sinvoke(cls, "valueForSecureStringParameter", [scope, parameter_name, version]))
 
-    @jsii.member(jsii_name="valueForStringParameter")
+    @jsii.member(jsii_name="valueForStringParameter") # type: ignore[misc]
     @builtins.classmethod
     def value_for_string_parameter(
         cls,
-        scope: aws_cdk.core.Construct,
-        parameter_name: str,
+        scope: constructs.Construct,
+        parameter_name: builtins.str,
         version: typing.Optional[jsii.Number] = None,
-    ) -> str:
-        """Returns a token that will resolve (during deployment) to the string value of an SSM string parameter.
+    ) -> builtins.str:
+        '''Returns a token that will resolve (during deployment) to the string value of an SSM string parameter.
 
         :param scope: Some scope within a stack.
         :param parameter_name: The name of the SSM parameter.
         :param version: The parameter version (recommended in order to ensure that the value won't change during deployment).
-        """
-        return jsii.sinvoke(
-            cls, "valueForStringParameter", [scope, parameter_name, version]
-        )
+        '''
+        return typing.cast(builtins.str, jsii.sinvoke(cls, "valueForStringParameter", [scope, parameter_name, version]))
 
-    @jsii.member(jsii_name="valueForTypedStringParameter")
+    @jsii.member(jsii_name="valueForTypedStringParameter") # type: ignore[misc]
     @builtins.classmethod
     def value_for_typed_string_parameter(
         cls,
-        scope: aws_cdk.core.Construct,
-        parameter_name: str,
-        type: typing.Optional["ParameterType"] = None,
+        scope: constructs.Construct,
+        parameter_name: builtins.str,
+        type: typing.Optional[ParameterType] = None,
         version: typing.Optional[jsii.Number] = None,
-    ) -> str:
-        """Returns a token that will resolve (during deployment) to the string value of an SSM string parameter.
+    ) -> builtins.str:
+        '''Returns a token that will resolve (during deployment) to the string value of an SSM string parameter.
 
         :param scope: Some scope within a stack.
         :param parameter_name: The name of the SSM parameter.
         :param type: The type of the SSM parameter.
         :param version: The parameter version (recommended in order to ensure that the value won't change during deployment).
-        """
-        return jsii.sinvoke(
-            cls, "valueForTypedStringParameter", [scope, parameter_name, type, version]
-        )
+        '''
+        return typing.cast(builtins.str, jsii.sinvoke(cls, "valueForTypedStringParameter", [scope, parameter_name, type, version]))
 
-    @jsii.member(jsii_name="valueFromLookup")
+    @jsii.member(jsii_name="valueFromLookup") # type: ignore[misc]
     @builtins.classmethod
     def value_from_lookup(
-        cls, scope: aws_cdk.core.Construct, parameter_name: str
-    ) -> str:
-        """Reads the value of an SSM parameter during synthesis through an environmental context provider.
+        cls,
+        scope: aws_cdk.core.Construct,
+        parameter_name: builtins.str,
+    ) -> builtins.str:
+        '''Reads the value of an SSM parameter during synthesis through an environmental context provider.
 
         Requires that the stack this scope is defined in will have explicit
         account/region information. Otherwise, it will fail during synthesis.
 
         :param scope: -
         :param parameter_name: -
-        """
-        return jsii.sinvoke(cls, "valueFromLookup", [scope, parameter_name])
+        '''
+        return typing.cast(builtins.str, jsii.sinvoke(cls, "valueFromLookup", [scope, parameter_name]))
 
     @jsii.member(jsii_name="grantRead")
     def grant_read(self, grantee: aws_cdk.aws_iam.IGrantable) -> aws_cdk.aws_iam.Grant:
-        """Grants read (DescribeParameter, GetParameter, GetParameterHistory) permissions on the SSM Parameter.
+        '''Grants read (DescribeParameter, GetParameter, GetParameterHistory) permissions on the SSM Parameter.
 
         :param grantee: -
-        """
-        return jsii.invoke(self, "grantRead", [grantee])
+        '''
+        return typing.cast(aws_cdk.aws_iam.Grant, jsii.invoke(self, "grantRead", [grantee]))
 
     @jsii.member(jsii_name="grantWrite")
     def grant_write(self, grantee: aws_cdk.aws_iam.IGrantable) -> aws_cdk.aws_iam.Grant:
-        """Grants write (PutParameter) permissions on the SSM Parameter.
+        '''Grants write (PutParameter) permissions on the SSM Parameter.
 
         :param grantee: -
-        """
-        return jsii.invoke(self, "grantWrite", [grantee])
+        '''
+        return typing.cast(aws_cdk.aws_iam.Grant, jsii.invoke(self, "grantWrite", [grantee]))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="parameterArn")
-    def parameter_arn(self) -> str:
-        """The ARN of the SSM Parameter resource."""
-        return jsii.get(self, "parameterArn")
+    def parameter_arn(self) -> builtins.str:
+        '''The ARN of the SSM Parameter resource.'''
+        return typing.cast(builtins.str, jsii.get(self, "parameterArn"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="parameterName")
-    def parameter_name(self) -> str:
-        """The name of the SSM Parameter resource."""
-        return jsii.get(self, "parameterName")
+    def parameter_name(self) -> builtins.str:
+        '''The name of the SSM Parameter resource.'''
+        return typing.cast(builtins.str, jsii.get(self, "parameterName"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="parameterType")
-    def parameter_type(self) -> str:
-        """The type of the SSM Parameter resource."""
-        return jsii.get(self, "parameterType")
+    def parameter_type(self) -> builtins.str:
+        '''The type of the SSM Parameter resource.'''
+        return typing.cast(builtins.str, jsii.get(self, "parameterType"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="stringValue")
-    def string_value(self) -> str:
-        """The parameter value.
+    def string_value(self) -> builtins.str:
+        '''The parameter value.
 
         Value must not nest another parameter. Do not use {{}} in the value.
-        """
-        return jsii.get(self, "stringValue")
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "stringValue"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="encryptionKey")
     def encryption_key(self) -> typing.Optional[aws_cdk.aws_kms.IKey]:
-        """The encryption key that is used to encrypt this parameter.
+        '''The encryption key that is used to encrypt this parameter.
 
         - @default - default master key
-        """
-        return jsii.get(self, "encryptionKey")
+        '''
+        return typing.cast(typing.Optional[aws_cdk.aws_kms.IKey], jsii.get(self, "encryptionKey"))
 
 
 @jsii.data_type(
@@ -6376,22 +6037,21 @@ class StringParameterAttributes(CommonStringParameterAttributes):
     def __init__(
         self,
         *,
-        parameter_name: str,
-        simple_name: typing.Optional[bool] = None,
-        type: typing.Optional["ParameterType"] = None,
+        parameter_name: builtins.str,
+        simple_name: typing.Optional[builtins.bool] = None,
+        type: typing.Optional[ParameterType] = None,
         version: typing.Optional[jsii.Number] = None,
     ) -> None:
-        """Attributes for parameters of various types of string.
+        '''Attributes for parameters of various types of string.
 
         :param parameter_name: The name of the parameter store value. This value can be a token or a concrete string. If it is a concrete string and includes "/" it must also be prefixed with a "/" (fully-qualified).
         :param simple_name: Indicates of the parameter name is a simple name (i.e. does not include "/" separators). This is only required only if ``parameterName`` is a token, which means we are unable to detect if the name is simple or "path-like" for the purpose of rendering SSM parameter ARNs. If ``parameterName`` is not specified, ``simpleName`` must be ``true`` (or undefined) since the name generated by AWS CloudFormation is always a simple name. Default: - auto-detect based on ``parameterName``
         :param type: The type of the string parameter. Default: ParameterType.STRING
         :param version: The version number of the value you wish to retrieve. Default: The latest version will be retrieved.
 
-        see
         :see: ParameterType
-        """
-        self._values = {
+        '''
+        self._values: typing.Dict[str, typing.Any] = {
             "parameter_name": parameter_name,
         }
         if simple_name is not None:
@@ -6402,17 +6062,19 @@ class StringParameterAttributes(CommonStringParameterAttributes):
             self._values["version"] = version
 
     @builtins.property
-    def parameter_name(self) -> str:
-        """The name of the parameter store value.
+    def parameter_name(self) -> builtins.str:
+        '''The name of the parameter store value.
 
         This value can be a token or a concrete string. If it is a concrete string
         and includes "/" it must also be prefixed with a "/" (fully-qualified).
-        """
-        return self._values.get("parameter_name")
+        '''
+        result = self._values.get("parameter_name")
+        assert result is not None, "Required property 'parameter_name' is missing"
+        return typing.cast(builtins.str, result)
 
     @builtins.property
-    def simple_name(self) -> typing.Optional[bool]:
-        """Indicates of the parameter name is a simple name (i.e. does not include "/" separators).
+    def simple_name(self) -> typing.Optional[builtins.bool]:
+        '''Indicates of the parameter name is a simple name (i.e. does not include "/" separators).
 
         This is only required only if ``parameterName`` is a token, which means we
         are unable to detect if the name is simple or "path-like" for the purpose
@@ -6422,33 +6084,33 @@ class StringParameterAttributes(CommonStringParameterAttributes):
         undefined) since the name generated by AWS CloudFormation is always a
         simple name.
 
-        default
         :default: - auto-detect based on ``parameterName``
-        """
-        return self._values.get("simple_name")
+        '''
+        result = self._values.get("simple_name")
+        return typing.cast(typing.Optional[builtins.bool], result)
 
     @builtins.property
-    def type(self) -> typing.Optional["ParameterType"]:
-        """The type of the string parameter.
+    def type(self) -> typing.Optional[ParameterType]:
+        '''The type of the string parameter.
 
-        default
         :default: ParameterType.STRING
-        """
-        return self._values.get("type")
+        '''
+        result = self._values.get("type")
+        return typing.cast(typing.Optional[ParameterType], result)
 
     @builtins.property
     def version(self) -> typing.Optional[jsii.Number]:
-        """The version number of the value you wish to retrieve.
+        '''The version number of the value you wish to retrieve.
 
-        default
         :default: The latest version will be retrieved.
-        """
-        return self._values.get("version")
+        '''
+        result = self._values.get("version")
+        return typing.cast(typing.Optional[jsii.Number], result)
 
-    def __eq__(self, rhs) -> bool:
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
@@ -6474,25 +6136,25 @@ class StringParameterProps(ParameterOptions):
     def __init__(
         self,
         *,
-        allowed_pattern: typing.Optional[str] = None,
-        description: typing.Optional[str] = None,
-        parameter_name: typing.Optional[str] = None,
-        simple_name: typing.Optional[bool] = None,
-        tier: typing.Optional["ParameterTier"] = None,
-        string_value: str,
-        type: typing.Optional["ParameterType"] = None,
+        allowed_pattern: typing.Optional[builtins.str] = None,
+        description: typing.Optional[builtins.str] = None,
+        parameter_name: typing.Optional[builtins.str] = None,
+        simple_name: typing.Optional[builtins.bool] = None,
+        tier: typing.Optional[ParameterTier] = None,
+        string_value: builtins.str,
+        type: typing.Optional[ParameterType] = None,
     ) -> None:
-        """Properties needed to create a String SSM parameter.
+        '''Properties needed to create a String SSM parameter.
 
-        :param allowed_pattern: A regular expression used to validate the parameter value. For example, for String types with values restricted to numbers, you can specify the following: ``^\d+$`` Default: no validation is performed
+        :param allowed_pattern: A regular expression used to validate the parameter value. For example, for String types with values restricted to numbers, you can specify the following: ``^\\d+$`` Default: no validation is performed
         :param description: Information about the parameter that you want to add to the system. Default: none
         :param parameter_name: The name of the parameter. Default: - a name will be generated by CloudFormation
         :param simple_name: Indicates of the parameter name is a simple name (i.e. does not include "/" separators). This is only required only if ``parameterName`` is a token, which means we are unable to detect if the name is simple or "path-like" for the purpose of rendering SSM parameter ARNs. If ``parameterName`` is not specified, ``simpleName`` must be ``true`` (or undefined) since the name generated by AWS CloudFormation is always a simple name. Default: - auto-detect based on ``parameterName``
         :param tier: The tier of the string parameter. Default: - undefined
         :param string_value: The value of the parameter. It may not reference another parameter and ``{{}}`` cannot be used in the value.
         :param type: The type of the string parameter. Default: ParameterType.STRING
-        """
-        self._values = {
+        '''
+        self._values: typing.Dict[str, typing.Any] = {
             "string_value": string_value,
         }
         if allowed_pattern is not None:
@@ -6509,38 +6171,38 @@ class StringParameterProps(ParameterOptions):
             self._values["type"] = type
 
     @builtins.property
-    def allowed_pattern(self) -> typing.Optional[str]:
-        """A regular expression used to validate the parameter value.
+    def allowed_pattern(self) -> typing.Optional[builtins.str]:
+        '''A regular expression used to validate the parameter value.
 
         For example, for String types with values restricted to
-        numbers, you can specify the following: ``^\d+$``
+        numbers, you can specify the following: ``^\\d+$``
 
-        default
         :default: no validation is performed
-        """
-        return self._values.get("allowed_pattern")
+        '''
+        result = self._values.get("allowed_pattern")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
-    def description(self) -> typing.Optional[str]:
-        """Information about the parameter that you want to add to the system.
+    def description(self) -> typing.Optional[builtins.str]:
+        '''Information about the parameter that you want to add to the system.
 
-        default
         :default: none
-        """
-        return self._values.get("description")
+        '''
+        result = self._values.get("description")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
-    def parameter_name(self) -> typing.Optional[str]:
-        """The name of the parameter.
+    def parameter_name(self) -> typing.Optional[builtins.str]:
+        '''The name of the parameter.
 
-        default
         :default: - a name will be generated by CloudFormation
-        """
-        return self._values.get("parameter_name")
+        '''
+        result = self._values.get("parameter_name")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
-    def simple_name(self) -> typing.Optional[bool]:
-        """Indicates of the parameter name is a simple name (i.e. does not include "/" separators).
+    def simple_name(self) -> typing.Optional[builtins.bool]:
+        '''Indicates of the parameter name is a simple name (i.e. does not include "/" separators).
 
         This is only required only if ``parameterName`` is a token, which means we
         are unable to detect if the name is simple or "path-like" for the purpose
@@ -6550,41 +6212,43 @@ class StringParameterProps(ParameterOptions):
         undefined) since the name generated by AWS CloudFormation is always a
         simple name.
 
-        default
         :default: - auto-detect based on ``parameterName``
-        """
-        return self._values.get("simple_name")
+        '''
+        result = self._values.get("simple_name")
+        return typing.cast(typing.Optional[builtins.bool], result)
 
     @builtins.property
-    def tier(self) -> typing.Optional["ParameterTier"]:
-        """The tier of the string parameter.
+    def tier(self) -> typing.Optional[ParameterTier]:
+        '''The tier of the string parameter.
 
-        default
         :default: - undefined
-        """
-        return self._values.get("tier")
+        '''
+        result = self._values.get("tier")
+        return typing.cast(typing.Optional[ParameterTier], result)
 
     @builtins.property
-    def string_value(self) -> str:
-        """The value of the parameter.
+    def string_value(self) -> builtins.str:
+        '''The value of the parameter.
 
         It may not reference another parameter and ``{{}}`` cannot be used in the value.
-        """
-        return self._values.get("string_value")
+        '''
+        result = self._values.get("string_value")
+        assert result is not None, "Required property 'string_value' is missing"
+        return typing.cast(builtins.str, result)
 
     @builtins.property
-    def type(self) -> typing.Optional["ParameterType"]:
-        """The type of the string parameter.
+    def type(self) -> typing.Optional[ParameterType]:
+        '''The type of the string parameter.
 
-        default
         :default: ParameterType.STRING
-        """
-        return self._values.get("type")
+        '''
+        result = self._values.get("type")
+        return typing.cast(typing.Optional[ParameterType], result)
 
-    def __eq__(self, rhs) -> bool:
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:

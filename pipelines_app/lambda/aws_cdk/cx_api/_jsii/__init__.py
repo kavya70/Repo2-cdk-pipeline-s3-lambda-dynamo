@@ -5,13 +5,13 @@ import enum
 import typing
 
 import jsii
-import jsii.compat
 import publication
+import typing_extensions
 
 import aws_cdk.cloud_assembly_schema._jsii
 
 __jsii_assembly__ = jsii.JSIIAssembly.load(
-    "@aws-cdk/cx-api", "1.56.0", __name__[0:-6], "cx-api@1.56.0.jsii.tgz"
+    "@aws-cdk/cx-api", "1.115.0", __name__[0:-6], "cx-api@1.115.0.jsii.tgz"
 )
 
 __all__ = [

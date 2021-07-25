@@ -5,14 +5,14 @@ import enum
 import typing
 
 import jsii
-import jsii.compat
 import publication
+import typing_extensions
 
 __jsii_assembly__ = jsii.JSIIAssembly.load(
     "@aws-cdk/cloud-assembly-schema",
-    "1.56.0",
+    "1.115.0",
     __name__[0:-6],
-    "cloud-assembly-schema@1.56.0.jsii.tgz",
+    "cloud-assembly-schema@1.115.0.jsii.tgz",
 )
 
 __all__ = [

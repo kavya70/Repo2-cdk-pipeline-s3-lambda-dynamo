@@ -1,5 +1,5 @@
-"""
-## Amazon CloudWatch Logs Construct Library
+'''
+# Amazon CloudWatch Logs Construct Library
 
 <!--BEGIN STABILITY BANNER-->---
 
@@ -13,7 +13,7 @@
 
 This library supplies constructs for working with CloudWatch Logs.
 
-### Log Groups/Streams
+## Log Groups/Streams
 
 The basic unit of CloudWatch is a *Log Group*. Every log group typically has the
 same kind of data logged to it, in the same format. If there are multiple
@@ -37,14 +37,49 @@ retention period (including infinite retention).
 # Configure log group for short retention
 log_group = LogGroup(stack, "LogGroup",
     retention=RetentionDays.ONE_WEEK
-)
-# Configure log group for infinite retention
+)# Configure log group for infinite retention
 log_group = LogGroup(stack, "LogGroup",
     retention=Infinity
 )
 ```
 
-### Subscriptions and Destinations
+## LogRetention
+
+The `LogRetention` construct is a way to control the retention period of log groups that are created outside of the CDK. The construct is usually
+used on log groups that are auto created by AWS services, such as [AWS
+lambda](https://docs.aws.amazon.com/lambda/latest/dg/monitoring-cloudwatchlogs.html).
+
+This is implemented using a [CloudFormation custom
+resource](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cfn-customresource.html)
+which pre-creates the log group if it doesn't exist, and sets the specified log retention period (never expire, by default).
+
+By default, the log group will be created in the same region as the stack. The `logGroupRegion` property can be used to configure
+log groups in other regions. This is typically useful when controlling retention for log groups auto-created by global services that
+publish their log group to a specific region, such as AWS Chatbot creating a log group in `us-east-1`.
+
+## Encrypting Log Groups
+
+By default, log group data is always encrypted in CloudWatch Logs. You have the
+option to encrypt log group data using a AWS KMS customer master key (CMK) should
+you not wish to use the default AWS encryption. Keep in mind that if you decide to
+encrypt a log group, any service or IAM identity that needs to read the encrypted
+log streams in the future will require the same CMK to decrypt the data.
+
+Here's a simple example of creating an encrypted Log Group using a KMS CMK.
+
+```python
+# Example automatically generated without compilation. See https://github.com/aws/jsii/issues/826
+import aws_cdk.aws_kms as kms
+
+LogGroup(self, "LogGroup",
+    encryption_key=kms.Key(self, "Key")
+)
+```
+
+See the AWS documentation for more detailed information about [encrypting CloudWatch
+Logs](https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/encrypt-log-data-kms.html).
+
+## Subscriptions and Destinations
 
 Log events matching a particular filter can be sent to either a Lambda function
 or a Kinesis stream.
@@ -59,7 +94,7 @@ below) and supply the intended destination:
 
 ```python
 # Example automatically generated without compilation. See https://github.com/aws/jsii/issues/826
-fn = lambda.Function(self, "Lambda", ...)
+fn = lambda_.Function(self, "Lambda", ...)
 log_group = LogGroup(self, "LogGroup", ...)
 
 SubscriptionFilter(self, "Subscription",
@@ -69,7 +104,7 @@ SubscriptionFilter(self, "Subscription",
 )
 ```
 
-### Metric Filters
+## Metric Filters
 
 CloudWatch Logs can extract and emit metrics based on a textual log stream.
 Depending on your needs, this may be a more convenient way of generating metrics
@@ -107,7 +142,7 @@ Will extract the value of `jsonField` wherever it occurs in JSON-structed
 log records in the LogGroup, and emit them to CloudWatch Metrics under
 the name `Namespace/MetricName`.
 
-#### Exposing Metric on a Metric Filter
+### Exposing Metric on a Metric Filter
 
 You can expose a metric on a metric filter by calling the `MetricFilter.metric()` API.
 This has a default of `statistic = 'avg'` if the statistic is not set in the `props`.
@@ -133,7 +168,7 @@ Alarm(self, "alarm from metric filter",
 )
 ```
 
-### Patterns
+## Patterns
 
 Patterns describe which log events match a subscription or metric filter. There
 are three types of patterns:
@@ -153,7 +188,7 @@ In addition to the patterns above, the following special patterns exist:
   more information, see the [Filter and Pattern
   Syntax](https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/FilterAndPatternSyntax.html).
 
-#### Text Patterns
+### Text Patterns
 
 Text patterns match if the literal strings appear in the text form of the log
 line.
@@ -178,7 +213,7 @@ pattern1 = FilterPattern.all_terms("ERROR", "MainThread")
 pattern2 = FilterPattern.any_group(["ERROR", "MainThread"], ["WARN", "Deadlock"])
 ```
 
-### JSON Patterns
+## JSON Patterns
 
 JSON patterns apply if the log event is the JSON representation of an object
 (without any other characters, so it cannot include a prefix such as timestamp
@@ -226,7 +261,7 @@ pattern = FilterPattern.all(
         FilterPattern.number_value("$.latency", ">", 1000)))
 ```
 
-### Space-delimited table patterns
+## Space-delimited table patterns
 
 If the log events are rows of a space-delimited table, this pattern can be used
 to identify the columns in that structure and add conditions on any of them. The
@@ -261,12 +296,12 @@ Example:
 pattern = FilterPattern.space_delimited("time", "component", "...", "result_code", "latency").where_string("component", "=", "HttpServer").where_number("result_code", "!=", 200)
 ```
 
-### Notes
+## Notes
 
 Be aware that Log Group ARNs will always have the string `:*` appended to
 them, to match the behavior of [the CloudFormation `AWS::Logs::LogGroup`
 resource](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-loggroup.html#aws-resource-logs-loggroup-return-values).
-"""
+'''
 import abc
 import builtins
 import datetime
@@ -274,14 +309,16 @@ import enum
 import typing
 
 import jsii
-import jsii.compat
 import publication
+import typing_extensions
 
 from ._jsii import *
 
 import aws_cdk.aws_cloudwatch
 import aws_cdk.aws_iam
+import aws_cdk.aws_kms
 import aws_cdk.core
+import constructs
 
 
 @jsii.implements(aws_cdk.core.IInspectable)
@@ -290,25 +327,23 @@ class CfnDestination(
     metaclass=jsii.JSIIMeta,
     jsii_type="@aws-cdk/aws-logs.CfnDestination",
 ):
-    """A CloudFormation ``AWS::Logs::Destination``.
+    '''A CloudFormation ``AWS::Logs::Destination``.
 
-    see
-    :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-destination.html
-    cloudformationResource:
-    :cloudformationResource:: AWS::Logs::Destination
-    """
+    :cloudformationResource: AWS::Logs::Destination
+    :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-destination.html
+    '''
 
     def __init__(
         self,
         scope: aws_cdk.core.Construct,
-        id: str,
+        id: builtins.str,
         *,
-        destination_name: str,
-        destination_policy: str,
-        role_arn: str,
-        target_arn: str,
+        destination_name: builtins.str,
+        destination_policy: builtins.str,
+        role_arn: builtins.str,
+        target_arn: builtins.str,
     ) -> None:
-        """Create a new ``AWS::Logs::Destination``.
+        '''Create a new ``AWS::Logs::Destination``.
 
         :param scope: - scope in which this resource is defined.
         :param id: - scoped id of the resource.
@@ -316,7 +351,7 @@ class CfnDestination(
         :param destination_policy: ``AWS::Logs::Destination.DestinationPolicy``.
         :param role_arn: ``AWS::Logs::Destination.RoleArn``.
         :param target_arn: ``AWS::Logs::Destination.TargetArn``.
-        """
+        '''
         props = CfnDestinationProps(
             destination_name=destination_name,
             destination_policy=destination_policy,
@@ -326,128 +361,93 @@ class CfnDestination(
 
         jsii.create(CfnDestination, self, [scope, id, props])
 
-    @jsii.member(jsii_name="fromCloudFormation")
-    @builtins.classmethod
-    def from_cloud_formation(
-        cls,
-        scope: aws_cdk.core.Construct,
-        id: str,
-        resource_attributes: typing.Any,
-        *,
-        finder: aws_cdk.core.ICfnFinder,
-    ) -> "CfnDestination":
-        """A factory method that creates a new instance of this class from an object containing the CloudFormation properties of this resource.
-
-        Used in the @aws-cdk/cloudformation-include module.
-
-        :param scope: -
-        :param id: -
-        :param resource_attributes: -
-        :param finder: The finder interface used to resolve references across the template.
-
-        stability
-        :stability: experimental
-        """
-        options = aws_cdk.core.FromCloudFormationOptions(finder=finder)
-
-        return jsii.sinvoke(
-            cls, "fromCloudFormation", [scope, id, resource_attributes, options]
-        )
-
     @jsii.member(jsii_name="inspect")
     def inspect(self, inspector: aws_cdk.core.TreeInspector) -> None:
-        """Examines the CloudFormation resource and discloses attributes.
+        '''Examines the CloudFormation resource and discloses attributes.
 
         :param inspector: - tree inspector to collect and process attributes.
-
-        stability
-        :stability: experimental
-        """
-        return jsii.invoke(self, "inspect", [inspector])
+        '''
+        return typing.cast(None, jsii.invoke(self, "inspect", [inspector]))
 
     @jsii.member(jsii_name="renderProperties")
     def _render_properties(
-        self, props: typing.Mapping[str, typing.Any]
-    ) -> typing.Mapping[str, typing.Any]:
-        """
+        self,
+        props: typing.Mapping[builtins.str, typing.Any],
+    ) -> typing.Mapping[builtins.str, typing.Any]:
+        '''
         :param props: -
-        """
-        return jsii.invoke(self, "renderProperties", [props])
+        '''
+        return typing.cast(typing.Mapping[builtins.str, typing.Any], jsii.invoke(self, "renderProperties", [props]))
 
-    @jsii.python.classproperty
+    @jsii.python.classproperty # type: ignore[misc]
     @jsii.member(jsii_name="CFN_RESOURCE_TYPE_NAME")
-    def CFN_RESOURCE_TYPE_NAME(cls) -> str:
-        """The CloudFormation resource type name for this resource class."""
-        return jsii.sget(cls, "CFN_RESOURCE_TYPE_NAME")
+    def CFN_RESOURCE_TYPE_NAME(cls) -> builtins.str:
+        '''The CloudFormation resource type name for this resource class.'''
+        return typing.cast(builtins.str, jsii.sget(cls, "CFN_RESOURCE_TYPE_NAME"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="attrArn")
-    def attr_arn(self) -> str:
-        """
-        cloudformationAttribute:
-        :cloudformationAttribute:: Arn
-        """
-        return jsii.get(self, "attrArn")
+    def attr_arn(self) -> builtins.str:
+        '''
+        :cloudformationAttribute: Arn
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "attrArn"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="cfnProperties")
-    def _cfn_properties(self) -> typing.Mapping[str, typing.Any]:
-        return jsii.get(self, "cfnProperties")
+    def _cfn_properties(self) -> typing.Mapping[builtins.str, typing.Any]:
+        return typing.cast(typing.Mapping[builtins.str, typing.Any], jsii.get(self, "cfnProperties"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="destinationName")
-    def destination_name(self) -> str:
-        """``AWS::Logs::Destination.DestinationName``.
+    def destination_name(self) -> builtins.str:
+        '''``AWS::Logs::Destination.DestinationName``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-destination.html#cfn-logs-destination-destinationname
-        """
-        return jsii.get(self, "destinationName")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-destination.html#cfn-logs-destination-destinationname
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "destinationName"))
 
     @destination_name.setter
-    def destination_name(self, value: str) -> None:
+    def destination_name(self, value: builtins.str) -> None:
         jsii.set(self, "destinationName", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="destinationPolicy")
-    def destination_policy(self) -> str:
-        """``AWS::Logs::Destination.DestinationPolicy``.
+    def destination_policy(self) -> builtins.str:
+        '''``AWS::Logs::Destination.DestinationPolicy``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-destination.html#cfn-logs-destination-destinationpolicy
-        """
-        return jsii.get(self, "destinationPolicy")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-destination.html#cfn-logs-destination-destinationpolicy
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "destinationPolicy"))
 
     @destination_policy.setter
-    def destination_policy(self, value: str) -> None:
+    def destination_policy(self, value: builtins.str) -> None:
         jsii.set(self, "destinationPolicy", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="roleArn")
-    def role_arn(self) -> str:
-        """``AWS::Logs::Destination.RoleArn``.
+    def role_arn(self) -> builtins.str:
+        '''``AWS::Logs::Destination.RoleArn``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-destination.html#cfn-logs-destination-rolearn
-        """
-        return jsii.get(self, "roleArn")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-destination.html#cfn-logs-destination-rolearn
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "roleArn"))
 
     @role_arn.setter
-    def role_arn(self, value: str) -> None:
+    def role_arn(self, value: builtins.str) -> None:
         jsii.set(self, "roleArn", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="targetArn")
-    def target_arn(self) -> str:
-        """``AWS::Logs::Destination.TargetArn``.
+    def target_arn(self) -> builtins.str:
+        '''``AWS::Logs::Destination.TargetArn``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-destination.html#cfn-logs-destination-targetarn
-        """
-        return jsii.get(self, "targetArn")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-destination.html#cfn-logs-destination-targetarn
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "targetArn"))
 
     @target_arn.setter
-    def target_arn(self, value: str) -> None:
+    def target_arn(self, value: builtins.str) -> None:
         jsii.set(self, "targetArn", value)
 
 
@@ -465,22 +465,21 @@ class CfnDestinationProps:
     def __init__(
         self,
         *,
-        destination_name: str,
-        destination_policy: str,
-        role_arn: str,
-        target_arn: str,
+        destination_name: builtins.str,
+        destination_policy: builtins.str,
+        role_arn: builtins.str,
+        target_arn: builtins.str,
     ) -> None:
-        """Properties for defining a ``AWS::Logs::Destination``.
+        '''Properties for defining a ``AWS::Logs::Destination``.
 
         :param destination_name: ``AWS::Logs::Destination.DestinationName``.
         :param destination_policy: ``AWS::Logs::Destination.DestinationPolicy``.
         :param role_arn: ``AWS::Logs::Destination.RoleArn``.
         :param target_arn: ``AWS::Logs::Destination.TargetArn``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-destination.html
-        """
-        self._values = {
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-destination.html
+        '''
+        self._values: typing.Dict[str, typing.Any] = {
             "destination_name": destination_name,
             "destination_policy": destination_policy,
             "role_arn": role_arn,
@@ -488,45 +487,49 @@ class CfnDestinationProps:
         }
 
     @builtins.property
-    def destination_name(self) -> str:
-        """``AWS::Logs::Destination.DestinationName``.
+    def destination_name(self) -> builtins.str:
+        '''``AWS::Logs::Destination.DestinationName``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-destination.html#cfn-logs-destination-destinationname
-        """
-        return self._values.get("destination_name")
-
-    @builtins.property
-    def destination_policy(self) -> str:
-        """``AWS::Logs::Destination.DestinationPolicy``.
-
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-destination.html#cfn-logs-destination-destinationpolicy
-        """
-        return self._values.get("destination_policy")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-destination.html#cfn-logs-destination-destinationname
+        '''
+        result = self._values.get("destination_name")
+        assert result is not None, "Required property 'destination_name' is missing"
+        return typing.cast(builtins.str, result)
 
     @builtins.property
-    def role_arn(self) -> str:
-        """``AWS::Logs::Destination.RoleArn``.
+    def destination_policy(self) -> builtins.str:
+        '''``AWS::Logs::Destination.DestinationPolicy``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-destination.html#cfn-logs-destination-rolearn
-        """
-        return self._values.get("role_arn")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-destination.html#cfn-logs-destination-destinationpolicy
+        '''
+        result = self._values.get("destination_policy")
+        assert result is not None, "Required property 'destination_policy' is missing"
+        return typing.cast(builtins.str, result)
 
     @builtins.property
-    def target_arn(self) -> str:
-        """``AWS::Logs::Destination.TargetArn``.
+    def role_arn(self) -> builtins.str:
+        '''``AWS::Logs::Destination.RoleArn``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-destination.html#cfn-logs-destination-targetarn
-        """
-        return self._values.get("target_arn")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-destination.html#cfn-logs-destination-rolearn
+        '''
+        result = self._values.get("role_arn")
+        assert result is not None, "Required property 'role_arn' is missing"
+        return typing.cast(builtins.str, result)
 
-    def __eq__(self, rhs) -> bool:
+    @builtins.property
+    def target_arn(self) -> builtins.str:
+        '''``AWS::Logs::Destination.TargetArn``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-destination.html#cfn-logs-destination-targetarn
+        '''
+        result = self._values.get("target_arn")
+        assert result is not None, "Required property 'target_arn' is missing"
+        return typing.cast(builtins.str, result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
@@ -541,126 +544,108 @@ class CfnLogGroup(
     metaclass=jsii.JSIIMeta,
     jsii_type="@aws-cdk/aws-logs.CfnLogGroup",
 ):
-    """A CloudFormation ``AWS::Logs::LogGroup``.
+    '''A CloudFormation ``AWS::Logs::LogGroup``.
 
-    see
-    :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-loggroup.html
-    cloudformationResource:
-    :cloudformationResource:: AWS::Logs::LogGroup
-    """
+    :cloudformationResource: AWS::Logs::LogGroup
+    :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-loggroup.html
+    '''
 
     def __init__(
         self,
         scope: aws_cdk.core.Construct,
-        id: str,
+        id: builtins.str,
         *,
-        log_group_name: typing.Optional[str] = None,
+        kms_key_id: typing.Optional[builtins.str] = None,
+        log_group_name: typing.Optional[builtins.str] = None,
         retention_in_days: typing.Optional[jsii.Number] = None,
     ) -> None:
-        """Create a new ``AWS::Logs::LogGroup``.
+        '''Create a new ``AWS::Logs::LogGroup``.
 
         :param scope: - scope in which this resource is defined.
         :param id: - scoped id of the resource.
+        :param kms_key_id: ``AWS::Logs::LogGroup.KmsKeyId``.
         :param log_group_name: ``AWS::Logs::LogGroup.LogGroupName``.
         :param retention_in_days: ``AWS::Logs::LogGroup.RetentionInDays``.
-        """
+        '''
         props = CfnLogGroupProps(
-            log_group_name=log_group_name, retention_in_days=retention_in_days
+            kms_key_id=kms_key_id,
+            log_group_name=log_group_name,
+            retention_in_days=retention_in_days,
         )
 
         jsii.create(CfnLogGroup, self, [scope, id, props])
 
-    @jsii.member(jsii_name="fromCloudFormation")
-    @builtins.classmethod
-    def from_cloud_formation(
-        cls,
-        scope: aws_cdk.core.Construct,
-        id: str,
-        resource_attributes: typing.Any,
-        *,
-        finder: aws_cdk.core.ICfnFinder,
-    ) -> "CfnLogGroup":
-        """A factory method that creates a new instance of this class from an object containing the CloudFormation properties of this resource.
-
-        Used in the @aws-cdk/cloudformation-include module.
-
-        :param scope: -
-        :param id: -
-        :param resource_attributes: -
-        :param finder: The finder interface used to resolve references across the template.
-
-        stability
-        :stability: experimental
-        """
-        options = aws_cdk.core.FromCloudFormationOptions(finder=finder)
-
-        return jsii.sinvoke(
-            cls, "fromCloudFormation", [scope, id, resource_attributes, options]
-        )
-
     @jsii.member(jsii_name="inspect")
     def inspect(self, inspector: aws_cdk.core.TreeInspector) -> None:
-        """Examines the CloudFormation resource and discloses attributes.
+        '''Examines the CloudFormation resource and discloses attributes.
 
         :param inspector: - tree inspector to collect and process attributes.
-
-        stability
-        :stability: experimental
-        """
-        return jsii.invoke(self, "inspect", [inspector])
+        '''
+        return typing.cast(None, jsii.invoke(self, "inspect", [inspector]))
 
     @jsii.member(jsii_name="renderProperties")
     def _render_properties(
-        self, props: typing.Mapping[str, typing.Any]
-    ) -> typing.Mapping[str, typing.Any]:
-        """
+        self,
+        props: typing.Mapping[builtins.str, typing.Any],
+    ) -> typing.Mapping[builtins.str, typing.Any]:
+        '''
         :param props: -
-        """
-        return jsii.invoke(self, "renderProperties", [props])
+        '''
+        return typing.cast(typing.Mapping[builtins.str, typing.Any], jsii.invoke(self, "renderProperties", [props]))
 
-    @jsii.python.classproperty
+    @jsii.python.classproperty # type: ignore[misc]
     @jsii.member(jsii_name="CFN_RESOURCE_TYPE_NAME")
-    def CFN_RESOURCE_TYPE_NAME(cls) -> str:
-        """The CloudFormation resource type name for this resource class."""
-        return jsii.sget(cls, "CFN_RESOURCE_TYPE_NAME")
+    def CFN_RESOURCE_TYPE_NAME(cls) -> builtins.str:
+        '''The CloudFormation resource type name for this resource class.'''
+        return typing.cast(builtins.str, jsii.sget(cls, "CFN_RESOURCE_TYPE_NAME"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="attrArn")
-    def attr_arn(self) -> str:
-        """
-        cloudformationAttribute:
-        :cloudformationAttribute:: Arn
-        """
-        return jsii.get(self, "attrArn")
+    def attr_arn(self) -> builtins.str:
+        '''
+        :cloudformationAttribute: Arn
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "attrArn"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="cfnProperties")
-    def _cfn_properties(self) -> typing.Mapping[str, typing.Any]:
-        return jsii.get(self, "cfnProperties")
+    def _cfn_properties(self) -> typing.Mapping[builtins.str, typing.Any]:
+        return typing.cast(typing.Mapping[builtins.str, typing.Any], jsii.get(self, "cfnProperties"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
+    @jsii.member(jsii_name="kmsKeyId")
+    def kms_key_id(self) -> typing.Optional[builtins.str]:
+        '''``AWS::Logs::LogGroup.KmsKeyId``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-loggroup.html#cfn-logs-loggroup-kmskeyid
+        '''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "kmsKeyId"))
+
+    @kms_key_id.setter
+    def kms_key_id(self, value: typing.Optional[builtins.str]) -> None:
+        jsii.set(self, "kmsKeyId", value)
+
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="logGroupName")
-    def log_group_name(self) -> typing.Optional[str]:
-        """``AWS::Logs::LogGroup.LogGroupName``.
+    def log_group_name(self) -> typing.Optional[builtins.str]:
+        '''``AWS::Logs::LogGroup.LogGroupName``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-loggroup.html#cfn-cwl-loggroup-loggroupname
-        """
-        return jsii.get(self, "logGroupName")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-loggroup.html#cfn-logs-loggroup-loggroupname
+        '''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "logGroupName"))
 
     @log_group_name.setter
-    def log_group_name(self, value: typing.Optional[str]) -> None:
+    def log_group_name(self, value: typing.Optional[builtins.str]) -> None:
         jsii.set(self, "logGroupName", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="retentionInDays")
     def retention_in_days(self) -> typing.Optional[jsii.Number]:
-        """``AWS::Logs::LogGroup.RetentionInDays``.
+        '''``AWS::Logs::LogGroup.RetentionInDays``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-loggroup.html#cfn-cwl-loggroup-retentionindays
-        """
-        return jsii.get(self, "retentionInDays")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-loggroup.html#cfn-logs-loggroup-retentionindays
+        '''
+        return typing.cast(typing.Optional[jsii.Number], jsii.get(self, "retentionInDays"))
 
     @retention_in_days.setter
     def retention_in_days(self, value: typing.Optional[jsii.Number]) -> None:
@@ -671,6 +656,7 @@ class CfnLogGroup(
     jsii_type="@aws-cdk/aws-logs.CfnLogGroupProps",
     jsii_struct_bases=[],
     name_mapping={
+        "kms_key_id": "kmsKeyId",
         "log_group_name": "logGroupName",
         "retention_in_days": "retentionInDays",
     },
@@ -679,45 +665,57 @@ class CfnLogGroupProps:
     def __init__(
         self,
         *,
-        log_group_name: typing.Optional[str] = None,
+        kms_key_id: typing.Optional[builtins.str] = None,
+        log_group_name: typing.Optional[builtins.str] = None,
         retention_in_days: typing.Optional[jsii.Number] = None,
     ) -> None:
-        """Properties for defining a ``AWS::Logs::LogGroup``.
+        '''Properties for defining a ``AWS::Logs::LogGroup``.
 
+        :param kms_key_id: ``AWS::Logs::LogGroup.KmsKeyId``.
         :param log_group_name: ``AWS::Logs::LogGroup.LogGroupName``.
         :param retention_in_days: ``AWS::Logs::LogGroup.RetentionInDays``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-loggroup.html
-        """
-        self._values = {}
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-loggroup.html
+        '''
+        self._values: typing.Dict[str, typing.Any] = {}
+        if kms_key_id is not None:
+            self._values["kms_key_id"] = kms_key_id
         if log_group_name is not None:
             self._values["log_group_name"] = log_group_name
         if retention_in_days is not None:
             self._values["retention_in_days"] = retention_in_days
 
     @builtins.property
-    def log_group_name(self) -> typing.Optional[str]:
-        """``AWS::Logs::LogGroup.LogGroupName``.
+    def kms_key_id(self) -> typing.Optional[builtins.str]:
+        '''``AWS::Logs::LogGroup.KmsKeyId``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-loggroup.html#cfn-cwl-loggroup-loggroupname
-        """
-        return self._values.get("log_group_name")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-loggroup.html#cfn-logs-loggroup-kmskeyid
+        '''
+        result = self._values.get("kms_key_id")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def log_group_name(self) -> typing.Optional[builtins.str]:
+        '''``AWS::Logs::LogGroup.LogGroupName``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-loggroup.html#cfn-logs-loggroup-loggroupname
+        '''
+        result = self._values.get("log_group_name")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def retention_in_days(self) -> typing.Optional[jsii.Number]:
-        """``AWS::Logs::LogGroup.RetentionInDays``.
+        '''``AWS::Logs::LogGroup.RetentionInDays``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-loggroup.html#cfn-cwl-loggroup-retentionindays
-        """
-        return self._values.get("retention_in_days")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-loggroup.html#cfn-logs-loggroup-retentionindays
+        '''
+        result = self._values.get("retention_in_days")
+        return typing.cast(typing.Optional[jsii.Number], result)
 
-    def __eq__(self, rhs) -> bool:
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
@@ -732,168 +730,140 @@ class CfnLogStream(
     metaclass=jsii.JSIIMeta,
     jsii_type="@aws-cdk/aws-logs.CfnLogStream",
 ):
-    """A CloudFormation ``AWS::Logs::LogStream``.
+    '''A CloudFormation ``AWS::Logs::LogStream``.
 
-    see
-    :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-logstream.html
-    cloudformationResource:
-    :cloudformationResource:: AWS::Logs::LogStream
-    """
+    :cloudformationResource: AWS::Logs::LogStream
+    :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-logstream.html
+    '''
 
     def __init__(
         self,
         scope: aws_cdk.core.Construct,
-        id: str,
+        id: builtins.str,
         *,
-        log_group_name: str,
-        log_stream_name: typing.Optional[str] = None,
+        log_group_name: builtins.str,
+        log_stream_name: typing.Optional[builtins.str] = None,
     ) -> None:
-        """Create a new ``AWS::Logs::LogStream``.
+        '''Create a new ``AWS::Logs::LogStream``.
 
         :param scope: - scope in which this resource is defined.
         :param id: - scoped id of the resource.
         :param log_group_name: ``AWS::Logs::LogStream.LogGroupName``.
         :param log_stream_name: ``AWS::Logs::LogStream.LogStreamName``.
-        """
+        '''
         props = CfnLogStreamProps(
             log_group_name=log_group_name, log_stream_name=log_stream_name
         )
 
         jsii.create(CfnLogStream, self, [scope, id, props])
 
-    @jsii.member(jsii_name="fromCloudFormation")
-    @builtins.classmethod
-    def from_cloud_formation(
-        cls,
-        scope: aws_cdk.core.Construct,
-        id: str,
-        resource_attributes: typing.Any,
-        *,
-        finder: aws_cdk.core.ICfnFinder,
-    ) -> "CfnLogStream":
-        """A factory method that creates a new instance of this class from an object containing the CloudFormation properties of this resource.
-
-        Used in the @aws-cdk/cloudformation-include module.
-
-        :param scope: -
-        :param id: -
-        :param resource_attributes: -
-        :param finder: The finder interface used to resolve references across the template.
-
-        stability
-        :stability: experimental
-        """
-        options = aws_cdk.core.FromCloudFormationOptions(finder=finder)
-
-        return jsii.sinvoke(
-            cls, "fromCloudFormation", [scope, id, resource_attributes, options]
-        )
-
     @jsii.member(jsii_name="inspect")
     def inspect(self, inspector: aws_cdk.core.TreeInspector) -> None:
-        """Examines the CloudFormation resource and discloses attributes.
+        '''Examines the CloudFormation resource and discloses attributes.
 
         :param inspector: - tree inspector to collect and process attributes.
-
-        stability
-        :stability: experimental
-        """
-        return jsii.invoke(self, "inspect", [inspector])
+        '''
+        return typing.cast(None, jsii.invoke(self, "inspect", [inspector]))
 
     @jsii.member(jsii_name="renderProperties")
     def _render_properties(
-        self, props: typing.Mapping[str, typing.Any]
-    ) -> typing.Mapping[str, typing.Any]:
-        """
+        self,
+        props: typing.Mapping[builtins.str, typing.Any],
+    ) -> typing.Mapping[builtins.str, typing.Any]:
+        '''
         :param props: -
-        """
-        return jsii.invoke(self, "renderProperties", [props])
+        '''
+        return typing.cast(typing.Mapping[builtins.str, typing.Any], jsii.invoke(self, "renderProperties", [props]))
 
-    @jsii.python.classproperty
+    @jsii.python.classproperty # type: ignore[misc]
     @jsii.member(jsii_name="CFN_RESOURCE_TYPE_NAME")
-    def CFN_RESOURCE_TYPE_NAME(cls) -> str:
-        """The CloudFormation resource type name for this resource class."""
-        return jsii.sget(cls, "CFN_RESOURCE_TYPE_NAME")
+    def CFN_RESOURCE_TYPE_NAME(cls) -> builtins.str:
+        '''The CloudFormation resource type name for this resource class.'''
+        return typing.cast(builtins.str, jsii.sget(cls, "CFN_RESOURCE_TYPE_NAME"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="cfnProperties")
-    def _cfn_properties(self) -> typing.Mapping[str, typing.Any]:
-        return jsii.get(self, "cfnProperties")
+    def _cfn_properties(self) -> typing.Mapping[builtins.str, typing.Any]:
+        return typing.cast(typing.Mapping[builtins.str, typing.Any], jsii.get(self, "cfnProperties"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="logGroupName")
-    def log_group_name(self) -> str:
-        """``AWS::Logs::LogStream.LogGroupName``.
+    def log_group_name(self) -> builtins.str:
+        '''``AWS::Logs::LogStream.LogGroupName``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-logstream.html#cfn-logs-logstream-loggroupname
-        """
-        return jsii.get(self, "logGroupName")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-logstream.html#cfn-logs-logstream-loggroupname
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "logGroupName"))
 
     @log_group_name.setter
-    def log_group_name(self, value: str) -> None:
+    def log_group_name(self, value: builtins.str) -> None:
         jsii.set(self, "logGroupName", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="logStreamName")
-    def log_stream_name(self) -> typing.Optional[str]:
-        """``AWS::Logs::LogStream.LogStreamName``.
+    def log_stream_name(self) -> typing.Optional[builtins.str]:
+        '''``AWS::Logs::LogStream.LogStreamName``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-logstream.html#cfn-logs-logstream-logstreamname
-        """
-        return jsii.get(self, "logStreamName")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-logstream.html#cfn-logs-logstream-logstreamname
+        '''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "logStreamName"))
 
     @log_stream_name.setter
-    def log_stream_name(self, value: typing.Optional[str]) -> None:
+    def log_stream_name(self, value: typing.Optional[builtins.str]) -> None:
         jsii.set(self, "logStreamName", value)
 
 
 @jsii.data_type(
     jsii_type="@aws-cdk/aws-logs.CfnLogStreamProps",
     jsii_struct_bases=[],
-    name_mapping={"log_group_name": "logGroupName", "log_stream_name": "logStreamName"},
+    name_mapping={
+        "log_group_name": "logGroupName",
+        "log_stream_name": "logStreamName",
+    },
 )
 class CfnLogStreamProps:
     def __init__(
-        self, *, log_group_name: str, log_stream_name: typing.Optional[str] = None
+        self,
+        *,
+        log_group_name: builtins.str,
+        log_stream_name: typing.Optional[builtins.str] = None,
     ) -> None:
-        """Properties for defining a ``AWS::Logs::LogStream``.
+        '''Properties for defining a ``AWS::Logs::LogStream``.
 
         :param log_group_name: ``AWS::Logs::LogStream.LogGroupName``.
         :param log_stream_name: ``AWS::Logs::LogStream.LogStreamName``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-logstream.html
-        """
-        self._values = {
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-logstream.html
+        '''
+        self._values: typing.Dict[str, typing.Any] = {
             "log_group_name": log_group_name,
         }
         if log_stream_name is not None:
             self._values["log_stream_name"] = log_stream_name
 
     @builtins.property
-    def log_group_name(self) -> str:
-        """``AWS::Logs::LogStream.LogGroupName``.
+    def log_group_name(self) -> builtins.str:
+        '''``AWS::Logs::LogStream.LogGroupName``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-logstream.html#cfn-logs-logstream-loggroupname
-        """
-        return self._values.get("log_group_name")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-logstream.html#cfn-logs-logstream-loggroupname
+        '''
+        result = self._values.get("log_group_name")
+        assert result is not None, "Required property 'log_group_name' is missing"
+        return typing.cast(builtins.str, result)
 
     @builtins.property
-    def log_stream_name(self) -> typing.Optional[str]:
-        """``AWS::Logs::LogStream.LogStreamName``.
+    def log_stream_name(self) -> typing.Optional[builtins.str]:
+        '''``AWS::Logs::LogStream.LogStreamName``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-logstream.html#cfn-logs-logstream-logstreamname
-        """
-        return self._values.get("log_stream_name")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-logstream.html#cfn-logs-logstream-logstreamname
+        '''
+        result = self._values.get("log_stream_name")
+        return typing.cast(typing.Optional[builtins.str], result)
 
-    def __eq__(self, rhs) -> bool:
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
@@ -908,36 +878,29 @@ class CfnMetricFilter(
     metaclass=jsii.JSIIMeta,
     jsii_type="@aws-cdk/aws-logs.CfnMetricFilter",
 ):
-    """A CloudFormation ``AWS::Logs::MetricFilter``.
+    '''A CloudFormation ``AWS::Logs::MetricFilter``.
 
-    see
-    :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-metricfilter.html
-    cloudformationResource:
-    :cloudformationResource:: AWS::Logs::MetricFilter
-    """
+    :cloudformationResource: AWS::Logs::MetricFilter
+    :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-metricfilter.html
+    '''
 
     def __init__(
         self,
         scope: aws_cdk.core.Construct,
-        id: str,
+        id: builtins.str,
         *,
-        filter_pattern: str,
-        log_group_name: str,
-        metric_transformations: typing.Union[
-            aws_cdk.core.IResolvable,
-            typing.List[
-                typing.Union["MetricTransformationProperty", aws_cdk.core.IResolvable]
-            ],
-        ],
+        filter_pattern: builtins.str,
+        log_group_name: builtins.str,
+        metric_transformations: typing.Union[aws_cdk.core.IResolvable, typing.Sequence[typing.Union["CfnMetricFilter.MetricTransformationProperty", aws_cdk.core.IResolvable]]],
     ) -> None:
-        """Create a new ``AWS::Logs::MetricFilter``.
+        '''Create a new ``AWS::Logs::MetricFilter``.
 
         :param scope: - scope in which this resource is defined.
         :param id: - scoped id of the resource.
         :param filter_pattern: ``AWS::Logs::MetricFilter.FilterPattern``.
         :param log_group_name: ``AWS::Logs::MetricFilter.LogGroupName``.
         :param metric_transformations: ``AWS::Logs::MetricFilter.MetricTransformations``.
-        """
+        '''
         props = CfnMetricFilterProps(
             filter_pattern=filter_pattern,
             log_group_name=log_group_name,
@@ -946,119 +909,76 @@ class CfnMetricFilter(
 
         jsii.create(CfnMetricFilter, self, [scope, id, props])
 
-    @jsii.member(jsii_name="fromCloudFormation")
-    @builtins.classmethod
-    def from_cloud_formation(
-        cls,
-        scope: aws_cdk.core.Construct,
-        id: str,
-        resource_attributes: typing.Any,
-        *,
-        finder: aws_cdk.core.ICfnFinder,
-    ) -> "CfnMetricFilter":
-        """A factory method that creates a new instance of this class from an object containing the CloudFormation properties of this resource.
-
-        Used in the @aws-cdk/cloudformation-include module.
-
-        :param scope: -
-        :param id: -
-        :param resource_attributes: -
-        :param finder: The finder interface used to resolve references across the template.
-
-        stability
-        :stability: experimental
-        """
-        options = aws_cdk.core.FromCloudFormationOptions(finder=finder)
-
-        return jsii.sinvoke(
-            cls, "fromCloudFormation", [scope, id, resource_attributes, options]
-        )
-
     @jsii.member(jsii_name="inspect")
     def inspect(self, inspector: aws_cdk.core.TreeInspector) -> None:
-        """Examines the CloudFormation resource and discloses attributes.
+        '''Examines the CloudFormation resource and discloses attributes.
 
         :param inspector: - tree inspector to collect and process attributes.
-
-        stability
-        :stability: experimental
-        """
-        return jsii.invoke(self, "inspect", [inspector])
+        '''
+        return typing.cast(None, jsii.invoke(self, "inspect", [inspector]))
 
     @jsii.member(jsii_name="renderProperties")
     def _render_properties(
-        self, props: typing.Mapping[str, typing.Any]
-    ) -> typing.Mapping[str, typing.Any]:
-        """
+        self,
+        props: typing.Mapping[builtins.str, typing.Any],
+    ) -> typing.Mapping[builtins.str, typing.Any]:
+        '''
         :param props: -
-        """
-        return jsii.invoke(self, "renderProperties", [props])
+        '''
+        return typing.cast(typing.Mapping[builtins.str, typing.Any], jsii.invoke(self, "renderProperties", [props]))
 
-    @jsii.python.classproperty
+    @jsii.python.classproperty # type: ignore[misc]
     @jsii.member(jsii_name="CFN_RESOURCE_TYPE_NAME")
-    def CFN_RESOURCE_TYPE_NAME(cls) -> str:
-        """The CloudFormation resource type name for this resource class."""
-        return jsii.sget(cls, "CFN_RESOURCE_TYPE_NAME")
+    def CFN_RESOURCE_TYPE_NAME(cls) -> builtins.str:
+        '''The CloudFormation resource type name for this resource class.'''
+        return typing.cast(builtins.str, jsii.sget(cls, "CFN_RESOURCE_TYPE_NAME"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="cfnProperties")
-    def _cfn_properties(self) -> typing.Mapping[str, typing.Any]:
-        return jsii.get(self, "cfnProperties")
+    def _cfn_properties(self) -> typing.Mapping[builtins.str, typing.Any]:
+        return typing.cast(typing.Mapping[builtins.str, typing.Any], jsii.get(self, "cfnProperties"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="filterPattern")
-    def filter_pattern(self) -> str:
-        """``AWS::Logs::MetricFilter.FilterPattern``.
+    def filter_pattern(self) -> builtins.str:
+        '''``AWS::Logs::MetricFilter.FilterPattern``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-metricfilter.html#cfn-cwl-metricfilter-filterpattern
-        """
-        return jsii.get(self, "filterPattern")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-metricfilter.html#cfn-cwl-metricfilter-filterpattern
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "filterPattern"))
 
     @filter_pattern.setter
-    def filter_pattern(self, value: str) -> None:
+    def filter_pattern(self, value: builtins.str) -> None:
         jsii.set(self, "filterPattern", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="logGroupName")
-    def log_group_name(self) -> str:
-        """``AWS::Logs::MetricFilter.LogGroupName``.
+    def log_group_name(self) -> builtins.str:
+        '''``AWS::Logs::MetricFilter.LogGroupName``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-metricfilter.html#cfn-cwl-metricfilter-loggroupname
-        """
-        return jsii.get(self, "logGroupName")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-metricfilter.html#cfn-cwl-metricfilter-loggroupname
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "logGroupName"))
 
     @log_group_name.setter
-    def log_group_name(self, value: str) -> None:
+    def log_group_name(self, value: builtins.str) -> None:
         jsii.set(self, "logGroupName", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="metricTransformations")
     def metric_transformations(
         self,
-    ) -> typing.Union[
-        aws_cdk.core.IResolvable,
-        typing.List[
-            typing.Union["MetricTransformationProperty", aws_cdk.core.IResolvable]
-        ],
-    ]:
-        """``AWS::Logs::MetricFilter.MetricTransformations``.
+    ) -> typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union["CfnMetricFilter.MetricTransformationProperty", aws_cdk.core.IResolvable]]]:
+        '''``AWS::Logs::MetricFilter.MetricTransformations``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-metricfilter.html#cfn-cwl-metricfilter-metrictransformations
-        """
-        return jsii.get(self, "metricTransformations")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-metricfilter.html#cfn-cwl-metricfilter-metrictransformations
+        '''
+        return typing.cast(typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union["CfnMetricFilter.MetricTransformationProperty", aws_cdk.core.IResolvable]]], jsii.get(self, "metricTransformations"))
 
     @metric_transformations.setter
     def metric_transformations(
         self,
-        value: typing.Union[
-            aws_cdk.core.IResolvable,
-            typing.List[
-                typing.Union["MetricTransformationProperty", aws_cdk.core.IResolvable]
-            ],
-        ],
+        value: typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union["CfnMetricFilter.MetricTransformationProperty", aws_cdk.core.IResolvable]]],
     ) -> None:
         jsii.set(self, "metricTransformations", value)
 
@@ -1076,21 +996,20 @@ class CfnMetricFilter(
         def __init__(
             self,
             *,
-            metric_name: str,
-            metric_namespace: str,
-            metric_value: str,
+            metric_name: builtins.str,
+            metric_namespace: builtins.str,
+            metric_value: builtins.str,
             default_value: typing.Optional[jsii.Number] = None,
         ) -> None:
-            """
+            '''
             :param metric_name: ``CfnMetricFilter.MetricTransformationProperty.MetricName``.
             :param metric_namespace: ``CfnMetricFilter.MetricTransformationProperty.MetricNamespace``.
             :param metric_value: ``CfnMetricFilter.MetricTransformationProperty.MetricValue``.
             :param default_value: ``CfnMetricFilter.MetricTransformationProperty.DefaultValue``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-logs-metricfilter-metrictransformation.html
-            """
-            self._values = {
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-logs-metricfilter-metrictransformation.html
+            '''
+            self._values: typing.Dict[str, typing.Any] = {
                 "metric_name": metric_name,
                 "metric_namespace": metric_namespace,
                 "metric_value": metric_value,
@@ -1099,45 +1018,48 @@ class CfnMetricFilter(
                 self._values["default_value"] = default_value
 
         @builtins.property
-        def metric_name(self) -> str:
-            """``CfnMetricFilter.MetricTransformationProperty.MetricName``.
+        def metric_name(self) -> builtins.str:
+            '''``CfnMetricFilter.MetricTransformationProperty.MetricName``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-logs-metricfilter-metrictransformation.html#cfn-cwl-metricfilter-metrictransformation-metricname
-            """
-            return self._values.get("metric_name")
-
-        @builtins.property
-        def metric_namespace(self) -> str:
-            """``CfnMetricFilter.MetricTransformationProperty.MetricNamespace``.
-
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-logs-metricfilter-metrictransformation.html#cfn-cwl-metricfilter-metrictransformation-metricnamespace
-            """
-            return self._values.get("metric_namespace")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-logs-metricfilter-metrictransformation.html#cfn-cwl-metricfilter-metrictransformation-metricname
+            '''
+            result = self._values.get("metric_name")
+            assert result is not None, "Required property 'metric_name' is missing"
+            return typing.cast(builtins.str, result)
 
         @builtins.property
-        def metric_value(self) -> str:
-            """``CfnMetricFilter.MetricTransformationProperty.MetricValue``.
+        def metric_namespace(self) -> builtins.str:
+            '''``CfnMetricFilter.MetricTransformationProperty.MetricNamespace``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-logs-metricfilter-metrictransformation.html#cfn-cwl-metricfilter-metrictransformation-metricvalue
-            """
-            return self._values.get("metric_value")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-logs-metricfilter-metrictransformation.html#cfn-cwl-metricfilter-metrictransformation-metricnamespace
+            '''
+            result = self._values.get("metric_namespace")
+            assert result is not None, "Required property 'metric_namespace' is missing"
+            return typing.cast(builtins.str, result)
+
+        @builtins.property
+        def metric_value(self) -> builtins.str:
+            '''``CfnMetricFilter.MetricTransformationProperty.MetricValue``.
+
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-logs-metricfilter-metrictransformation.html#cfn-cwl-metricfilter-metrictransformation-metricvalue
+            '''
+            result = self._values.get("metric_value")
+            assert result is not None, "Required property 'metric_value' is missing"
+            return typing.cast(builtins.str, result)
 
         @builtins.property
         def default_value(self) -> typing.Optional[jsii.Number]:
-            """``CfnMetricFilter.MetricTransformationProperty.DefaultValue``.
+            '''``CfnMetricFilter.MetricTransformationProperty.DefaultValue``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-logs-metricfilter-metrictransformation.html#cfn-cwl-metricfilter-metrictransformation-defaultvalue
-            """
-            return self._values.get("default_value")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-logs-metricfilter-metrictransformation.html#cfn-cwl-metricfilter-metrictransformation-defaultvalue
+            '''
+            result = self._values.get("default_value")
+            return typing.cast(typing.Optional[jsii.Number], result)
 
-        def __eq__(self, rhs) -> bool:
+        def __eq__(self, rhs: typing.Any) -> builtins.bool:
             return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-        def __ne__(self, rhs) -> bool:
+        def __ne__(self, rhs: typing.Any) -> builtins.bool:
             return not (rhs == self)
 
         def __repr__(self) -> str:
@@ -1159,77 +1081,252 @@ class CfnMetricFilterProps:
     def __init__(
         self,
         *,
-        filter_pattern: str,
-        log_group_name: str,
-        metric_transformations: typing.Union[
-            aws_cdk.core.IResolvable,
-            typing.List[
-                typing.Union[
-                    "CfnMetricFilter.MetricTransformationProperty",
-                    aws_cdk.core.IResolvable,
-                ]
-            ],
-        ],
+        filter_pattern: builtins.str,
+        log_group_name: builtins.str,
+        metric_transformations: typing.Union[aws_cdk.core.IResolvable, typing.Sequence[typing.Union[CfnMetricFilter.MetricTransformationProperty, aws_cdk.core.IResolvable]]],
     ) -> None:
-        """Properties for defining a ``AWS::Logs::MetricFilter``.
+        '''Properties for defining a ``AWS::Logs::MetricFilter``.
 
         :param filter_pattern: ``AWS::Logs::MetricFilter.FilterPattern``.
         :param log_group_name: ``AWS::Logs::MetricFilter.LogGroupName``.
         :param metric_transformations: ``AWS::Logs::MetricFilter.MetricTransformations``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-metricfilter.html
-        """
-        self._values = {
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-metricfilter.html
+        '''
+        self._values: typing.Dict[str, typing.Any] = {
             "filter_pattern": filter_pattern,
             "log_group_name": log_group_name,
             "metric_transformations": metric_transformations,
         }
 
     @builtins.property
-    def filter_pattern(self) -> str:
-        """``AWS::Logs::MetricFilter.FilterPattern``.
+    def filter_pattern(self) -> builtins.str:
+        '''``AWS::Logs::MetricFilter.FilterPattern``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-metricfilter.html#cfn-cwl-metricfilter-filterpattern
-        """
-        return self._values.get("filter_pattern")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-metricfilter.html#cfn-cwl-metricfilter-filterpattern
+        '''
+        result = self._values.get("filter_pattern")
+        assert result is not None, "Required property 'filter_pattern' is missing"
+        return typing.cast(builtins.str, result)
 
     @builtins.property
-    def log_group_name(self) -> str:
-        """``AWS::Logs::MetricFilter.LogGroupName``.
+    def log_group_name(self) -> builtins.str:
+        '''``AWS::Logs::MetricFilter.LogGroupName``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-metricfilter.html#cfn-cwl-metricfilter-loggroupname
-        """
-        return self._values.get("log_group_name")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-metricfilter.html#cfn-cwl-metricfilter-loggroupname
+        '''
+        result = self._values.get("log_group_name")
+        assert result is not None, "Required property 'log_group_name' is missing"
+        return typing.cast(builtins.str, result)
 
     @builtins.property
     def metric_transformations(
         self,
-    ) -> typing.Union[
-        aws_cdk.core.IResolvable,
-        typing.List[
-            typing.Union[
-                "CfnMetricFilter.MetricTransformationProperty", aws_cdk.core.IResolvable
-            ]
-        ],
-    ]:
-        """``AWS::Logs::MetricFilter.MetricTransformations``.
+    ) -> typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[CfnMetricFilter.MetricTransformationProperty, aws_cdk.core.IResolvable]]]:
+        '''``AWS::Logs::MetricFilter.MetricTransformations``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-metricfilter.html#cfn-cwl-metricfilter-metrictransformations
-        """
-        return self._values.get("metric_transformations")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-metricfilter.html#cfn-cwl-metricfilter-metrictransformations
+        '''
+        result = self._values.get("metric_transformations")
+        assert result is not None, "Required property 'metric_transformations' is missing"
+        return typing.cast(typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[CfnMetricFilter.MetricTransformationProperty, aws_cdk.core.IResolvable]]], result)
 
-    def __eq__(self, rhs) -> bool:
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
         return "CfnMetricFilterProps(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+@jsii.implements(aws_cdk.core.IInspectable)
+class CfnQueryDefinition(
+    aws_cdk.core.CfnResource,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@aws-cdk/aws-logs.CfnQueryDefinition",
+):
+    '''A CloudFormation ``AWS::Logs::QueryDefinition``.
+
+    :cloudformationResource: AWS::Logs::QueryDefinition
+    :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-querydefinition.html
+    '''
+
+    def __init__(
+        self,
+        scope: aws_cdk.core.Construct,
+        id: builtins.str,
+        *,
+        name: builtins.str,
+        query_string: builtins.str,
+        log_group_names: typing.Optional[typing.Sequence[builtins.str]] = None,
+    ) -> None:
+        '''Create a new ``AWS::Logs::QueryDefinition``.
+
+        :param scope: - scope in which this resource is defined.
+        :param id: - scoped id of the resource.
+        :param name: ``AWS::Logs::QueryDefinition.Name``.
+        :param query_string: ``AWS::Logs::QueryDefinition.QueryString``.
+        :param log_group_names: ``AWS::Logs::QueryDefinition.LogGroupNames``.
+        '''
+        props = CfnQueryDefinitionProps(
+            name=name, query_string=query_string, log_group_names=log_group_names
+        )
+
+        jsii.create(CfnQueryDefinition, self, [scope, id, props])
+
+    @jsii.member(jsii_name="inspect")
+    def inspect(self, inspector: aws_cdk.core.TreeInspector) -> None:
+        '''Examines the CloudFormation resource and discloses attributes.
+
+        :param inspector: - tree inspector to collect and process attributes.
+        '''
+        return typing.cast(None, jsii.invoke(self, "inspect", [inspector]))
+
+    @jsii.member(jsii_name="renderProperties")
+    def _render_properties(
+        self,
+        props: typing.Mapping[builtins.str, typing.Any],
+    ) -> typing.Mapping[builtins.str, typing.Any]:
+        '''
+        :param props: -
+        '''
+        return typing.cast(typing.Mapping[builtins.str, typing.Any], jsii.invoke(self, "renderProperties", [props]))
+
+    @jsii.python.classproperty # type: ignore[misc]
+    @jsii.member(jsii_name="CFN_RESOURCE_TYPE_NAME")
+    def CFN_RESOURCE_TYPE_NAME(cls) -> builtins.str:
+        '''The CloudFormation resource type name for this resource class.'''
+        return typing.cast(builtins.str, jsii.sget(cls, "CFN_RESOURCE_TYPE_NAME"))
+
+    @builtins.property # type: ignore[misc]
+    @jsii.member(jsii_name="attrQueryDefinitionId")
+    def attr_query_definition_id(self) -> builtins.str:
+        '''
+        :cloudformationAttribute: QueryDefinitionId
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "attrQueryDefinitionId"))
+
+    @builtins.property # type: ignore[misc]
+    @jsii.member(jsii_name="cfnProperties")
+    def _cfn_properties(self) -> typing.Mapping[builtins.str, typing.Any]:
+        return typing.cast(typing.Mapping[builtins.str, typing.Any], jsii.get(self, "cfnProperties"))
+
+    @builtins.property # type: ignore[misc]
+    @jsii.member(jsii_name="name")
+    def name(self) -> builtins.str:
+        '''``AWS::Logs::QueryDefinition.Name``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-querydefinition.html#cfn-logs-querydefinition-name
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "name"))
+
+    @name.setter
+    def name(self, value: builtins.str) -> None:
+        jsii.set(self, "name", value)
+
+    @builtins.property # type: ignore[misc]
+    @jsii.member(jsii_name="queryString")
+    def query_string(self) -> builtins.str:
+        '''``AWS::Logs::QueryDefinition.QueryString``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-querydefinition.html#cfn-logs-querydefinition-querystring
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "queryString"))
+
+    @query_string.setter
+    def query_string(self, value: builtins.str) -> None:
+        jsii.set(self, "queryString", value)
+
+    @builtins.property # type: ignore[misc]
+    @jsii.member(jsii_name="logGroupNames")
+    def log_group_names(self) -> typing.Optional[typing.List[builtins.str]]:
+        '''``AWS::Logs::QueryDefinition.LogGroupNames``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-querydefinition.html#cfn-logs-querydefinition-loggroupnames
+        '''
+        return typing.cast(typing.Optional[typing.List[builtins.str]], jsii.get(self, "logGroupNames"))
+
+    @log_group_names.setter
+    def log_group_names(
+        self,
+        value: typing.Optional[typing.List[builtins.str]],
+    ) -> None:
+        jsii.set(self, "logGroupNames", value)
+
+
+@jsii.data_type(
+    jsii_type="@aws-cdk/aws-logs.CfnQueryDefinitionProps",
+    jsii_struct_bases=[],
+    name_mapping={
+        "name": "name",
+        "query_string": "queryString",
+        "log_group_names": "logGroupNames",
+    },
+)
+class CfnQueryDefinitionProps:
+    def __init__(
+        self,
+        *,
+        name: builtins.str,
+        query_string: builtins.str,
+        log_group_names: typing.Optional[typing.Sequence[builtins.str]] = None,
+    ) -> None:
+        '''Properties for defining a ``AWS::Logs::QueryDefinition``.
+
+        :param name: ``AWS::Logs::QueryDefinition.Name``.
+        :param query_string: ``AWS::Logs::QueryDefinition.QueryString``.
+        :param log_group_names: ``AWS::Logs::QueryDefinition.LogGroupNames``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-querydefinition.html
+        '''
+        self._values: typing.Dict[str, typing.Any] = {
+            "name": name,
+            "query_string": query_string,
+        }
+        if log_group_names is not None:
+            self._values["log_group_names"] = log_group_names
+
+    @builtins.property
+    def name(self) -> builtins.str:
+        '''``AWS::Logs::QueryDefinition.Name``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-querydefinition.html#cfn-logs-querydefinition-name
+        '''
+        result = self._values.get("name")
+        assert result is not None, "Required property 'name' is missing"
+        return typing.cast(builtins.str, result)
+
+    @builtins.property
+    def query_string(self) -> builtins.str:
+        '''``AWS::Logs::QueryDefinition.QueryString``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-querydefinition.html#cfn-logs-querydefinition-querystring
+        '''
+        result = self._values.get("query_string")
+        assert result is not None, "Required property 'query_string' is missing"
+        return typing.cast(builtins.str, result)
+
+    @builtins.property
+    def log_group_names(self) -> typing.Optional[typing.List[builtins.str]]:
+        '''``AWS::Logs::QueryDefinition.LogGroupNames``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-querydefinition.html#cfn-logs-querydefinition-loggroupnames
+        '''
+        result = self._values.get("log_group_names")
+        return typing.cast(typing.Optional[typing.List[builtins.str]], result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "CfnQueryDefinitionProps(%s)" % ", ".join(
             k + "=" + repr(v) for k, v in self._values.items()
         )
 
@@ -1240,25 +1337,23 @@ class CfnSubscriptionFilter(
     metaclass=jsii.JSIIMeta,
     jsii_type="@aws-cdk/aws-logs.CfnSubscriptionFilter",
 ):
-    """A CloudFormation ``AWS::Logs::SubscriptionFilter``.
+    '''A CloudFormation ``AWS::Logs::SubscriptionFilter``.
 
-    see
-    :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-subscriptionfilter.html
-    cloudformationResource:
-    :cloudformationResource:: AWS::Logs::SubscriptionFilter
-    """
+    :cloudformationResource: AWS::Logs::SubscriptionFilter
+    :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-subscriptionfilter.html
+    '''
 
     def __init__(
         self,
         scope: aws_cdk.core.Construct,
-        id: str,
+        id: builtins.str,
         *,
-        destination_arn: str,
-        filter_pattern: str,
-        log_group_name: str,
-        role_arn: typing.Optional[str] = None,
+        destination_arn: builtins.str,
+        filter_pattern: builtins.str,
+        log_group_name: builtins.str,
+        role_arn: typing.Optional[builtins.str] = None,
     ) -> None:
-        """Create a new ``AWS::Logs::SubscriptionFilter``.
+        '''Create a new ``AWS::Logs::SubscriptionFilter``.
 
         :param scope: - scope in which this resource is defined.
         :param id: - scoped id of the resource.
@@ -1266,7 +1361,7 @@ class CfnSubscriptionFilter(
         :param filter_pattern: ``AWS::Logs::SubscriptionFilter.FilterPattern``.
         :param log_group_name: ``AWS::Logs::SubscriptionFilter.LogGroupName``.
         :param role_arn: ``AWS::Logs::SubscriptionFilter.RoleArn``.
-        """
+        '''
         props = CfnSubscriptionFilterProps(
             destination_arn=destination_arn,
             filter_pattern=filter_pattern,
@@ -1276,119 +1371,85 @@ class CfnSubscriptionFilter(
 
         jsii.create(CfnSubscriptionFilter, self, [scope, id, props])
 
-    @jsii.member(jsii_name="fromCloudFormation")
-    @builtins.classmethod
-    def from_cloud_formation(
-        cls,
-        scope: aws_cdk.core.Construct,
-        id: str,
-        resource_attributes: typing.Any,
-        *,
-        finder: aws_cdk.core.ICfnFinder,
-    ) -> "CfnSubscriptionFilter":
-        """A factory method that creates a new instance of this class from an object containing the CloudFormation properties of this resource.
-
-        Used in the @aws-cdk/cloudformation-include module.
-
-        :param scope: -
-        :param id: -
-        :param resource_attributes: -
-        :param finder: The finder interface used to resolve references across the template.
-
-        stability
-        :stability: experimental
-        """
-        options = aws_cdk.core.FromCloudFormationOptions(finder=finder)
-
-        return jsii.sinvoke(
-            cls, "fromCloudFormation", [scope, id, resource_attributes, options]
-        )
-
     @jsii.member(jsii_name="inspect")
     def inspect(self, inspector: aws_cdk.core.TreeInspector) -> None:
-        """Examines the CloudFormation resource and discloses attributes.
+        '''Examines the CloudFormation resource and discloses attributes.
 
         :param inspector: - tree inspector to collect and process attributes.
-
-        stability
-        :stability: experimental
-        """
-        return jsii.invoke(self, "inspect", [inspector])
+        '''
+        return typing.cast(None, jsii.invoke(self, "inspect", [inspector]))
 
     @jsii.member(jsii_name="renderProperties")
     def _render_properties(
-        self, props: typing.Mapping[str, typing.Any]
-    ) -> typing.Mapping[str, typing.Any]:
-        """
+        self,
+        props: typing.Mapping[builtins.str, typing.Any],
+    ) -> typing.Mapping[builtins.str, typing.Any]:
+        '''
         :param props: -
-        """
-        return jsii.invoke(self, "renderProperties", [props])
+        '''
+        return typing.cast(typing.Mapping[builtins.str, typing.Any], jsii.invoke(self, "renderProperties", [props]))
 
-    @jsii.python.classproperty
+    @jsii.python.classproperty # type: ignore[misc]
     @jsii.member(jsii_name="CFN_RESOURCE_TYPE_NAME")
-    def CFN_RESOURCE_TYPE_NAME(cls) -> str:
-        """The CloudFormation resource type name for this resource class."""
-        return jsii.sget(cls, "CFN_RESOURCE_TYPE_NAME")
+    def CFN_RESOURCE_TYPE_NAME(cls) -> builtins.str:
+        '''The CloudFormation resource type name for this resource class.'''
+        return typing.cast(builtins.str, jsii.sget(cls, "CFN_RESOURCE_TYPE_NAME"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="cfnProperties")
-    def _cfn_properties(self) -> typing.Mapping[str, typing.Any]:
-        return jsii.get(self, "cfnProperties")
+    def _cfn_properties(self) -> typing.Mapping[builtins.str, typing.Any]:
+        return typing.cast(typing.Mapping[builtins.str, typing.Any], jsii.get(self, "cfnProperties"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="destinationArn")
-    def destination_arn(self) -> str:
-        """``AWS::Logs::SubscriptionFilter.DestinationArn``.
+    def destination_arn(self) -> builtins.str:
+        '''``AWS::Logs::SubscriptionFilter.DestinationArn``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-subscriptionfilter.html#cfn-cwl-subscriptionfilter-destinationarn
-        """
-        return jsii.get(self, "destinationArn")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-subscriptionfilter.html#cfn-cwl-subscriptionfilter-destinationarn
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "destinationArn"))
 
     @destination_arn.setter
-    def destination_arn(self, value: str) -> None:
+    def destination_arn(self, value: builtins.str) -> None:
         jsii.set(self, "destinationArn", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="filterPattern")
-    def filter_pattern(self) -> str:
-        """``AWS::Logs::SubscriptionFilter.FilterPattern``.
+    def filter_pattern(self) -> builtins.str:
+        '''``AWS::Logs::SubscriptionFilter.FilterPattern``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-subscriptionfilter.html#cfn-cwl-subscriptionfilter-filterpattern
-        """
-        return jsii.get(self, "filterPattern")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-subscriptionfilter.html#cfn-cwl-subscriptionfilter-filterpattern
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "filterPattern"))
 
     @filter_pattern.setter
-    def filter_pattern(self, value: str) -> None:
+    def filter_pattern(self, value: builtins.str) -> None:
         jsii.set(self, "filterPattern", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="logGroupName")
-    def log_group_name(self) -> str:
-        """``AWS::Logs::SubscriptionFilter.LogGroupName``.
+    def log_group_name(self) -> builtins.str:
+        '''``AWS::Logs::SubscriptionFilter.LogGroupName``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-subscriptionfilter.html#cfn-cwl-subscriptionfilter-loggroupname
-        """
-        return jsii.get(self, "logGroupName")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-subscriptionfilter.html#cfn-cwl-subscriptionfilter-loggroupname
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "logGroupName"))
 
     @log_group_name.setter
-    def log_group_name(self, value: str) -> None:
+    def log_group_name(self, value: builtins.str) -> None:
         jsii.set(self, "logGroupName", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="roleArn")
-    def role_arn(self) -> typing.Optional[str]:
-        """``AWS::Logs::SubscriptionFilter.RoleArn``.
+    def role_arn(self) -> typing.Optional[builtins.str]:
+        '''``AWS::Logs::SubscriptionFilter.RoleArn``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-subscriptionfilter.html#cfn-cwl-subscriptionfilter-rolearn
-        """
-        return jsii.get(self, "roleArn")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-subscriptionfilter.html#cfn-cwl-subscriptionfilter-rolearn
+        '''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "roleArn"))
 
     @role_arn.setter
-    def role_arn(self, value: typing.Optional[str]) -> None:
+    def role_arn(self, value: typing.Optional[builtins.str]) -> None:
         jsii.set(self, "roleArn", value)
 
 
@@ -1406,22 +1467,21 @@ class CfnSubscriptionFilterProps:
     def __init__(
         self,
         *,
-        destination_arn: str,
-        filter_pattern: str,
-        log_group_name: str,
-        role_arn: typing.Optional[str] = None,
+        destination_arn: builtins.str,
+        filter_pattern: builtins.str,
+        log_group_name: builtins.str,
+        role_arn: typing.Optional[builtins.str] = None,
     ) -> None:
-        """Properties for defining a ``AWS::Logs::SubscriptionFilter``.
+        '''Properties for defining a ``AWS::Logs::SubscriptionFilter``.
 
         :param destination_arn: ``AWS::Logs::SubscriptionFilter.DestinationArn``.
         :param filter_pattern: ``AWS::Logs::SubscriptionFilter.FilterPattern``.
         :param log_group_name: ``AWS::Logs::SubscriptionFilter.LogGroupName``.
         :param role_arn: ``AWS::Logs::SubscriptionFilter.RoleArn``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-subscriptionfilter.html
-        """
-        self._values = {
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-subscriptionfilter.html
+        '''
+        self._values: typing.Dict[str, typing.Any] = {
             "destination_arn": destination_arn,
             "filter_pattern": filter_pattern,
             "log_group_name": log_group_name,
@@ -1430,45 +1490,48 @@ class CfnSubscriptionFilterProps:
             self._values["role_arn"] = role_arn
 
     @builtins.property
-    def destination_arn(self) -> str:
-        """``AWS::Logs::SubscriptionFilter.DestinationArn``.
+    def destination_arn(self) -> builtins.str:
+        '''``AWS::Logs::SubscriptionFilter.DestinationArn``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-subscriptionfilter.html#cfn-cwl-subscriptionfilter-destinationarn
-        """
-        return self._values.get("destination_arn")
-
-    @builtins.property
-    def filter_pattern(self) -> str:
-        """``AWS::Logs::SubscriptionFilter.FilterPattern``.
-
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-subscriptionfilter.html#cfn-cwl-subscriptionfilter-filterpattern
-        """
-        return self._values.get("filter_pattern")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-subscriptionfilter.html#cfn-cwl-subscriptionfilter-destinationarn
+        '''
+        result = self._values.get("destination_arn")
+        assert result is not None, "Required property 'destination_arn' is missing"
+        return typing.cast(builtins.str, result)
 
     @builtins.property
-    def log_group_name(self) -> str:
-        """``AWS::Logs::SubscriptionFilter.LogGroupName``.
+    def filter_pattern(self) -> builtins.str:
+        '''``AWS::Logs::SubscriptionFilter.FilterPattern``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-subscriptionfilter.html#cfn-cwl-subscriptionfilter-loggroupname
-        """
-        return self._values.get("log_group_name")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-subscriptionfilter.html#cfn-cwl-subscriptionfilter-filterpattern
+        '''
+        result = self._values.get("filter_pattern")
+        assert result is not None, "Required property 'filter_pattern' is missing"
+        return typing.cast(builtins.str, result)
 
     @builtins.property
-    def role_arn(self) -> typing.Optional[str]:
-        """``AWS::Logs::SubscriptionFilter.RoleArn``.
+    def log_group_name(self) -> builtins.str:
+        '''``AWS::Logs::SubscriptionFilter.LogGroupName``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-subscriptionfilter.html#cfn-cwl-subscriptionfilter-rolearn
-        """
-        return self._values.get("role_arn")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-subscriptionfilter.html#cfn-cwl-subscriptionfilter-loggroupname
+        '''
+        result = self._values.get("log_group_name")
+        assert result is not None, "Required property 'log_group_name' is missing"
+        return typing.cast(builtins.str, result)
 
-    def __eq__(self, rhs) -> bool:
+    @builtins.property
+    def role_arn(self) -> typing.Optional[builtins.str]:
+        '''``AWS::Logs::SubscriptionFilter.RoleArn``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-subscriptionfilter.html#cfn-cwl-subscriptionfilter-rolearn
+        '''
+        result = self._values.get("role_arn")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
@@ -1490,16 +1553,16 @@ class ColumnRestriction:
     def __init__(
         self,
         *,
-        comparison: str,
+        comparison: builtins.str,
         number_value: typing.Optional[jsii.Number] = None,
-        string_value: typing.Optional[str] = None,
+        string_value: typing.Optional[builtins.str] = None,
     ) -> None:
-        """
+        '''
         :param comparison: Comparison operator to use.
         :param number_value: Number value to compare to. Exactly one of 'stringValue' and 'numberValue' must be set.
         :param string_value: String value to compare to. Exactly one of 'stringValue' and 'numberValue' must be set.
-        """
-        self._values = {
+        '''
+        self._values: typing.Dict[str, typing.Any] = {
             "comparison": comparison,
         }
         if number_value is not None:
@@ -1508,30 +1571,34 @@ class ColumnRestriction:
             self._values["string_value"] = string_value
 
     @builtins.property
-    def comparison(self) -> str:
-        """Comparison operator to use."""
-        return self._values.get("comparison")
+    def comparison(self) -> builtins.str:
+        '''Comparison operator to use.'''
+        result = self._values.get("comparison")
+        assert result is not None, "Required property 'comparison' is missing"
+        return typing.cast(builtins.str, result)
 
     @builtins.property
     def number_value(self) -> typing.Optional[jsii.Number]:
-        """Number value to compare to.
+        '''Number value to compare to.
 
         Exactly one of 'stringValue' and 'numberValue' must be set.
-        """
-        return self._values.get("number_value")
+        '''
+        result = self._values.get("number_value")
+        return typing.cast(typing.Optional[jsii.Number], result)
 
     @builtins.property
-    def string_value(self) -> typing.Optional[str]:
-        """String value to compare to.
+    def string_value(self) -> typing.Optional[builtins.str]:
+        '''String value to compare to.
 
         Exactly one of 'stringValue' and 'numberValue' must be set.
-        """
-        return self._values.get("string_value")
+        '''
+        result = self._values.get("string_value")
+        return typing.cast(typing.Optional[builtins.str], result)
 
-    def __eq__(self, rhs) -> bool:
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
@@ -1554,16 +1621,16 @@ class CrossAccountDestinationProps:
         self,
         *,
         role: aws_cdk.aws_iam.IRole,
-        target_arn: str,
-        destination_name: typing.Optional[str] = None,
+        target_arn: builtins.str,
+        destination_name: typing.Optional[builtins.str] = None,
     ) -> None:
-        """Properties for a CrossAccountDestination.
+        '''Properties for a CrossAccountDestination.
 
         :param role: The role to assume that grants permissions to write to 'target'. The role must be assumable by 'logs.{REGION}.amazonaws.com'.
         :param target_arn: The log destination target's ARN.
         :param destination_name: The name of the log destination. Default: Automatically generated
-        """
-        self._values = {
+        '''
+        self._values: typing.Dict[str, typing.Any] = {
             "role": role,
             "target_arn": target_arn,
         }
@@ -1572,30 +1639,34 @@ class CrossAccountDestinationProps:
 
     @builtins.property
     def role(self) -> aws_cdk.aws_iam.IRole:
-        """The role to assume that grants permissions to write to 'target'.
+        '''The role to assume that grants permissions to write to 'target'.
 
         The role must be assumable by 'logs.{REGION}.amazonaws.com'.
-        """
-        return self._values.get("role")
+        '''
+        result = self._values.get("role")
+        assert result is not None, "Required property 'role' is missing"
+        return typing.cast(aws_cdk.aws_iam.IRole, result)
 
     @builtins.property
-    def target_arn(self) -> str:
-        """The log destination target's ARN."""
-        return self._values.get("target_arn")
+    def target_arn(self) -> builtins.str:
+        '''The log destination target's ARN.'''
+        result = self._values.get("target_arn")
+        assert result is not None, "Required property 'target_arn' is missing"
+        return typing.cast(builtins.str, result)
 
     @builtins.property
-    def destination_name(self) -> typing.Optional[str]:
-        """The name of the log destination.
+    def destination_name(self) -> typing.Optional[builtins.str]:
+        '''The name of the log destination.
 
-        default
         :default: Automatically generated
-        """
-        return self._values.get("destination_name")
+        '''
+        result = self._values.get("destination_name")
+        return typing.cast(typing.Optional[builtins.str], result)
 
-    def __eq__(self, rhs) -> bool:
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
@@ -1605,123 +1676,134 @@ class CrossAccountDestinationProps:
 
 
 class FilterPattern(
-    metaclass=jsii.JSIIMeta, jsii_type="@aws-cdk/aws-logs.FilterPattern"
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@aws-cdk/aws-logs.FilterPattern",
 ):
-    """A collection of static methods to generate appropriate ILogPatterns."""
+    '''A collection of static methods to generate appropriate ILogPatterns.'''
 
     def __init__(self) -> None:
         jsii.create(FilterPattern, self, [])
 
-    @jsii.member(jsii_name="all")
+    @jsii.member(jsii_name="all") # type: ignore[misc]
     @builtins.classmethod
     def all(cls, *patterns: "JsonPattern") -> "JsonPattern":
-        """A JSON log pattern that matches if all given JSON log patterns match.
+        '''A JSON log pattern that matches if all given JSON log patterns match.
 
         :param patterns: -
-        """
-        return jsii.sinvoke(cls, "all", [*patterns])
+        '''
+        return typing.cast("JsonPattern", jsii.sinvoke(cls, "all", [*patterns]))
 
-    @jsii.member(jsii_name="allEvents")
+    @jsii.member(jsii_name="allEvents") # type: ignore[misc]
     @builtins.classmethod
     def all_events(cls) -> "IFilterPattern":
-        """A log pattern that matches all events."""
-        return jsii.sinvoke(cls, "allEvents", [])
+        '''A log pattern that matches all events.'''
+        return typing.cast("IFilterPattern", jsii.sinvoke(cls, "allEvents", []))
 
-    @jsii.member(jsii_name="allTerms")
+    @jsii.member(jsii_name="allTerms") # type: ignore[misc]
     @builtins.classmethod
-    def all_terms(cls, *terms: str) -> "IFilterPattern":
-        """A log pattern that matches if all the strings given appear in the event.
+    def all_terms(cls, *terms: builtins.str) -> "IFilterPattern":
+        '''A log pattern that matches if all the strings given appear in the event.
 
         :param terms: The words to search for. All terms must match.
-        """
-        return jsii.sinvoke(cls, "allTerms", [*terms])
+        '''
+        return typing.cast("IFilterPattern", jsii.sinvoke(cls, "allTerms", [*terms]))
 
-    @jsii.member(jsii_name="any")
+    @jsii.member(jsii_name="any") # type: ignore[misc]
     @builtins.classmethod
     def any(cls, *patterns: "JsonPattern") -> "JsonPattern":
-        """A JSON log pattern that matches if any of the given JSON log patterns match.
+        '''A JSON log pattern that matches if any of the given JSON log patterns match.
 
         :param patterns: -
-        """
-        return jsii.sinvoke(cls, "any", [*patterns])
+        '''
+        return typing.cast("JsonPattern", jsii.sinvoke(cls, "any", [*patterns]))
 
-    @jsii.member(jsii_name="anyTerm")
+    @jsii.member(jsii_name="anyTerm") # type: ignore[misc]
     @builtins.classmethod
-    def any_term(cls, *terms: str) -> "IFilterPattern":
-        """A log pattern that matches if any of the strings given appear in the event.
+    def any_term(cls, *terms: builtins.str) -> "IFilterPattern":
+        '''A log pattern that matches if any of the strings given appear in the event.
 
         :param terms: The words to search for. Any terms must match.
-        """
-        return jsii.sinvoke(cls, "anyTerm", [*terms])
+        '''
+        return typing.cast("IFilterPattern", jsii.sinvoke(cls, "anyTerm", [*terms]))
 
-    @jsii.member(jsii_name="anyTermGroup")
+    @jsii.member(jsii_name="anyTermGroup") # type: ignore[misc]
     @builtins.classmethod
-    def any_term_group(cls, *term_groups: typing.List[str]) -> "IFilterPattern":
-        """A log pattern that matches if any of the given term groups matches the event.
+    def any_term_group(
+        cls,
+        *term_groups: typing.List[builtins.str],
+    ) -> "IFilterPattern":
+        '''A log pattern that matches if any of the given term groups matches the event.
 
         A term group matches an event if all the terms in it appear in the event string.
 
         :param term_groups: A list of term groups to search for. Any one of the clauses must match.
-        """
-        return jsii.sinvoke(cls, "anyTermGroup", [*term_groups])
+        '''
+        return typing.cast("IFilterPattern", jsii.sinvoke(cls, "anyTermGroup", [*term_groups]))
 
-    @jsii.member(jsii_name="booleanValue")
+    @jsii.member(jsii_name="booleanValue") # type: ignore[misc]
     @builtins.classmethod
-    def boolean_value(cls, json_field: str, value: bool) -> "JsonPattern":
-        """A JSON log pattern that matches if the field exists and equals the boolean value.
+    def boolean_value(
+        cls,
+        json_field: builtins.str,
+        value: builtins.bool,
+    ) -> "JsonPattern":
+        '''A JSON log pattern that matches if the field exists and equals the boolean value.
 
         :param json_field: Field inside JSON. Example: "$.myField"
         :param value: The value to match.
-        """
-        return jsii.sinvoke(cls, "booleanValue", [json_field, value])
+        '''
+        return typing.cast("JsonPattern", jsii.sinvoke(cls, "booleanValue", [json_field, value]))
 
-    @jsii.member(jsii_name="exists")
+    @jsii.member(jsii_name="exists") # type: ignore[misc]
     @builtins.classmethod
-    def exists(cls, json_field: str) -> "JsonPattern":
-        """A JSON log patter that matches if the field exists.
+    def exists(cls, json_field: builtins.str) -> "JsonPattern":
+        '''A JSON log patter that matches if the field exists.
 
         This is a readable convenience wrapper over 'field = *'
 
         :param json_field: Field inside JSON. Example: "$.myField"
-        """
-        return jsii.sinvoke(cls, "exists", [json_field])
+        '''
+        return typing.cast("JsonPattern", jsii.sinvoke(cls, "exists", [json_field]))
 
-    @jsii.member(jsii_name="isNull")
+    @jsii.member(jsii_name="isNull") # type: ignore[misc]
     @builtins.classmethod
-    def is_null(cls, json_field: str) -> "JsonPattern":
-        """A JSON log pattern that matches if the field exists and has the special value 'null'.
+    def is_null(cls, json_field: builtins.str) -> "JsonPattern":
+        '''A JSON log pattern that matches if the field exists and has the special value 'null'.
 
         :param json_field: Field inside JSON. Example: "$.myField"
-        """
-        return jsii.sinvoke(cls, "isNull", [json_field])
+        '''
+        return typing.cast("JsonPattern", jsii.sinvoke(cls, "isNull", [json_field]))
 
-    @jsii.member(jsii_name="literal")
+    @jsii.member(jsii_name="literal") # type: ignore[misc]
     @builtins.classmethod
-    def literal(cls, log_pattern_string: str) -> "IFilterPattern":
-        """Use the given string as log pattern.
+    def literal(cls, log_pattern_string: builtins.str) -> "IFilterPattern":
+        '''Use the given string as log pattern.
 
         See https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/FilterAndPatternSyntax.html
         for information on writing log patterns.
 
         :param log_pattern_string: The pattern string to use.
-        """
-        return jsii.sinvoke(cls, "literal", [log_pattern_string])
+        '''
+        return typing.cast("IFilterPattern", jsii.sinvoke(cls, "literal", [log_pattern_string]))
 
-    @jsii.member(jsii_name="notExists")
+    @jsii.member(jsii_name="notExists") # type: ignore[misc]
     @builtins.classmethod
-    def not_exists(cls, json_field: str) -> "JsonPattern":
-        """A JSON log pattern that matches if the field does not exist.
+    def not_exists(cls, json_field: builtins.str) -> "JsonPattern":
+        '''A JSON log pattern that matches if the field does not exist.
 
         :param json_field: Field inside JSON. Example: "$.myField"
-        """
-        return jsii.sinvoke(cls, "notExists", [json_field])
+        '''
+        return typing.cast("JsonPattern", jsii.sinvoke(cls, "notExists", [json_field]))
 
-    @jsii.member(jsii_name="numberValue")
+    @jsii.member(jsii_name="numberValue") # type: ignore[misc]
     @builtins.classmethod
     def number_value(
-        cls, json_field: str, comparison: str, value: jsii.Number
+        cls,
+        json_field: builtins.str,
+        comparison: builtins.str,
+        value: jsii.Number,
     ) -> "JsonPattern":
-        """A JSON log pattern that compares numerical values.
+        '''A JSON log pattern that compares numerical values.
 
         This pattern only matches if the event is a JSON event, and the indicated field inside
         compares with the value in the indicated way.
@@ -1737,13 +1819,13 @@ class FilterPattern(
         :param json_field: Field inside JSON. Example: "$.myField"
         :param comparison: Comparison to carry out. One of =, !=, <, <=, >, >=.
         :param value: The numerical value to compare to.
-        """
-        return jsii.sinvoke(cls, "numberValue", [json_field, comparison, value])
+        '''
+        return typing.cast("JsonPattern", jsii.sinvoke(cls, "numberValue", [json_field, comparison, value]))
 
-    @jsii.member(jsii_name="spaceDelimited")
+    @jsii.member(jsii_name="spaceDelimited") # type: ignore[misc]
     @builtins.classmethod
-    def space_delimited(cls, *columns: str) -> "SpaceDelimitedTextPattern":
-        """A space delimited log pattern matcher.
+    def space_delimited(cls, *columns: builtins.str) -> "SpaceDelimitedTextPattern":
+        '''A space delimited log pattern matcher.
 
         The log event is divided into space-delimited columns (optionally
         enclosed by "" or [] to capture spaces into column values), and names
@@ -1754,15 +1836,18 @@ class FilterPattern(
         Afterwards, conditions may be added to individual columns.
 
         :param columns: The columns in the space-delimited log stream.
-        """
-        return jsii.sinvoke(cls, "spaceDelimited", [*columns])
+        '''
+        return typing.cast("SpaceDelimitedTextPattern", jsii.sinvoke(cls, "spaceDelimited", [*columns]))
 
-    @jsii.member(jsii_name="stringValue")
+    @jsii.member(jsii_name="stringValue") # type: ignore[misc]
     @builtins.classmethod
     def string_value(
-        cls, json_field: str, comparison: str, value: str
+        cls,
+        json_field: builtins.str,
+        comparison: builtins.str,
+        value: builtins.str,
     ) -> "JsonPattern":
-        """A JSON log pattern that compares string values.
+        '''A JSON log pattern that compares string values.
 
         This pattern only matches if the event is a JSON event, and the indicated field inside
         compares with the string value.
@@ -1778,73 +1863,66 @@ class FilterPattern(
         :param json_field: Field inside JSON. Example: "$.myField"
         :param comparison: Comparison to carry out. Either = or !=.
         :param value: The string value to compare to. May use '*' as wildcard at start or end of string.
-        """
-        return jsii.sinvoke(cls, "stringValue", [json_field, comparison, value])
+        '''
+        return typing.cast("JsonPattern", jsii.sinvoke(cls, "stringValue", [json_field, comparison, value]))
 
 
 @jsii.interface(jsii_type="@aws-cdk/aws-logs.IFilterPattern")
-class IFilterPattern(jsii.compat.Protocol):
-    """Interface for objects that can render themselves to log patterns."""
+class IFilterPattern(typing_extensions.Protocol):
+    '''Interface for objects that can render themselves to log patterns.'''
 
-    @builtins.staticmethod
-    def __jsii_proxy_class__():
-        return _IFilterPatternProxy
-
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="logPatternString")
-    def log_pattern_string(self) -> str:
+    def log_pattern_string(self) -> builtins.str:
         ...
 
 
 class _IFilterPatternProxy:
-    """Interface for objects that can render themselves to log patterns."""
+    '''Interface for objects that can render themselves to log patterns.'''
 
-    __jsii_type__ = "@aws-cdk/aws-logs.IFilterPattern"
+    __jsii_type__: typing.ClassVar[str] = "@aws-cdk/aws-logs.IFilterPattern"
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="logPatternString")
-    def log_pattern_string(self) -> str:
-        return jsii.get(self, "logPatternString")
+    def log_pattern_string(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "logPatternString"))
+
+# Adding a "__jsii_proxy_class__(): typing.Type" function to the interface
+typing.cast(typing.Any, IFilterPattern).__jsii_proxy_class__ = lambda : _IFilterPatternProxy
 
 
 @jsii.interface(jsii_type="@aws-cdk/aws-logs.ILogGroup")
-class ILogGroup(aws_cdk.core.IResource, jsii.compat.Protocol):
-    @builtins.staticmethod
-    def __jsii_proxy_class__():
-        return _ILogGroupProxy
-
-    @builtins.property
+class ILogGroup(aws_cdk.core.IResource, typing_extensions.Protocol):
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="logGroupArn")
-    def log_group_arn(self) -> str:
-        """The ARN of this log group, with ':*' appended.
+    def log_group_arn(self) -> builtins.str:
+        '''The ARN of this log group, with ':*' appended.
 
-        attribute:
-        :attribute:: true
-        """
+        :attribute: true
+        '''
         ...
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="logGroupName")
-    def log_group_name(self) -> str:
-        """The name of this log group.
+    def log_group_name(self) -> builtins.str:
+        '''The name of this log group.
 
-        attribute:
-        :attribute:: true
-        """
+        :attribute: true
+        '''
         ...
 
     @jsii.member(jsii_name="addMetricFilter")
     def add_metric_filter(
         self,
-        id: str,
+        id: builtins.str,
         *,
-        filter_pattern: "IFilterPattern",
-        metric_name: str,
-        metric_namespace: str,
+        filter_pattern: IFilterPattern,
+        metric_name: builtins.str,
+        metric_namespace: builtins.str,
         default_value: typing.Optional[jsii.Number] = None,
-        metric_value: typing.Optional[str] = None,
+        metric_value: typing.Optional[builtins.str] = None,
     ) -> "MetricFilter":
-        """Create a new Metric Filter on this Log Group.
+        '''Create a new Metric Filter on this Log Group.
 
         :param id: Unique identifier for the construct in its parent.
         :param filter_pattern: Pattern to search for log events.
@@ -1852,41 +1930,47 @@ class ILogGroup(aws_cdk.core.IResource, jsii.compat.Protocol):
         :param metric_namespace: The namespace of the metric to emit.
         :param default_value: The value to emit if the pattern does not match a particular event. Default: No metric emitted.
         :param metric_value: The value to emit for the metric. Can either be a literal number (typically "1"), or the name of a field in the structure to take the value from the matched event. If you are using a field value, the field value must have been matched using the pattern. If you want to specify a field from a matched JSON structure, use '$.fieldName', and make sure the field is in the pattern (if only as '$.fieldName = *'). If you want to specify a field from a matched space-delimited structure, use '$fieldName'. Default: "1"
-        """
+        '''
         ...
 
     @jsii.member(jsii_name="addStream")
     def add_stream(
-        self, id: str, *, log_stream_name: typing.Optional[str] = None
+        self,
+        id: builtins.str,
+        *,
+        log_stream_name: typing.Optional[builtins.str] = None,
     ) -> "LogStream":
-        """Create a new Log Stream for this Log Group.
+        '''Create a new Log Stream for this Log Group.
 
         :param id: Unique identifier for the construct in its parent.
         :param log_stream_name: The name of the log stream to create. The name must be unique within the log group. Default: Automatically generated
-        """
+        '''
         ...
 
     @jsii.member(jsii_name="addSubscriptionFilter")
     def add_subscription_filter(
         self,
-        id: str,
+        id: builtins.str,
         *,
         destination: "ILogSubscriptionDestination",
-        filter_pattern: "IFilterPattern",
+        filter_pattern: IFilterPattern,
     ) -> "SubscriptionFilter":
-        """Create a new Subscription Filter on this Log Group.
+        '''Create a new Subscription Filter on this Log Group.
 
         :param id: Unique identifier for the construct in its parent.
         :param destination: The destination to send the filtered events to. For example, a Kinesis stream or a Lambda function.
         :param filter_pattern: Log events matching this pattern will be sent to the destination.
-        """
+        '''
         ...
 
     @jsii.member(jsii_name="extractMetric")
     def extract_metric(
-        self, json_field: str, metric_namespace: str, metric_name: str
+        self,
+        json_field: builtins.str,
+        metric_namespace: builtins.str,
+        metric_name: builtins.str,
     ) -> aws_cdk.aws_cloudwatch.Metric:
-        """Extract a metric from structured log events in the LogGroup.
+        '''Extract a metric from structured log events in the LogGroup.
 
         Creates a MetricFilter on this LogGroup that will extract the value
         of the indicated JSON field in all records where it occurs.
@@ -1898,66 +1982,72 @@ class ILogGroup(aws_cdk.core.IResource, jsii.compat.Protocol):
         :param metric_namespace: Namespace to emit the metric under.
         :param metric_name: Name to emit the metric under.
 
-        return
         :return: A Metric object representing the extracted metric
-        """
+        '''
         ...
 
     @jsii.member(jsii_name="grant")
     def grant(
-        self, grantee: aws_cdk.aws_iam.IGrantable, *actions: str
+        self,
+        grantee: aws_cdk.aws_iam.IGrantable,
+        *actions: builtins.str,
     ) -> aws_cdk.aws_iam.Grant:
-        """Give the indicated permissions on this log group and all streams.
+        '''Give the indicated permissions on this log group and all streams.
 
         :param grantee: -
         :param actions: -
-        """
+        '''
         ...
 
     @jsii.member(jsii_name="grantWrite")
     def grant_write(self, grantee: aws_cdk.aws_iam.IGrantable) -> aws_cdk.aws_iam.Grant:
-        """Give permissions to write to create and write to streams in this log group.
+        '''Give permissions to write to create and write to streams in this log group.
 
         :param grantee: -
-        """
+        '''
+        ...
+
+    @jsii.member(jsii_name="logGroupPhysicalName")
+    def log_group_physical_name(self) -> builtins.str:
+        '''Public method to get the physical name of this log group.'''
         ...
 
 
-class _ILogGroupProxy(jsii.proxy_for(aws_cdk.core.IResource)):
-    __jsii_type__ = "@aws-cdk/aws-logs.ILogGroup"
+class _ILogGroupProxy(
+    jsii.proxy_for(aws_cdk.core.IResource) # type: ignore[misc]
+):
+    __jsii_type__: typing.ClassVar[str] = "@aws-cdk/aws-logs.ILogGroup"
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="logGroupArn")
-    def log_group_arn(self) -> str:
-        """The ARN of this log group, with ':*' appended.
+    def log_group_arn(self) -> builtins.str:
+        '''The ARN of this log group, with ':*' appended.
 
-        attribute:
-        :attribute:: true
-        """
-        return jsii.get(self, "logGroupArn")
+        :attribute: true
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "logGroupArn"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="logGroupName")
-    def log_group_name(self) -> str:
-        """The name of this log group.
+    def log_group_name(self) -> builtins.str:
+        '''The name of this log group.
 
-        attribute:
-        :attribute:: true
-        """
-        return jsii.get(self, "logGroupName")
+        :attribute: true
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "logGroupName"))
 
     @jsii.member(jsii_name="addMetricFilter")
     def add_metric_filter(
         self,
-        id: str,
+        id: builtins.str,
         *,
-        filter_pattern: "IFilterPattern",
-        metric_name: str,
-        metric_namespace: str,
+        filter_pattern: IFilterPattern,
+        metric_name: builtins.str,
+        metric_namespace: builtins.str,
         default_value: typing.Optional[jsii.Number] = None,
-        metric_value: typing.Optional[str] = None,
+        metric_value: typing.Optional[builtins.str] = None,
     ) -> "MetricFilter":
-        """Create a new Metric Filter on this Log Group.
+        '''Create a new Metric Filter on this Log Group.
 
         :param id: Unique identifier for the construct in its parent.
         :param filter_pattern: Pattern to search for log events.
@@ -1965,7 +2055,7 @@ class _ILogGroupProxy(jsii.proxy_for(aws_cdk.core.IResource)):
         :param metric_namespace: The namespace of the metric to emit.
         :param default_value: The value to emit if the pattern does not match a particular event. Default: No metric emitted.
         :param metric_value: The value to emit for the metric. Can either be a literal number (typically "1"), or the name of a field in the structure to take the value from the matched event. If you are using a field value, the field value must have been matched using the pattern. If you want to specify a field from a matched JSON structure, use '$.fieldName', and make sure the field is in the pattern (if only as '$.fieldName = *'). If you want to specify a field from a matched space-delimited structure, use '$fieldName'. Default: "1"
-        """
+        '''
         props = MetricFilterOptions(
             filter_pattern=filter_pattern,
             metric_name=metric_name,
@@ -1974,46 +2064,52 @@ class _ILogGroupProxy(jsii.proxy_for(aws_cdk.core.IResource)):
             metric_value=metric_value,
         )
 
-        return jsii.invoke(self, "addMetricFilter", [id, props])
+        return typing.cast("MetricFilter", jsii.invoke(self, "addMetricFilter", [id, props]))
 
     @jsii.member(jsii_name="addStream")
     def add_stream(
-        self, id: str, *, log_stream_name: typing.Optional[str] = None
+        self,
+        id: builtins.str,
+        *,
+        log_stream_name: typing.Optional[builtins.str] = None,
     ) -> "LogStream":
-        """Create a new Log Stream for this Log Group.
+        '''Create a new Log Stream for this Log Group.
 
         :param id: Unique identifier for the construct in its parent.
         :param log_stream_name: The name of the log stream to create. The name must be unique within the log group. Default: Automatically generated
-        """
+        '''
         props = StreamOptions(log_stream_name=log_stream_name)
 
-        return jsii.invoke(self, "addStream", [id, props])
+        return typing.cast("LogStream", jsii.invoke(self, "addStream", [id, props]))
 
     @jsii.member(jsii_name="addSubscriptionFilter")
     def add_subscription_filter(
         self,
-        id: str,
+        id: builtins.str,
         *,
         destination: "ILogSubscriptionDestination",
-        filter_pattern: "IFilterPattern",
+        filter_pattern: IFilterPattern,
     ) -> "SubscriptionFilter":
-        """Create a new Subscription Filter on this Log Group.
+        '''Create a new Subscription Filter on this Log Group.
 
         :param id: Unique identifier for the construct in its parent.
         :param destination: The destination to send the filtered events to. For example, a Kinesis stream or a Lambda function.
         :param filter_pattern: Log events matching this pattern will be sent to the destination.
-        """
+        '''
         props = SubscriptionFilterOptions(
             destination=destination, filter_pattern=filter_pattern
         )
 
-        return jsii.invoke(self, "addSubscriptionFilter", [id, props])
+        return typing.cast("SubscriptionFilter", jsii.invoke(self, "addSubscriptionFilter", [id, props]))
 
     @jsii.member(jsii_name="extractMetric")
     def extract_metric(
-        self, json_field: str, metric_namespace: str, metric_name: str
+        self,
+        json_field: builtins.str,
+        metric_namespace: builtins.str,
+        metric_name: builtins.str,
     ) -> aws_cdk.aws_cloudwatch.Metric:
-        """Extract a metric from structured log events in the LogGroup.
+        '''Extract a metric from structured log events in the LogGroup.
 
         Creates a MetricFilter on this LogGroup that will extract the value
         of the indicated JSON field in all records where it occurs.
@@ -2025,77 +2121,81 @@ class _ILogGroupProxy(jsii.proxy_for(aws_cdk.core.IResource)):
         :param metric_namespace: Namespace to emit the metric under.
         :param metric_name: Name to emit the metric under.
 
-        return
         :return: A Metric object representing the extracted metric
-        """
-        return jsii.invoke(
-            self, "extractMetric", [json_field, metric_namespace, metric_name]
-        )
+        '''
+        return typing.cast(aws_cdk.aws_cloudwatch.Metric, jsii.invoke(self, "extractMetric", [json_field, metric_namespace, metric_name]))
 
     @jsii.member(jsii_name="grant")
     def grant(
-        self, grantee: aws_cdk.aws_iam.IGrantable, *actions: str
+        self,
+        grantee: aws_cdk.aws_iam.IGrantable,
+        *actions: builtins.str,
     ) -> aws_cdk.aws_iam.Grant:
-        """Give the indicated permissions on this log group and all streams.
+        '''Give the indicated permissions on this log group and all streams.
 
         :param grantee: -
         :param actions: -
-        """
-        return jsii.invoke(self, "grant", [grantee, *actions])
+        '''
+        return typing.cast(aws_cdk.aws_iam.Grant, jsii.invoke(self, "grant", [grantee, *actions]))
 
     @jsii.member(jsii_name="grantWrite")
     def grant_write(self, grantee: aws_cdk.aws_iam.IGrantable) -> aws_cdk.aws_iam.Grant:
-        """Give permissions to write to create and write to streams in this log group.
+        '''Give permissions to write to create and write to streams in this log group.
 
         :param grantee: -
-        """
-        return jsii.invoke(self, "grantWrite", [grantee])
+        '''
+        return typing.cast(aws_cdk.aws_iam.Grant, jsii.invoke(self, "grantWrite", [grantee]))
+
+    @jsii.member(jsii_name="logGroupPhysicalName")
+    def log_group_physical_name(self) -> builtins.str:
+        '''Public method to get the physical name of this log group.'''
+        return typing.cast(builtins.str, jsii.invoke(self, "logGroupPhysicalName", []))
+
+# Adding a "__jsii_proxy_class__(): typing.Type" function to the interface
+typing.cast(typing.Any, ILogGroup).__jsii_proxy_class__ = lambda : _ILogGroupProxy
 
 
 @jsii.interface(jsii_type="@aws-cdk/aws-logs.ILogStream")
-class ILogStream(aws_cdk.core.IResource, jsii.compat.Protocol):
-    @builtins.staticmethod
-    def __jsii_proxy_class__():
-        return _ILogStreamProxy
-
-    @builtins.property
+class ILogStream(aws_cdk.core.IResource, typing_extensions.Protocol):
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="logStreamName")
-    def log_stream_name(self) -> str:
-        """The name of this log stream.
+    def log_stream_name(self) -> builtins.str:
+        '''The name of this log stream.
 
-        attribute:
-        :attribute:: true
-        """
+        :attribute: true
+        '''
         ...
 
 
-class _ILogStreamProxy(jsii.proxy_for(aws_cdk.core.IResource)):
-    __jsii_type__ = "@aws-cdk/aws-logs.ILogStream"
+class _ILogStreamProxy(
+    jsii.proxy_for(aws_cdk.core.IResource) # type: ignore[misc]
+):
+    __jsii_type__: typing.ClassVar[str] = "@aws-cdk/aws-logs.ILogStream"
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="logStreamName")
-    def log_stream_name(self) -> str:
-        """The name of this log stream.
+    def log_stream_name(self) -> builtins.str:
+        '''The name of this log stream.
 
-        attribute:
-        :attribute:: true
-        """
-        return jsii.get(self, "logStreamName")
+        :attribute: true
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "logStreamName"))
+
+# Adding a "__jsii_proxy_class__(): typing.Type" function to the interface
+typing.cast(typing.Any, ILogStream).__jsii_proxy_class__ = lambda : _ILogStreamProxy
 
 
 @jsii.interface(jsii_type="@aws-cdk/aws-logs.ILogSubscriptionDestination")
-class ILogSubscriptionDestination(jsii.compat.Protocol):
-    """Interface for classes that can be the destination of a log Subscription."""
-
-    @builtins.staticmethod
-    def __jsii_proxy_class__():
-        return _ILogSubscriptionDestinationProxy
+class ILogSubscriptionDestination(typing_extensions.Protocol):
+    '''Interface for classes that can be the destination of a log Subscription.'''
 
     @jsii.member(jsii_name="bind")
     def bind(
-        self, scope: aws_cdk.core.Construct, source_log_group: "ILogGroup"
+        self,
+        scope: aws_cdk.core.Construct,
+        source_log_group: ILogGroup,
     ) -> "LogSubscriptionDestinationConfig":
-        """Return the properties required to send subscription events to this destination.
+        '''Return the properties required to send subscription events to this destination.
 
         If necessary, the destination can use the properties of the SubscriptionFilter
         object itself to configure its permissions to allow the subscription to write
@@ -2106,20 +2206,22 @@ class ILogSubscriptionDestination(jsii.compat.Protocol):
 
         :param scope: -
         :param source_log_group: -
-        """
+        '''
         ...
 
 
 class _ILogSubscriptionDestinationProxy:
-    """Interface for classes that can be the destination of a log Subscription."""
+    '''Interface for classes that can be the destination of a log Subscription.'''
 
-    __jsii_type__ = "@aws-cdk/aws-logs.ILogSubscriptionDestination"
+    __jsii_type__: typing.ClassVar[str] = "@aws-cdk/aws-logs.ILogSubscriptionDestination"
 
     @jsii.member(jsii_name="bind")
     def bind(
-        self, scope: aws_cdk.core.Construct, source_log_group: "ILogGroup"
+        self,
+        scope: aws_cdk.core.Construct,
+        source_log_group: ILogGroup,
     ) -> "LogSubscriptionDestinationConfig":
-        """Return the properties required to send subscription events to this destination.
+        '''Return the properties required to send subscription events to this destination.
 
         If necessary, the destination can use the properties of the SubscriptionFilter
         object itself to configure its permissions to allow the subscription to write
@@ -2130,39 +2232,42 @@ class _ILogSubscriptionDestinationProxy:
 
         :param scope: -
         :param source_log_group: -
-        """
-        return jsii.invoke(self, "bind", [scope, source_log_group])
+        '''
+        return typing.cast("LogSubscriptionDestinationConfig", jsii.invoke(self, "bind", [scope, source_log_group]))
+
+# Adding a "__jsii_proxy_class__(): typing.Type" function to the interface
+typing.cast(typing.Any, ILogSubscriptionDestination).__jsii_proxy_class__ = lambda : _ILogSubscriptionDestinationProxy
 
 
 @jsii.implements(IFilterPattern)
 class JsonPattern(
-    metaclass=jsii.JSIIAbstractClass, jsii_type="@aws-cdk/aws-logs.JsonPattern"
+    metaclass=jsii.JSIIAbstractClass,
+    jsii_type="@aws-cdk/aws-logs.JsonPattern",
 ):
-    """Base class for patterns that only match JSON log events."""
+    '''Base class for patterns that only match JSON log events.'''
 
-    @builtins.staticmethod
-    def __jsii_proxy_class__():
-        return _JsonPatternProxy
-
-    def __init__(self, json_pattern_string: str) -> None:
-        """
+    def __init__(self, json_pattern_string: builtins.str) -> None:
+        '''
         :param json_pattern_string: -
-        """
+        '''
         jsii.create(JsonPattern, self, [json_pattern_string])
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="jsonPatternString")
-    def json_pattern_string(self) -> str:
-        return jsii.get(self, "jsonPatternString")
+    def json_pattern_string(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "jsonPatternString"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="logPatternString")
-    def log_pattern_string(self) -> str:
-        return jsii.get(self, "logPatternString")
+    def log_pattern_string(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "logPatternString"))
 
 
 class _JsonPatternProxy(JsonPattern):
     pass
+
+# Adding a "__jsii_proxy_class__(): typing.Type" function to the abstract class
+typing.cast(typing.Any, JsonPattern).__jsii_proxy_class__ = lambda : _JsonPatternProxy
 
 
 @jsii.implements(ILogGroup)
@@ -2171,25 +2276,28 @@ class LogGroup(
     metaclass=jsii.JSIIMeta,
     jsii_type="@aws-cdk/aws-logs.LogGroup",
 ):
-    """Define a CloudWatch Log Group."""
+    '''Define a CloudWatch Log Group.'''
 
     def __init__(
         self,
-        scope: aws_cdk.core.Construct,
-        id: str,
+        scope: constructs.Construct,
+        id: builtins.str,
         *,
-        log_group_name: typing.Optional[str] = None,
+        encryption_key: typing.Optional[aws_cdk.aws_kms.IKey] = None,
+        log_group_name: typing.Optional[builtins.str] = None,
         removal_policy: typing.Optional[aws_cdk.core.RemovalPolicy] = None,
         retention: typing.Optional["RetentionDays"] = None,
     ) -> None:
-        """
+        '''
         :param scope: -
         :param id: -
+        :param encryption_key: The KMS Key to encrypt the log group with. Default: - log group is encrypted with the default master key
         :param log_group_name: Name of the log group. Default: Automatically generated
         :param removal_policy: Determine the removal policy of this log group. Normally you want to retain the log group so you can diagnose issues from logs even after a deployment that no longer includes the log group. In that case, use the normal date-based retention policy to age out your logs. Default: RemovalPolicy.Retain
         :param retention: How long, in days, the log contents will be retained. To retain all logs, set this value to RetentionDays.INFINITE. Default: RetentionDays.TWO_YEARS
-        """
+        '''
         props = LogGroupProps(
+            encryption_key=encryption_key,
             log_group_name=log_group_name,
             removal_policy=removal_policy,
             retention=retention,
@@ -2197,44 +2305,50 @@ class LogGroup(
 
         jsii.create(LogGroup, self, [scope, id, props])
 
-    @jsii.member(jsii_name="fromLogGroupArn")
+    @jsii.member(jsii_name="fromLogGroupArn") # type: ignore[misc]
     @builtins.classmethod
     def from_log_group_arn(
-        cls, scope: aws_cdk.core.Construct, id: str, log_group_arn: str
-    ) -> "ILogGroup":
-        """Import an existing LogGroup given its ARN.
+        cls,
+        scope: constructs.Construct,
+        id: builtins.str,
+        log_group_arn: builtins.str,
+    ) -> ILogGroup:
+        '''Import an existing LogGroup given its ARN.
 
         :param scope: -
         :param id: -
         :param log_group_arn: -
-        """
-        return jsii.sinvoke(cls, "fromLogGroupArn", [scope, id, log_group_arn])
+        '''
+        return typing.cast(ILogGroup, jsii.sinvoke(cls, "fromLogGroupArn", [scope, id, log_group_arn]))
 
-    @jsii.member(jsii_name="fromLogGroupName")
+    @jsii.member(jsii_name="fromLogGroupName") # type: ignore[misc]
     @builtins.classmethod
     def from_log_group_name(
-        cls, scope: aws_cdk.core.Construct, id: str, log_group_name: str
-    ) -> "ILogGroup":
-        """Import an existing LogGroup given its name.
+        cls,
+        scope: constructs.Construct,
+        id: builtins.str,
+        log_group_name: builtins.str,
+    ) -> ILogGroup:
+        '''Import an existing LogGroup given its name.
 
         :param scope: -
         :param id: -
         :param log_group_name: -
-        """
-        return jsii.sinvoke(cls, "fromLogGroupName", [scope, id, log_group_name])
+        '''
+        return typing.cast(ILogGroup, jsii.sinvoke(cls, "fromLogGroupName", [scope, id, log_group_name]))
 
     @jsii.member(jsii_name="addMetricFilter")
     def add_metric_filter(
         self,
-        id: str,
+        id: builtins.str,
         *,
-        filter_pattern: "IFilterPattern",
-        metric_name: str,
-        metric_namespace: str,
+        filter_pattern: IFilterPattern,
+        metric_name: builtins.str,
+        metric_namespace: builtins.str,
         default_value: typing.Optional[jsii.Number] = None,
-        metric_value: typing.Optional[str] = None,
+        metric_value: typing.Optional[builtins.str] = None,
     ) -> "MetricFilter":
-        """Create a new Metric Filter on this Log Group.
+        '''Create a new Metric Filter on this Log Group.
 
         :param id: Unique identifier for the construct in its parent.
         :param filter_pattern: Pattern to search for log events.
@@ -2242,7 +2356,7 @@ class LogGroup(
         :param metric_namespace: The namespace of the metric to emit.
         :param default_value: The value to emit if the pattern does not match a particular event. Default: No metric emitted.
         :param metric_value: The value to emit for the metric. Can either be a literal number (typically "1"), or the name of a field in the structure to take the value from the matched event. If you are using a field value, the field value must have been matched using the pattern. If you want to specify a field from a matched JSON structure, use '$.fieldName', and make sure the field is in the pattern (if only as '$.fieldName = *'). If you want to specify a field from a matched space-delimited structure, use '$fieldName'. Default: "1"
-        """
+        '''
         props = MetricFilterOptions(
             filter_pattern=filter_pattern,
             metric_name=metric_name,
@@ -2251,46 +2365,52 @@ class LogGroup(
             metric_value=metric_value,
         )
 
-        return jsii.invoke(self, "addMetricFilter", [id, props])
+        return typing.cast("MetricFilter", jsii.invoke(self, "addMetricFilter", [id, props]))
 
     @jsii.member(jsii_name="addStream")
     def add_stream(
-        self, id: str, *, log_stream_name: typing.Optional[str] = None
+        self,
+        id: builtins.str,
+        *,
+        log_stream_name: typing.Optional[builtins.str] = None,
     ) -> "LogStream":
-        """Create a new Log Stream for this Log Group.
+        '''Create a new Log Stream for this Log Group.
 
         :param id: Unique identifier for the construct in its parent.
         :param log_stream_name: The name of the log stream to create. The name must be unique within the log group. Default: Automatically generated
-        """
+        '''
         props = StreamOptions(log_stream_name=log_stream_name)
 
-        return jsii.invoke(self, "addStream", [id, props])
+        return typing.cast("LogStream", jsii.invoke(self, "addStream", [id, props]))
 
     @jsii.member(jsii_name="addSubscriptionFilter")
     def add_subscription_filter(
         self,
-        id: str,
+        id: builtins.str,
         *,
-        destination: "ILogSubscriptionDestination",
-        filter_pattern: "IFilterPattern",
+        destination: ILogSubscriptionDestination,
+        filter_pattern: IFilterPattern,
     ) -> "SubscriptionFilter":
-        """Create a new Subscription Filter on this Log Group.
+        '''Create a new Subscription Filter on this Log Group.
 
         :param id: Unique identifier for the construct in its parent.
         :param destination: The destination to send the filtered events to. For example, a Kinesis stream or a Lambda function.
         :param filter_pattern: Log events matching this pattern will be sent to the destination.
-        """
+        '''
         props = SubscriptionFilterOptions(
             destination=destination, filter_pattern=filter_pattern
         )
 
-        return jsii.invoke(self, "addSubscriptionFilter", [id, props])
+        return typing.cast("SubscriptionFilter", jsii.invoke(self, "addSubscriptionFilter", [id, props]))
 
     @jsii.member(jsii_name="extractMetric")
     def extract_metric(
-        self, json_field: str, metric_namespace: str, metric_name: str
+        self,
+        json_field: builtins.str,
+        metric_namespace: builtins.str,
+        metric_name: builtins.str,
     ) -> aws_cdk.aws_cloudwatch.Metric:
-        """Extract a metric from structured log events in the LogGroup.
+        '''Extract a metric from structured log events in the LogGroup.
 
         Creates a MetricFilter on this LogGroup that will extract the value
         of the indicated JSON field in all records where it occurs.
@@ -2302,49 +2422,57 @@ class LogGroup(
         :param metric_namespace: Namespace to emit the metric under.
         :param metric_name: Name to emit the metric under.
 
-        return
         :return: A Metric object representing the extracted metric
-        """
-        return jsii.invoke(
-            self, "extractMetric", [json_field, metric_namespace, metric_name]
-        )
+        '''
+        return typing.cast(aws_cdk.aws_cloudwatch.Metric, jsii.invoke(self, "extractMetric", [json_field, metric_namespace, metric_name]))
 
     @jsii.member(jsii_name="grant")
     def grant(
-        self, grantee: aws_cdk.aws_iam.IGrantable, *actions: str
+        self,
+        grantee: aws_cdk.aws_iam.IGrantable,
+        *actions: builtins.str,
     ) -> aws_cdk.aws_iam.Grant:
-        """Give the indicated permissions on this log group and all streams.
+        '''Give the indicated permissions on this log group and all streams.
 
         :param grantee: -
         :param actions: -
-        """
-        return jsii.invoke(self, "grant", [grantee, *actions])
+        '''
+        return typing.cast(aws_cdk.aws_iam.Grant, jsii.invoke(self, "grant", [grantee, *actions]))
 
     @jsii.member(jsii_name="grantWrite")
     def grant_write(self, grantee: aws_cdk.aws_iam.IGrantable) -> aws_cdk.aws_iam.Grant:
-        """Give permissions to write to create and write to streams in this log group.
+        '''Give permissions to create and write to streams in this log group.
 
         :param grantee: -
-        """
-        return jsii.invoke(self, "grantWrite", [grantee])
+        '''
+        return typing.cast(aws_cdk.aws_iam.Grant, jsii.invoke(self, "grantWrite", [grantee]))
 
-    @builtins.property
+    @jsii.member(jsii_name="logGroupPhysicalName")
+    def log_group_physical_name(self) -> builtins.str:
+        '''Public method to get the physical name of this log group.
+
+        :return: Physical name of log group
+        '''
+        return typing.cast(builtins.str, jsii.invoke(self, "logGroupPhysicalName", []))
+
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="logGroupArn")
-    def log_group_arn(self) -> str:
-        """The ARN of this log group."""
-        return jsii.get(self, "logGroupArn")
+    def log_group_arn(self) -> builtins.str:
+        '''The ARN of this log group.'''
+        return typing.cast(builtins.str, jsii.get(self, "logGroupArn"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="logGroupName")
-    def log_group_name(self) -> str:
-        """The name of this log group."""
-        return jsii.get(self, "logGroupName")
+    def log_group_name(self) -> builtins.str:
+        '''The name of this log group.'''
+        return typing.cast(builtins.str, jsii.get(self, "logGroupName"))
 
 
 @jsii.data_type(
     jsii_type="@aws-cdk/aws-logs.LogGroupProps",
     jsii_struct_bases=[],
     name_mapping={
+        "encryption_key": "encryptionKey",
         "log_group_name": "logGroupName",
         "removal_policy": "removalPolicy",
         "retention": "retention",
@@ -2354,17 +2482,21 @@ class LogGroupProps:
     def __init__(
         self,
         *,
-        log_group_name: typing.Optional[str] = None,
+        encryption_key: typing.Optional[aws_cdk.aws_kms.IKey] = None,
+        log_group_name: typing.Optional[builtins.str] = None,
         removal_policy: typing.Optional[aws_cdk.core.RemovalPolicy] = None,
         retention: typing.Optional["RetentionDays"] = None,
     ) -> None:
-        """Properties for a LogGroup.
+        '''Properties for a LogGroup.
 
+        :param encryption_key: The KMS Key to encrypt the log group with. Default: - log group is encrypted with the default master key
         :param log_group_name: Name of the log group. Default: Automatically generated
         :param removal_policy: Determine the removal policy of this log group. Normally you want to retain the log group so you can diagnose issues from logs even after a deployment that no longer includes the log group. In that case, use the normal date-based retention policy to age out your logs. Default: RemovalPolicy.Retain
         :param retention: How long, in days, the log contents will be retained. To retain all logs, set this value to RetentionDays.INFINITE. Default: RetentionDays.TWO_YEARS
-        """
-        self._values = {}
+        '''
+        self._values: typing.Dict[str, typing.Any] = {}
+        if encryption_key is not None:
+            self._values["encryption_key"] = encryption_key
         if log_group_name is not None:
             self._values["log_group_name"] = log_group_name
         if removal_policy is not None:
@@ -2373,47 +2505,256 @@ class LogGroupProps:
             self._values["retention"] = retention
 
     @builtins.property
-    def log_group_name(self) -> typing.Optional[str]:
-        """Name of the log group.
+    def encryption_key(self) -> typing.Optional[aws_cdk.aws_kms.IKey]:
+        '''The KMS Key to encrypt the log group with.
 
-        default
+        :default: - log group is encrypted with the default master key
+        '''
+        result = self._values.get("encryption_key")
+        return typing.cast(typing.Optional[aws_cdk.aws_kms.IKey], result)
+
+    @builtins.property
+    def log_group_name(self) -> typing.Optional[builtins.str]:
+        '''Name of the log group.
+
         :default: Automatically generated
-        """
-        return self._values.get("log_group_name")
+        '''
+        result = self._values.get("log_group_name")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def removal_policy(self) -> typing.Optional[aws_cdk.core.RemovalPolicy]:
-        """Determine the removal policy of this log group.
+        '''Determine the removal policy of this log group.
 
         Normally you want to retain the log group so you can diagnose issues
         from logs even after a deployment that no longer includes the log group.
         In that case, use the normal date-based retention policy to age out your
         logs.
 
-        default
         :default: RemovalPolicy.Retain
-        """
-        return self._values.get("removal_policy")
+        '''
+        result = self._values.get("removal_policy")
+        return typing.cast(typing.Optional[aws_cdk.core.RemovalPolicy], result)
 
     @builtins.property
     def retention(self) -> typing.Optional["RetentionDays"]:
-        """How long, in days, the log contents will be retained.
+        '''How long, in days, the log contents will be retained.
 
         To retain all logs, set this value to RetentionDays.INFINITE.
 
-        default
         :default: RetentionDays.TWO_YEARS
-        """
-        return self._values.get("retention")
+        '''
+        result = self._values.get("retention")
+        return typing.cast(typing.Optional["RetentionDays"], result)
 
-    def __eq__(self, rhs) -> bool:
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
         return "LogGroupProps(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+class LogRetention(
+    aws_cdk.core.Construct,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@aws-cdk/aws-logs.LogRetention",
+):
+    '''Creates a custom resource to control the retention policy of a CloudWatch Logs log group.
+
+    The log group is created if it doesn't already exist. The policy
+    is removed when ``retentionDays`` is ``undefined`` or equal to ``Infinity``.
+    Log group can be created in the region that is different from stack region by
+    specifying ``logGroupRegion``
+    '''
+
+    def __init__(
+        self,
+        scope: constructs.Construct,
+        id: builtins.str,
+        *,
+        log_group_name: builtins.str,
+        retention: "RetentionDays",
+        log_group_region: typing.Optional[builtins.str] = None,
+        log_retention_retry_options: typing.Optional["LogRetentionRetryOptions"] = None,
+        role: typing.Optional[aws_cdk.aws_iam.IRole] = None,
+    ) -> None:
+        '''
+        :param scope: -
+        :param id: -
+        :param log_group_name: The log group name.
+        :param retention: The number of days log events are kept in CloudWatch Logs.
+        :param log_group_region: The region where the log group should be created. Default: - same region as the stack
+        :param log_retention_retry_options: Retry options for all AWS API calls. Default: - AWS SDK default retry options
+        :param role: The IAM role for the Lambda function associated with the custom resource. Default: - A new role is created
+        '''
+        props = LogRetentionProps(
+            log_group_name=log_group_name,
+            retention=retention,
+            log_group_region=log_group_region,
+            log_retention_retry_options=log_retention_retry_options,
+            role=role,
+        )
+
+        jsii.create(LogRetention, self, [scope, id, props])
+
+    @builtins.property # type: ignore[misc]
+    @jsii.member(jsii_name="logGroupArn")
+    def log_group_arn(self) -> builtins.str:
+        '''The ARN of the LogGroup.'''
+        return typing.cast(builtins.str, jsii.get(self, "logGroupArn"))
+
+
+@jsii.data_type(
+    jsii_type="@aws-cdk/aws-logs.LogRetentionProps",
+    jsii_struct_bases=[],
+    name_mapping={
+        "log_group_name": "logGroupName",
+        "retention": "retention",
+        "log_group_region": "logGroupRegion",
+        "log_retention_retry_options": "logRetentionRetryOptions",
+        "role": "role",
+    },
+)
+class LogRetentionProps:
+    def __init__(
+        self,
+        *,
+        log_group_name: builtins.str,
+        retention: "RetentionDays",
+        log_group_region: typing.Optional[builtins.str] = None,
+        log_retention_retry_options: typing.Optional["LogRetentionRetryOptions"] = None,
+        role: typing.Optional[aws_cdk.aws_iam.IRole] = None,
+    ) -> None:
+        '''Construction properties for a LogRetention.
+
+        :param log_group_name: The log group name.
+        :param retention: The number of days log events are kept in CloudWatch Logs.
+        :param log_group_region: The region where the log group should be created. Default: - same region as the stack
+        :param log_retention_retry_options: Retry options for all AWS API calls. Default: - AWS SDK default retry options
+        :param role: The IAM role for the Lambda function associated with the custom resource. Default: - A new role is created
+        '''
+        if isinstance(log_retention_retry_options, dict):
+            log_retention_retry_options = LogRetentionRetryOptions(**log_retention_retry_options)
+        self._values: typing.Dict[str, typing.Any] = {
+            "log_group_name": log_group_name,
+            "retention": retention,
+        }
+        if log_group_region is not None:
+            self._values["log_group_region"] = log_group_region
+        if log_retention_retry_options is not None:
+            self._values["log_retention_retry_options"] = log_retention_retry_options
+        if role is not None:
+            self._values["role"] = role
+
+    @builtins.property
+    def log_group_name(self) -> builtins.str:
+        '''The log group name.'''
+        result = self._values.get("log_group_name")
+        assert result is not None, "Required property 'log_group_name' is missing"
+        return typing.cast(builtins.str, result)
+
+    @builtins.property
+    def retention(self) -> "RetentionDays":
+        '''The number of days log events are kept in CloudWatch Logs.'''
+        result = self._values.get("retention")
+        assert result is not None, "Required property 'retention' is missing"
+        return typing.cast("RetentionDays", result)
+
+    @builtins.property
+    def log_group_region(self) -> typing.Optional[builtins.str]:
+        '''The region where the log group should be created.
+
+        :default: - same region as the stack
+        '''
+        result = self._values.get("log_group_region")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def log_retention_retry_options(
+        self,
+    ) -> typing.Optional["LogRetentionRetryOptions"]:
+        '''Retry options for all AWS API calls.
+
+        :default: - AWS SDK default retry options
+        '''
+        result = self._values.get("log_retention_retry_options")
+        return typing.cast(typing.Optional["LogRetentionRetryOptions"], result)
+
+    @builtins.property
+    def role(self) -> typing.Optional[aws_cdk.aws_iam.IRole]:
+        '''The IAM role for the Lambda function associated with the custom resource.
+
+        :default: - A new role is created
+        '''
+        result = self._values.get("role")
+        return typing.cast(typing.Optional[aws_cdk.aws_iam.IRole], result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "LogRetentionProps(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+@jsii.data_type(
+    jsii_type="@aws-cdk/aws-logs.LogRetentionRetryOptions",
+    jsii_struct_bases=[],
+    name_mapping={"base": "base", "max_retries": "maxRetries"},
+)
+class LogRetentionRetryOptions:
+    def __init__(
+        self,
+        *,
+        base: typing.Optional[aws_cdk.core.Duration] = None,
+        max_retries: typing.Optional[jsii.Number] = None,
+    ) -> None:
+        '''Retry options for all AWS API calls.
+
+        :param base: The base duration to use in the exponential backoff for operation retries. Default: Duration.millis(100) (AWS SDK default)
+        :param max_retries: The maximum amount of retries. Default: 3 (AWS SDK default)
+        '''
+        self._values: typing.Dict[str, typing.Any] = {}
+        if base is not None:
+            self._values["base"] = base
+        if max_retries is not None:
+            self._values["max_retries"] = max_retries
+
+    @builtins.property
+    def base(self) -> typing.Optional[aws_cdk.core.Duration]:
+        '''The base duration to use in the exponential backoff for operation retries.
+
+        :default: Duration.millis(100) (AWS SDK default)
+        '''
+        result = self._values.get("base")
+        return typing.cast(typing.Optional[aws_cdk.core.Duration], result)
+
+    @builtins.property
+    def max_retries(self) -> typing.Optional[jsii.Number]:
+        '''The maximum amount of retries.
+
+        :default: 3 (AWS SDK default)
+        '''
+        result = self._values.get("max_retries")
+        return typing.cast(typing.Optional[jsii.Number], result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "LogRetentionRetryOptions(%s)" % ", ".join(
             k + "=" + repr(v) for k, v in self._values.items()
         )
 
@@ -2424,24 +2765,24 @@ class LogStream(
     metaclass=jsii.JSIIMeta,
     jsii_type="@aws-cdk/aws-logs.LogStream",
 ):
-    """Define a Log Stream in a Log Group."""
+    '''Define a Log Stream in a Log Group.'''
 
     def __init__(
         self,
-        scope: aws_cdk.core.Construct,
-        id: str,
+        scope: constructs.Construct,
+        id: builtins.str,
         *,
-        log_group: "ILogGroup",
-        log_stream_name: typing.Optional[str] = None,
+        log_group: ILogGroup,
+        log_stream_name: typing.Optional[builtins.str] = None,
         removal_policy: typing.Optional[aws_cdk.core.RemovalPolicy] = None,
     ) -> None:
-        """
+        '''
         :param scope: -
         :param id: -
         :param log_group: The log group to create a log stream for.
         :param log_stream_name: The name of the log stream to create. The name must be unique within the log group. Default: Automatically generated
         :param removal_policy: Determine what happens when the log stream resource is removed from the app. Normally you want to retain the log stream so you can diagnose issues from logs even after a deployment that no longer includes the log stream. The date-based retention policy of your log group will age out the logs after a certain time. Default: RemovalPolicy.Retain
-        """
+        '''
         props = LogStreamProps(
             log_group=log_group,
             log_stream_name=log_stream_name,
@@ -2450,24 +2791,27 @@ class LogStream(
 
         jsii.create(LogStream, self, [scope, id, props])
 
-    @jsii.member(jsii_name="fromLogStreamName")
+    @jsii.member(jsii_name="fromLogStreamName") # type: ignore[misc]
     @builtins.classmethod
     def from_log_stream_name(
-        cls, scope: aws_cdk.core.Construct, id: str, log_stream_name: str
-    ) -> "ILogStream":
-        """Import an existing LogGroup.
+        cls,
+        scope: constructs.Construct,
+        id: builtins.str,
+        log_stream_name: builtins.str,
+    ) -> ILogStream:
+        '''Import an existing LogGroup.
 
         :param scope: -
         :param id: -
         :param log_stream_name: -
-        """
-        return jsii.sinvoke(cls, "fromLogStreamName", [scope, id, log_stream_name])
+        '''
+        return typing.cast(ILogStream, jsii.sinvoke(cls, "fromLogStreamName", [scope, id, log_stream_name]))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="logStreamName")
-    def log_stream_name(self) -> str:
-        """The name of this log stream."""
-        return jsii.get(self, "logStreamName")
+    def log_stream_name(self) -> builtins.str:
+        '''The name of this log stream.'''
+        return typing.cast(builtins.str, jsii.get(self, "logStreamName"))
 
 
 @jsii.data_type(
@@ -2483,17 +2827,17 @@ class LogStreamProps:
     def __init__(
         self,
         *,
-        log_group: "ILogGroup",
-        log_stream_name: typing.Optional[str] = None,
+        log_group: ILogGroup,
+        log_stream_name: typing.Optional[builtins.str] = None,
         removal_policy: typing.Optional[aws_cdk.core.RemovalPolicy] = None,
     ) -> None:
-        """Properties for a LogStream.
+        '''Properties for a LogStream.
 
         :param log_group: The log group to create a log stream for.
         :param log_stream_name: The name of the log stream to create. The name must be unique within the log group. Default: Automatically generated
         :param removal_policy: Determine what happens when the log stream resource is removed from the app. Normally you want to retain the log stream so you can diagnose issues from logs even after a deployment that no longer includes the log stream. The date-based retention policy of your log group will age out the logs after a certain time. Default: RemovalPolicy.Retain
-        """
-        self._values = {
+        '''
+        self._values: typing.Dict[str, typing.Any] = {
             "log_group": log_group,
         }
         if log_stream_name is not None:
@@ -2502,24 +2846,26 @@ class LogStreamProps:
             self._values["removal_policy"] = removal_policy
 
     @builtins.property
-    def log_group(self) -> "ILogGroup":
-        """The log group to create a log stream for."""
-        return self._values.get("log_group")
+    def log_group(self) -> ILogGroup:
+        '''The log group to create a log stream for.'''
+        result = self._values.get("log_group")
+        assert result is not None, "Required property 'log_group' is missing"
+        return typing.cast(ILogGroup, result)
 
     @builtins.property
-    def log_stream_name(self) -> typing.Optional[str]:
-        """The name of the log stream to create.
+    def log_stream_name(self) -> typing.Optional[builtins.str]:
+        '''The name of the log stream to create.
 
         The name must be unique within the log group.
 
-        default
         :default: Automatically generated
-        """
-        return self._values.get("log_stream_name")
+        '''
+        result = self._values.get("log_stream_name")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def removal_policy(self) -> typing.Optional[aws_cdk.core.RemovalPolicy]:
-        """Determine what happens when the log stream resource is removed from the app.
+        '''Determine what happens when the log stream resource is removed from the app.
 
         Normally you want to retain the log stream so you can diagnose issues from
         logs even after a deployment that no longer includes the log stream.
@@ -2527,15 +2873,15 @@ class LogStreamProps:
         The date-based retention policy of your log group will age out the logs
         after a certain time.
 
-        default
         :default: RemovalPolicy.Retain
-        """
-        return self._values.get("removal_policy")
+        '''
+        result = self._values.get("removal_policy")
+        return typing.cast(typing.Optional[aws_cdk.core.RemovalPolicy], result)
 
-    def __eq__(self, rhs) -> bool:
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
@@ -2551,37 +2897,42 @@ class LogStreamProps:
 )
 class LogSubscriptionDestinationConfig:
     def __init__(
-        self, *, arn: str, role: typing.Optional[aws_cdk.aws_iam.IRole] = None
+        self,
+        *,
+        arn: builtins.str,
+        role: typing.Optional[aws_cdk.aws_iam.IRole] = None,
     ) -> None:
-        """Properties returned by a Subscription destination.
+        '''Properties returned by a Subscription destination.
 
         :param arn: The ARN of the subscription's destination.
         :param role: The role to assume to write log events to the destination. Default: No role assumed
-        """
-        self._values = {
+        '''
+        self._values: typing.Dict[str, typing.Any] = {
             "arn": arn,
         }
         if role is not None:
             self._values["role"] = role
 
     @builtins.property
-    def arn(self) -> str:
-        """The ARN of the subscription's destination."""
-        return self._values.get("arn")
+    def arn(self) -> builtins.str:
+        '''The ARN of the subscription's destination.'''
+        result = self._values.get("arn")
+        assert result is not None, "Required property 'arn' is missing"
+        return typing.cast(builtins.str, result)
 
     @builtins.property
     def role(self) -> typing.Optional[aws_cdk.aws_iam.IRole]:
-        """The role to assume to write log events to the destination.
+        '''The role to assume to write log events to the destination.
 
-        default
         :default: No role assumed
-        """
-        return self._values.get("role")
+        '''
+        result = self._values.get("role")
+        return typing.cast(typing.Optional[aws_cdk.aws_iam.IRole], result)
 
-    def __eq__(self, rhs) -> bool:
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
@@ -2595,21 +2946,21 @@ class MetricFilter(
     metaclass=jsii.JSIIMeta,
     jsii_type="@aws-cdk/aws-logs.MetricFilter",
 ):
-    """A filter that extracts information from CloudWatch Logs and emits to CloudWatch Metrics."""
+    '''A filter that extracts information from CloudWatch Logs and emits to CloudWatch Metrics.'''
 
     def __init__(
         self,
-        scope: aws_cdk.core.Construct,
-        id: str,
+        scope: constructs.Construct,
+        id: builtins.str,
         *,
-        log_group: "ILogGroup",
-        filter_pattern: "IFilterPattern",
-        metric_name: str,
-        metric_namespace: str,
+        log_group: ILogGroup,
+        filter_pattern: IFilterPattern,
+        metric_name: builtins.str,
+        metric_namespace: builtins.str,
         default_value: typing.Optional[jsii.Number] = None,
-        metric_value: typing.Optional[str] = None,
+        metric_value: typing.Optional[builtins.str] = None,
     ) -> None:
-        """
+        '''
         :param scope: -
         :param id: -
         :param log_group: The log group to create the filter on.
@@ -2618,7 +2969,7 @@ class MetricFilter(
         :param metric_namespace: The namespace of the metric to emit.
         :param default_value: The value to emit if the pattern does not match a particular event. Default: No metric emitted.
         :param metric_value: The value to emit for the metric. Can either be a literal number (typically "1"), or the name of a field in the structure to take the value from the matched event. If you are using a field value, the field value must have been matched using the pattern. If you want to specify a field from a matched JSON structure, use '$.fieldName', and make sure the field is in the pattern (if only as '$.fieldName = *'). If you want to specify a field from a matched space-delimited structure, use '$fieldName'. Default: "1"
-        """
+        '''
         props = MetricFilterProps(
             log_group=log_group,
             filter_pattern=filter_pattern,
@@ -2634,33 +2985,35 @@ class MetricFilter(
     def metric(
         self,
         *,
-        account: typing.Optional[str] = None,
-        color: typing.Optional[str] = None,
-        dimensions: typing.Optional[typing.Mapping[str, typing.Any]] = None,
-        label: typing.Optional[str] = None,
+        account: typing.Optional[builtins.str] = None,
+        color: typing.Optional[builtins.str] = None,
+        dimensions: typing.Optional[typing.Mapping[builtins.str, typing.Any]] = None,
+        dimensions_map: typing.Optional[typing.Mapping[builtins.str, builtins.str]] = None,
+        label: typing.Optional[builtins.str] = None,
         period: typing.Optional[aws_cdk.core.Duration] = None,
-        region: typing.Optional[str] = None,
-        statistic: typing.Optional[str] = None,
+        region: typing.Optional[builtins.str] = None,
+        statistic: typing.Optional[builtins.str] = None,
         unit: typing.Optional[aws_cdk.aws_cloudwatch.Unit] = None,
     ) -> aws_cdk.aws_cloudwatch.Metric:
-        """Return the given named metric for this Metric Filter.
+        '''Return the given named metric for this Metric Filter.
 
         :param account: Account which this metric comes from. Default: - Deployment account.
         :param color: The hex color code, prefixed with '#' (e.g. '#00ff00'), to use when this metric is rendered on a graph. The ``Color`` class has a set of standard colors that can be used here. Default: - Automatic color
-        :param dimensions: Dimensions of the metric. Default: - No dimensions.
+        :param dimensions: (deprecated) Dimensions of the metric. Default: - No dimensions.
+        :param dimensions_map: Dimensions of the metric. Default: - No dimensions.
         :param label: Label for this metric when added to a Graph in a Dashboard. Default: - No label
         :param period: The period over which the specified statistic is applied. Default: Duration.minutes(5)
         :param region: Region which this metric comes from. Default: - Deployment region.
         :param statistic: What function to use for aggregating. Can be one of the following: - "Minimum" | "min" - "Maximum" | "max" - "Average" | "avg" - "Sum" | "sum" - "SampleCount | "n" - "pNN.NN" Default: Average
         :param unit: Unit used to filter the metric stream. Only refer to datums emitted to the metric stream with the given unit and ignore all others. Only useful when datums are being emitted to the same metric stream under different units. The default is to use all matric datums in the stream, regardless of unit, which is recommended in nearly all cases. CloudWatch does not honor this property for graphs. Default: - All metric datums in the given metric stream
 
-        default
         :default: avg over 5 minutes
-        """
+        '''
         props = aws_cdk.aws_cloudwatch.MetricOptions(
             account=account,
             color=color,
             dimensions=dimensions,
+            dimensions_map=dimensions_map,
             label=label,
             period=period,
             region=region,
@@ -2668,7 +3021,7 @@ class MetricFilter(
             unit=unit,
         )
 
-        return jsii.invoke(self, "metric", [props])
+        return typing.cast(aws_cdk.aws_cloudwatch.Metric, jsii.invoke(self, "metric", [props]))
 
 
 @jsii.data_type(
@@ -2686,21 +3039,21 @@ class MetricFilterOptions:
     def __init__(
         self,
         *,
-        filter_pattern: "IFilterPattern",
-        metric_name: str,
-        metric_namespace: str,
+        filter_pattern: IFilterPattern,
+        metric_name: builtins.str,
+        metric_namespace: builtins.str,
         default_value: typing.Optional[jsii.Number] = None,
-        metric_value: typing.Optional[str] = None,
+        metric_value: typing.Optional[builtins.str] = None,
     ) -> None:
-        """Properties for a MetricFilter created from a LogGroup.
+        '''Properties for a MetricFilter created from a LogGroup.
 
         :param filter_pattern: Pattern to search for log events.
         :param metric_name: The name of the metric to emit.
         :param metric_namespace: The namespace of the metric to emit.
         :param default_value: The value to emit if the pattern does not match a particular event. Default: No metric emitted.
         :param metric_value: The value to emit for the metric. Can either be a literal number (typically "1"), or the name of a field in the structure to take the value from the matched event. If you are using a field value, the field value must have been matched using the pattern. If you want to specify a field from a matched JSON structure, use '$.fieldName', and make sure the field is in the pattern (if only as '$.fieldName = *'). If you want to specify a field from a matched space-delimited structure, use '$fieldName'. Default: "1"
-        """
-        self._values = {
+        '''
+        self._values: typing.Dict[str, typing.Any] = {
             "filter_pattern": filter_pattern,
             "metric_name": metric_name,
             "metric_namespace": metric_namespace,
@@ -2711,32 +3064,38 @@ class MetricFilterOptions:
             self._values["metric_value"] = metric_value
 
     @builtins.property
-    def filter_pattern(self) -> "IFilterPattern":
-        """Pattern to search for log events."""
-        return self._values.get("filter_pattern")
+    def filter_pattern(self) -> IFilterPattern:
+        '''Pattern to search for log events.'''
+        result = self._values.get("filter_pattern")
+        assert result is not None, "Required property 'filter_pattern' is missing"
+        return typing.cast(IFilterPattern, result)
 
     @builtins.property
-    def metric_name(self) -> str:
-        """The name of the metric to emit."""
-        return self._values.get("metric_name")
+    def metric_name(self) -> builtins.str:
+        '''The name of the metric to emit.'''
+        result = self._values.get("metric_name")
+        assert result is not None, "Required property 'metric_name' is missing"
+        return typing.cast(builtins.str, result)
 
     @builtins.property
-    def metric_namespace(self) -> str:
-        """The namespace of the metric to emit."""
-        return self._values.get("metric_namespace")
+    def metric_namespace(self) -> builtins.str:
+        '''The namespace of the metric to emit.'''
+        result = self._values.get("metric_namespace")
+        assert result is not None, "Required property 'metric_namespace' is missing"
+        return typing.cast(builtins.str, result)
 
     @builtins.property
     def default_value(self) -> typing.Optional[jsii.Number]:
-        """The value to emit if the pattern does not match a particular event.
+        '''The value to emit if the pattern does not match a particular event.
 
-        default
         :default: No metric emitted.
-        """
-        return self._values.get("default_value")
+        '''
+        result = self._values.get("default_value")
+        return typing.cast(typing.Optional[jsii.Number], result)
 
     @builtins.property
-    def metric_value(self) -> typing.Optional[str]:
-        """The value to emit for the metric.
+    def metric_value(self) -> typing.Optional[builtins.str]:
+        '''The value to emit for the metric.
 
         Can either be a literal number (typically "1"), or the name of a field in the structure
         to take the value from the matched event. If you are using a field value, the field
@@ -2748,15 +3107,15 @@ class MetricFilterOptions:
         If you want to specify a field from a matched space-delimited structure,
         use '$fieldName'.
 
-        default
         :default: "1"
-        """
-        return self._values.get("metric_value")
+        '''
+        result = self._values.get("metric_value")
+        return typing.cast(typing.Optional[builtins.str], result)
 
-    def __eq__(self, rhs) -> bool:
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
@@ -2781,14 +3140,14 @@ class MetricFilterProps(MetricFilterOptions):
     def __init__(
         self,
         *,
-        filter_pattern: "IFilterPattern",
-        metric_name: str,
-        metric_namespace: str,
+        filter_pattern: IFilterPattern,
+        metric_name: builtins.str,
+        metric_namespace: builtins.str,
         default_value: typing.Optional[jsii.Number] = None,
-        metric_value: typing.Optional[str] = None,
-        log_group: "ILogGroup",
+        metric_value: typing.Optional[builtins.str] = None,
+        log_group: ILogGroup,
     ) -> None:
-        """Properties for a MetricFilter.
+        '''Properties for a MetricFilter.
 
         :param filter_pattern: Pattern to search for log events.
         :param metric_name: The name of the metric to emit.
@@ -2796,8 +3155,8 @@ class MetricFilterProps(MetricFilterOptions):
         :param default_value: The value to emit if the pattern does not match a particular event. Default: No metric emitted.
         :param metric_value: The value to emit for the metric. Can either be a literal number (typically "1"), or the name of a field in the structure to take the value from the matched event. If you are using a field value, the field value must have been matched using the pattern. If you want to specify a field from a matched JSON structure, use '$.fieldName', and make sure the field is in the pattern (if only as '$.fieldName = *'). If you want to specify a field from a matched space-delimited structure, use '$fieldName'. Default: "1"
         :param log_group: The log group to create the filter on.
-        """
-        self._values = {
+        '''
+        self._values: typing.Dict[str, typing.Any] = {
             "filter_pattern": filter_pattern,
             "metric_name": metric_name,
             "metric_namespace": metric_namespace,
@@ -2809,32 +3168,38 @@ class MetricFilterProps(MetricFilterOptions):
             self._values["metric_value"] = metric_value
 
     @builtins.property
-    def filter_pattern(self) -> "IFilterPattern":
-        """Pattern to search for log events."""
-        return self._values.get("filter_pattern")
+    def filter_pattern(self) -> IFilterPattern:
+        '''Pattern to search for log events.'''
+        result = self._values.get("filter_pattern")
+        assert result is not None, "Required property 'filter_pattern' is missing"
+        return typing.cast(IFilterPattern, result)
 
     @builtins.property
-    def metric_name(self) -> str:
-        """The name of the metric to emit."""
-        return self._values.get("metric_name")
+    def metric_name(self) -> builtins.str:
+        '''The name of the metric to emit.'''
+        result = self._values.get("metric_name")
+        assert result is not None, "Required property 'metric_name' is missing"
+        return typing.cast(builtins.str, result)
 
     @builtins.property
-    def metric_namespace(self) -> str:
-        """The namespace of the metric to emit."""
-        return self._values.get("metric_namespace")
+    def metric_namespace(self) -> builtins.str:
+        '''The namespace of the metric to emit.'''
+        result = self._values.get("metric_namespace")
+        assert result is not None, "Required property 'metric_namespace' is missing"
+        return typing.cast(builtins.str, result)
 
     @builtins.property
     def default_value(self) -> typing.Optional[jsii.Number]:
-        """The value to emit if the pattern does not match a particular event.
+        '''The value to emit if the pattern does not match a particular event.
 
-        default
         :default: No metric emitted.
-        """
-        return self._values.get("default_value")
+        '''
+        result = self._values.get("default_value")
+        return typing.cast(typing.Optional[jsii.Number], result)
 
     @builtins.property
-    def metric_value(self) -> typing.Optional[str]:
-        """The value to emit for the metric.
+    def metric_value(self) -> typing.Optional[builtins.str]:
+        '''The value to emit for the metric.
 
         Can either be a literal number (typically "1"), or the name of a field in the structure
         to take the value from the matched event. If you are using a field value, the field
@@ -2846,20 +3211,22 @@ class MetricFilterProps(MetricFilterOptions):
         If you want to specify a field from a matched space-delimited structure,
         use '$fieldName'.
 
-        default
         :default: "1"
-        """
-        return self._values.get("metric_value")
+        '''
+        result = self._values.get("metric_value")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
-    def log_group(self) -> "ILogGroup":
-        """The log group to create the filter on."""
-        return self._values.get("log_group")
+    def log_group(self) -> ILogGroup:
+        '''The log group to create the filter on.'''
+        result = self._values.get("log_group")
+        assert result is not None, "Required property 'log_group' is missing"
+        return typing.cast(ILogGroup, result)
 
-    def __eq__(self, rhs) -> bool:
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
@@ -2870,67 +3237,71 @@ class MetricFilterProps(MetricFilterOptions):
 
 @jsii.enum(jsii_type="@aws-cdk/aws-logs.RetentionDays")
 class RetentionDays(enum.Enum):
-    """How long, in days, the log contents will be retained."""
+    '''How long, in days, the log contents will be retained.'''
 
     ONE_DAY = "ONE_DAY"
-    """1 day."""
+    '''1 day.'''
     THREE_DAYS = "THREE_DAYS"
-    """3 days."""
+    '''3 days.'''
     FIVE_DAYS = "FIVE_DAYS"
-    """5 days."""
+    '''5 days.'''
     ONE_WEEK = "ONE_WEEK"
-    """1 week."""
+    '''1 week.'''
     TWO_WEEKS = "TWO_WEEKS"
-    """2 weeks."""
+    '''2 weeks.'''
     ONE_MONTH = "ONE_MONTH"
-    """1 month."""
+    '''1 month.'''
     TWO_MONTHS = "TWO_MONTHS"
-    """2 months."""
+    '''2 months.'''
     THREE_MONTHS = "THREE_MONTHS"
-    """3 months."""
+    '''3 months.'''
     FOUR_MONTHS = "FOUR_MONTHS"
-    """4 months."""
+    '''4 months.'''
     FIVE_MONTHS = "FIVE_MONTHS"
-    """5 months."""
+    '''5 months.'''
     SIX_MONTHS = "SIX_MONTHS"
-    """6 months."""
+    '''6 months.'''
     ONE_YEAR = "ONE_YEAR"
-    """1 year."""
+    '''1 year.'''
     THIRTEEN_MONTHS = "THIRTEEN_MONTHS"
-    """13 months."""
+    '''13 months.'''
     EIGHTEEN_MONTHS = "EIGHTEEN_MONTHS"
-    """18 months."""
+    '''18 months.'''
     TWO_YEARS = "TWO_YEARS"
-    """2 years."""
+    '''2 years.'''
     FIVE_YEARS = "FIVE_YEARS"
-    """5 years."""
+    '''5 years.'''
     TEN_YEARS = "TEN_YEARS"
-    """10 years."""
+    '''10 years.'''
     INFINITE = "INFINITE"
-    """Retain logs forever."""
+    '''Retain logs forever.'''
 
 
 @jsii.implements(IFilterPattern)
 class SpaceDelimitedTextPattern(
-    metaclass=jsii.JSIIMeta, jsii_type="@aws-cdk/aws-logs.SpaceDelimitedTextPattern"
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@aws-cdk/aws-logs.SpaceDelimitedTextPattern",
 ):
-    """Space delimited text pattern."""
+    '''Space delimited text pattern.'''
 
     def __init__(
         self,
-        columns: typing.List[str],
-        restrictions: typing.Mapping[str, typing.List["ColumnRestriction"]],
+        columns: typing.Sequence[builtins.str],
+        restrictions: typing.Mapping[builtins.str, typing.Sequence[ColumnRestriction]],
     ) -> None:
-        """
+        '''
         :param columns: -
         :param restrictions: -
-        """
+        '''
         jsii.create(SpaceDelimitedTextPattern, self, [columns, restrictions])
 
-    @jsii.member(jsii_name="construct")
+    @jsii.member(jsii_name="construct") # type: ignore[misc]
     @builtins.classmethod
-    def construct(cls, columns: typing.List[str]) -> "SpaceDelimitedTextPattern":
-        """Construct a new instance of a space delimited text pattern.
+    def construct(
+        cls,
+        columns: typing.Sequence[builtins.str],
+    ) -> "SpaceDelimitedTextPattern":
+        '''Construct a new instance of a space delimited text pattern.
 
         Since this class must be public, we can't rely on the user only creating it through
         the ``LogPattern.spaceDelimited()`` factory function. We must therefore validate the
@@ -2939,37 +3310,43 @@ class SpaceDelimitedTextPattern(
         set of mutator functions and only validate the new data every time.
 
         :param columns: -
-        """
-        return jsii.sinvoke(cls, "construct", [columns])
+        '''
+        return typing.cast("SpaceDelimitedTextPattern", jsii.sinvoke(cls, "construct", [columns]))
 
     @jsii.member(jsii_name="whereNumber")
     def where_number(
-        self, column_name: str, comparison: str, value: jsii.Number
+        self,
+        column_name: builtins.str,
+        comparison: builtins.str,
+        value: jsii.Number,
     ) -> "SpaceDelimitedTextPattern":
-        """Restrict where the pattern applies.
+        '''Restrict where the pattern applies.
 
         :param column_name: -
         :param comparison: -
         :param value: -
-        """
-        return jsii.invoke(self, "whereNumber", [column_name, comparison, value])
+        '''
+        return typing.cast("SpaceDelimitedTextPattern", jsii.invoke(self, "whereNumber", [column_name, comparison, value]))
 
     @jsii.member(jsii_name="whereString")
     def where_string(
-        self, column_name: str, comparison: str, value: str
+        self,
+        column_name: builtins.str,
+        comparison: builtins.str,
+        value: builtins.str,
     ) -> "SpaceDelimitedTextPattern":
-        """Restrict where the pattern applies.
+        '''Restrict where the pattern applies.
 
         :param column_name: -
         :param comparison: -
         :param value: -
-        """
-        return jsii.invoke(self, "whereString", [column_name, comparison, value])
+        '''
+        return typing.cast("SpaceDelimitedTextPattern", jsii.invoke(self, "whereString", [column_name, comparison, value]))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="logPatternString")
-    def log_pattern_string(self) -> str:
-        return jsii.get(self, "logPatternString")
+    def log_pattern_string(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "logPatternString"))
 
 
 @jsii.data_type(
@@ -2978,30 +3355,34 @@ class SpaceDelimitedTextPattern(
     name_mapping={"log_stream_name": "logStreamName"},
 )
 class StreamOptions:
-    def __init__(self, *, log_stream_name: typing.Optional[str] = None) -> None:
-        """Properties for a new LogStream created from a LogGroup.
+    def __init__(
+        self,
+        *,
+        log_stream_name: typing.Optional[builtins.str] = None,
+    ) -> None:
+        '''Properties for a new LogStream created from a LogGroup.
 
         :param log_stream_name: The name of the log stream to create. The name must be unique within the log group. Default: Automatically generated
-        """
-        self._values = {}
+        '''
+        self._values: typing.Dict[str, typing.Any] = {}
         if log_stream_name is not None:
             self._values["log_stream_name"] = log_stream_name
 
     @builtins.property
-    def log_stream_name(self) -> typing.Optional[str]:
-        """The name of the log stream to create.
+    def log_stream_name(self) -> typing.Optional[builtins.str]:
+        '''The name of the log stream to create.
 
         The name must be unique within the log group.
 
-        default
         :default: Automatically generated
-        """
-        return self._values.get("log_stream_name")
+        '''
+        result = self._values.get("log_stream_name")
+        return typing.cast(typing.Optional[builtins.str], result)
 
-    def __eq__(self, rhs) -> bool:
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
@@ -3015,24 +3396,24 @@ class SubscriptionFilter(
     metaclass=jsii.JSIIMeta,
     jsii_type="@aws-cdk/aws-logs.SubscriptionFilter",
 ):
-    """A new Subscription on a CloudWatch log group."""
+    '''A new Subscription on a CloudWatch log group.'''
 
     def __init__(
         self,
-        scope: aws_cdk.core.Construct,
-        id: str,
+        scope: constructs.Construct,
+        id: builtins.str,
         *,
-        log_group: "ILogGroup",
-        destination: "ILogSubscriptionDestination",
-        filter_pattern: "IFilterPattern",
+        log_group: ILogGroup,
+        destination: ILogSubscriptionDestination,
+        filter_pattern: IFilterPattern,
     ) -> None:
-        """
+        '''
         :param scope: -
         :param id: -
         :param log_group: The log group to create the subscription on.
         :param destination: The destination to send the filtered events to. For example, a Kinesis stream or a Lambda function.
         :param filter_pattern: Log events matching this pattern will be sent to the destination.
-        """
+        '''
         props = SubscriptionFilterProps(
             log_group=log_group, destination=destination, filter_pattern=filter_pattern
         )
@@ -3049,36 +3430,40 @@ class SubscriptionFilterOptions:
     def __init__(
         self,
         *,
-        destination: "ILogSubscriptionDestination",
-        filter_pattern: "IFilterPattern",
+        destination: ILogSubscriptionDestination,
+        filter_pattern: IFilterPattern,
     ) -> None:
-        """Properties for a new SubscriptionFilter created from a LogGroup.
+        '''Properties for a new SubscriptionFilter created from a LogGroup.
 
         :param destination: The destination to send the filtered events to. For example, a Kinesis stream or a Lambda function.
         :param filter_pattern: Log events matching this pattern will be sent to the destination.
-        """
-        self._values = {
+        '''
+        self._values: typing.Dict[str, typing.Any] = {
             "destination": destination,
             "filter_pattern": filter_pattern,
         }
 
     @builtins.property
-    def destination(self) -> "ILogSubscriptionDestination":
-        """The destination to send the filtered events to.
+    def destination(self) -> ILogSubscriptionDestination:
+        '''The destination to send the filtered events to.
 
         For example, a Kinesis stream or a Lambda function.
-        """
-        return self._values.get("destination")
+        '''
+        result = self._values.get("destination")
+        assert result is not None, "Required property 'destination' is missing"
+        return typing.cast(ILogSubscriptionDestination, result)
 
     @builtins.property
-    def filter_pattern(self) -> "IFilterPattern":
-        """Log events matching this pattern will be sent to the destination."""
-        return self._values.get("filter_pattern")
+    def filter_pattern(self) -> IFilterPattern:
+        '''Log events matching this pattern will be sent to the destination.'''
+        result = self._values.get("filter_pattern")
+        assert result is not None, "Required property 'filter_pattern' is missing"
+        return typing.cast(IFilterPattern, result)
 
-    def __eq__(self, rhs) -> bool:
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
@@ -3100,44 +3485,50 @@ class SubscriptionFilterProps(SubscriptionFilterOptions):
     def __init__(
         self,
         *,
-        destination: "ILogSubscriptionDestination",
-        filter_pattern: "IFilterPattern",
-        log_group: "ILogGroup",
+        destination: ILogSubscriptionDestination,
+        filter_pattern: IFilterPattern,
+        log_group: ILogGroup,
     ) -> None:
-        """Properties for a SubscriptionFilter.
+        '''Properties for a SubscriptionFilter.
 
         :param destination: The destination to send the filtered events to. For example, a Kinesis stream or a Lambda function.
         :param filter_pattern: Log events matching this pattern will be sent to the destination.
         :param log_group: The log group to create the subscription on.
-        """
-        self._values = {
+        '''
+        self._values: typing.Dict[str, typing.Any] = {
             "destination": destination,
             "filter_pattern": filter_pattern,
             "log_group": log_group,
         }
 
     @builtins.property
-    def destination(self) -> "ILogSubscriptionDestination":
-        """The destination to send the filtered events to.
+    def destination(self) -> ILogSubscriptionDestination:
+        '''The destination to send the filtered events to.
 
         For example, a Kinesis stream or a Lambda function.
-        """
-        return self._values.get("destination")
+        '''
+        result = self._values.get("destination")
+        assert result is not None, "Required property 'destination' is missing"
+        return typing.cast(ILogSubscriptionDestination, result)
 
     @builtins.property
-    def filter_pattern(self) -> "IFilterPattern":
-        """Log events matching this pattern will be sent to the destination."""
-        return self._values.get("filter_pattern")
+    def filter_pattern(self) -> IFilterPattern:
+        '''Log events matching this pattern will be sent to the destination.'''
+        result = self._values.get("filter_pattern")
+        assert result is not None, "Required property 'filter_pattern' is missing"
+        return typing.cast(IFilterPattern, result)
 
     @builtins.property
-    def log_group(self) -> "ILogGroup":
-        """The log group to create the subscription on."""
-        return self._values.get("log_group")
+    def log_group(self) -> ILogGroup:
+        '''The log group to create the subscription on.'''
+        result = self._values.get("log_group")
+        assert result is not None, "Required property 'log_group' is missing"
+        return typing.cast(ILogGroup, result)
 
-    def __eq__(self, rhs) -> bool:
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
@@ -3152,7 +3543,7 @@ class CrossAccountDestination(
     metaclass=jsii.JSIIMeta,
     jsii_type="@aws-cdk/aws-logs.CrossAccountDestination",
 ):
-    """A new CloudWatch Logs Destination for use in cross-account scenarios.
+    '''A new CloudWatch Logs Destination for use in cross-account scenarios.
 
     CrossAccountDestinations are used to subscribe a Kinesis stream in a
     different account to a CloudWatch Subscription.
@@ -3162,26 +3553,25 @@ class CrossAccountDestination(
     ``@aws-cdk/aws-logs-destinations`` package; if necessary, a
     ``CrossAccountDestination`` will be created automatically.
 
-    resource:
-    :resource:: AWS::Logs::Destination
-    """
+    :resource: AWS::Logs::Destination
+    '''
 
     def __init__(
         self,
-        scope: aws_cdk.core.Construct,
-        id: str,
+        scope: constructs.Construct,
+        id: builtins.str,
         *,
         role: aws_cdk.aws_iam.IRole,
-        target_arn: str,
-        destination_name: typing.Optional[str] = None,
+        target_arn: builtins.str,
+        destination_name: typing.Optional[builtins.str] = None,
     ) -> None:
-        """
+        '''
         :param scope: -
         :param id: -
         :param role: The role to assume that grants permissions to write to 'target'. The role must be assumable by 'logs.{REGION}.amazonaws.com'.
         :param target_arn: The log destination target's ARN.
         :param destination_name: The name of the log destination. Default: Automatically generated
-        """
+        '''
         props = CrossAccountDestinationProps(
             role=role, target_arn=target_arn, destination_name=destination_name
         )
@@ -3190,16 +3580,18 @@ class CrossAccountDestination(
 
     @jsii.member(jsii_name="addToPolicy")
     def add_to_policy(self, statement: aws_cdk.aws_iam.PolicyStatement) -> None:
-        """
+        '''
         :param statement: -
-        """
-        return jsii.invoke(self, "addToPolicy", [statement])
+        '''
+        return typing.cast(None, jsii.invoke(self, "addToPolicy", [statement]))
 
     @jsii.member(jsii_name="bind")
     def bind(
-        self, _scope: aws_cdk.core.Construct, _source_log_group: "ILogGroup"
-    ) -> "LogSubscriptionDestinationConfig":
-        """Return the properties required to send subscription events to this destination.
+        self,
+        _scope: aws_cdk.core.Construct,
+        _source_log_group: ILogGroup,
+    ) -> LogSubscriptionDestinationConfig:
+        '''Return the properties required to send subscription events to this destination.
 
         If necessary, the destination can use the properties of the SubscriptionFilter
         object itself to configure its permissions to allow the subscription to write
@@ -3210,34 +3602,32 @@ class CrossAccountDestination(
 
         :param _scope: -
         :param _source_log_group: -
-        """
-        return jsii.invoke(self, "bind", [_scope, _source_log_group])
+        '''
+        return typing.cast(LogSubscriptionDestinationConfig, jsii.invoke(self, "bind", [_scope, _source_log_group]))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="destinationArn")
-    def destination_arn(self) -> str:
-        """The ARN of this CrossAccountDestination object.
+    def destination_arn(self) -> builtins.str:
+        '''The ARN of this CrossAccountDestination object.
 
-        attribute:
-        :attribute:: true
-        """
-        return jsii.get(self, "destinationArn")
+        :attribute: true
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "destinationArn"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="destinationName")
-    def destination_name(self) -> str:
-        """The name of this CrossAccountDestination object.
+    def destination_name(self) -> builtins.str:
+        '''The name of this CrossAccountDestination object.
 
-        attribute:
-        :attribute:: true
-        """
-        return jsii.get(self, "destinationName")
+        :attribute: true
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "destinationName"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="policyDocument")
     def policy_document(self) -> aws_cdk.aws_iam.PolicyDocument:
-        """Policy object of this CrossAccountDestination object."""
-        return jsii.get(self, "policyDocument")
+        '''Policy object of this CrossAccountDestination object.'''
+        return typing.cast(aws_cdk.aws_iam.PolicyDocument, jsii.get(self, "policyDocument"))
 
 
 __all__ = [
@@ -3249,6 +3639,8 @@ __all__ = [
     "CfnLogStreamProps",
     "CfnMetricFilter",
     "CfnMetricFilterProps",
+    "CfnQueryDefinition",
+    "CfnQueryDefinitionProps",
     "CfnSubscriptionFilter",
     "CfnSubscriptionFilterProps",
     "ColumnRestriction",
@@ -3262,6 +3654,9 @@ __all__ = [
     "JsonPattern",
     "LogGroup",
     "LogGroupProps",
+    "LogRetention",
+    "LogRetentionProps",
+    "LogRetentionRetryOptions",
     "LogStream",
     "LogStreamProps",
     "LogSubscriptionDestinationConfig",

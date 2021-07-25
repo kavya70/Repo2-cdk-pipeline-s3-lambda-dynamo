@@ -1,5 +1,5 @@
-"""
-## Amazon CloudWatch Construct Library
+'''
+# Amazon CloudWatch Construct Library
 
 <!--BEGIN STABILITY BANNER-->---
 
@@ -40,7 +40,7 @@ hosted_zone = route53.HostedZone(self, "MyHostedZone", zone_name="example.org")
 metric = Metric(
     namespace="AWS/Route53",
     metric_name="DNSQueries",
-    dimensions={
+    dimensions_map={
         "HostedZoneId": hosted_zone.hosted_zone_id
     }
 )
@@ -56,7 +56,7 @@ you can instantiate a `Metric` object to represent it. For example:
 metric = Metric(
     namespace="MyNamespace",
     metric_name="MyMetric",
-    dimensions={
+    dimensions_map={
         "ProcessingStep": "Download"
     }
 )
@@ -235,6 +235,7 @@ The following widgets are available:
 * `AlarmWidget` -- shows the graph and alarm line for a single alarm.
 * `SingleValueWidget` -- shows the current value of a set of metrics.
 * `TextWidget` -- shows some static Markdown.
+* `AlarmStatusWidget` -- shows the status of your alarms in a grid view.
 
 ### Graph widget
 
@@ -255,6 +256,8 @@ dashboard.add_widgets(GraphWidget(
     )]
 ))
 ```
+
+Using the methods `addLeftMetric()` and `addRightMetric()` you can add metrics to a graph widget later on.
 
 Graph widgets can also display annotations attached to the left or the right y-axis.
 
@@ -293,6 +296,18 @@ dashboard.add_widgets(GraphWidget(
 ))
 ```
 
+The graph view can be changed from default 'timeSeries' to 'bar' or 'pie'.
+
+```python
+# Example automatically generated without compilation. See https://github.com/aws/jsii/issues/826
+dashboard.add_widgets(GraphWidget(
+    # ...
+    # ...
+
+    view=GraphWidgetView.BAR
+))
+```
+
 ### Alarm widget
 
 An alarm widget shows the graph and the alarm line of a single alarm:
@@ -317,6 +332,18 @@ dashboard.add_widgets(SingleValueWidget(
 ))
 ```
 
+Show as many digits as can fit, before rounding.
+
+```python
+# Example automatically generated without compilation. See https://github.com/aws/jsii/issues/826
+dashboard.add_widgets(SingleValueWidget(
+    # ..
+    # ..
+
+    full_precision=True
+))
+```
+
 ### Text widget
 
 A text widget shows an arbitrary piece of MarkDown. Use this to add explanations
@@ -329,6 +356,19 @@ dashboard.add_widgets(TextWidget(
 ))
 ```
 
+### Alarm Status widget
+
+An alarm status widget displays instantly the status of any type of alarms and gives the
+ability to aggregate one or more alarms together in a small surface.
+
+```python
+# Example automatically generated without compilation. See https://github.com/aws/jsii/issues/826
+dashboard.add_widgets(
+    AlarmStatusWidget(
+        alarms=[error_alarm]
+    ))
+```
+
 ### Query results widget
 
 A `LogQueryWidget` shows the results of a query from Logs Insights:
@@ -337,6 +377,7 @@ A `LogQueryWidget` shows the results of a query from Logs Insights:
 # Example automatically generated without compilation. See https://github.com/aws/jsii/issues/826
 dashboard.add_widgets(LogQueryWidget(
     log_group_names=["my-log-group"],
+    view=LogQueryVisualizationType.TABLE,
     # The lines will be automatically combined using '\n|'.
     query_lines=["fields @message", "filter @message like /Error/"
     ]
@@ -362,7 +403,7 @@ you can use the following widgets to pack widgets together in different ways:
 * `Column`: stack two or more widgets vertically.
 * `Row`: lay out two or more widgets horizontally.
 * `Spacer`: take up empty space
-"""
+'''
 import abc
 import builtins
 import datetime
@@ -370,13 +411,14 @@ import enum
 import typing
 
 import jsii
-import jsii.compat
 import publication
+import typing_extensions
 
 from ._jsii import *
 
 import aws_cdk.aws_iam
 import aws_cdk.core
+import constructs
 
 
 @jsii.data_type(
@@ -385,24 +427,26 @@ import aws_cdk.core
     name_mapping={"alarm_action_arn": "alarmActionArn"},
 )
 class AlarmActionConfig:
-    def __init__(self, *, alarm_action_arn: str) -> None:
-        """Properties for an alarm action.
+    def __init__(self, *, alarm_action_arn: builtins.str) -> None:
+        '''Properties for an alarm action.
 
         :param alarm_action_arn: Return the ARN that should be used for a CloudWatch Alarm action.
-        """
-        self._values = {
+        '''
+        self._values: typing.Dict[str, typing.Any] = {
             "alarm_action_arn": alarm_action_arn,
         }
 
     @builtins.property
-    def alarm_action_arn(self) -> str:
-        """Return the ARN that should be used for a CloudWatch Alarm action."""
-        return self._values.get("alarm_action_arn")
+    def alarm_action_arn(self) -> builtins.str:
+        '''Return the ARN that should be used for a CloudWatch Alarm action.'''
+        result = self._values.get("alarm_action_arn")
+        assert result is not None, "Required property 'alarm_action_arn' is missing"
+        return typing.cast(builtins.str, result)
 
-    def __eq__(self, rhs) -> bool:
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
@@ -412,77 +456,159 @@ class AlarmActionConfig:
 
 
 class AlarmRule(metaclass=jsii.JSIIMeta, jsii_type="@aws-cdk/aws-cloudwatch.AlarmRule"):
-    """Class with static functions to build AlarmRule for Composite Alarms."""
+    '''Class with static functions to build AlarmRule for Composite Alarms.'''
 
     def __init__(self) -> None:
         jsii.create(AlarmRule, self, [])
 
-    @jsii.member(jsii_name="allOf")
+    @jsii.member(jsii_name="allOf") # type: ignore[misc]
     @builtins.classmethod
     def all_of(cls, *operands: "IAlarmRule") -> "IAlarmRule":
-        """function to join all provided AlarmRules with AND operator.
+        '''function to join all provided AlarmRules with AND operator.
 
         :param operands: IAlarmRules to be joined with AND operator.
-        """
-        return jsii.sinvoke(cls, "allOf", [*operands])
+        '''
+        return typing.cast("IAlarmRule", jsii.sinvoke(cls, "allOf", [*operands]))
 
-    @jsii.member(jsii_name="anyOf")
+    @jsii.member(jsii_name="anyOf") # type: ignore[misc]
     @builtins.classmethod
     def any_of(cls, *operands: "IAlarmRule") -> "IAlarmRule":
-        """function to join all provided AlarmRules with OR operator.
+        '''function to join all provided AlarmRules with OR operator.
 
         :param operands: IAlarmRules to be joined with OR operator.
-        """
-        return jsii.sinvoke(cls, "anyOf", [*operands])
+        '''
+        return typing.cast("IAlarmRule", jsii.sinvoke(cls, "anyOf", [*operands]))
 
-    @jsii.member(jsii_name="fromAlarm")
+    @jsii.member(jsii_name="fromAlarm") # type: ignore[misc]
     @builtins.classmethod
     def from_alarm(cls, alarm: "IAlarm", alarm_state: "AlarmState") -> "IAlarmRule":
-        """function to build Rule Expression for given IAlarm and AlarmState.
+        '''function to build Rule Expression for given IAlarm and AlarmState.
 
         :param alarm: IAlarm to be used in Rule Expression.
         :param alarm_state: AlarmState to be used in Rule Expression.
-        """
-        return jsii.sinvoke(cls, "fromAlarm", [alarm, alarm_state])
+        '''
+        return typing.cast("IAlarmRule", jsii.sinvoke(cls, "fromAlarm", [alarm, alarm_state]))
 
-    @jsii.member(jsii_name="fromBoolean")
+    @jsii.member(jsii_name="fromBoolean") # type: ignore[misc]
     @builtins.classmethod
-    def from_boolean(cls, value: bool) -> "IAlarmRule":
-        """function to build TRUE/FALSE intent for Rule Expression.
+    def from_boolean(cls, value: builtins.bool) -> "IAlarmRule":
+        '''function to build TRUE/FALSE intent for Rule Expression.
 
         :param value: boolean value to be used in rule expression.
-        """
-        return jsii.sinvoke(cls, "fromBoolean", [value])
+        '''
+        return typing.cast("IAlarmRule", jsii.sinvoke(cls, "fromBoolean", [value]))
 
-    @jsii.member(jsii_name="fromString")
+    @jsii.member(jsii_name="fromString") # type: ignore[misc]
     @builtins.classmethod
-    def from_string(cls, alarm_rule: str) -> "IAlarmRule":
-        """function to build Rule Expression for given Alarm Rule string.
+    def from_string(cls, alarm_rule: builtins.str) -> "IAlarmRule":
+        '''function to build Rule Expression for given Alarm Rule string.
 
         :param alarm_rule: string to be used in Rule Expression.
-        """
-        return jsii.sinvoke(cls, "fromString", [alarm_rule])
+        '''
+        return typing.cast("IAlarmRule", jsii.sinvoke(cls, "fromString", [alarm_rule]))
 
-    @jsii.member(jsii_name="not")
+    @jsii.member(jsii_name="not") # type: ignore[misc]
     @builtins.classmethod
     def not_(cls, operand: "IAlarmRule") -> "IAlarmRule":
-        """function to wrap provided AlarmRule in NOT operator.
+        '''function to wrap provided AlarmRule in NOT operator.
 
         :param operand: IAlarmRule to be wrapped in NOT operator.
-        """
-        return jsii.sinvoke(cls, "not", [operand])
+        '''
+        return typing.cast("IAlarmRule", jsii.sinvoke(cls, "not", [operand]))
 
 
 @jsii.enum(jsii_type="@aws-cdk/aws-cloudwatch.AlarmState")
 class AlarmState(enum.Enum):
-    """Enumeration indicates state of Alarm used in building Alarm Rule."""
+    '''Enumeration indicates state of Alarm used in building Alarm Rule.'''
 
     ALARM = "ALARM"
-    """State indicates resource is in ALARM."""
+    '''State indicates resource is in ALARM.'''
     OK = "OK"
-    """State indicates resource is not in ALARM."""
+    '''State indicates resource is not in ALARM.'''
     INSUFFICIENT_DATA = "INSUFFICIENT_DATA"
-    """State indicates there is not enough data to determine is resource is in ALARM."""
+    '''State indicates there is not enough data to determine is resource is in ALARM.'''
+
+
+@jsii.data_type(
+    jsii_type="@aws-cdk/aws-cloudwatch.AlarmStatusWidgetProps",
+    jsii_struct_bases=[],
+    name_mapping={
+        "alarms": "alarms",
+        "height": "height",
+        "title": "title",
+        "width": "width",
+    },
+)
+class AlarmStatusWidgetProps:
+    def __init__(
+        self,
+        *,
+        alarms: typing.Sequence["IAlarm"],
+        height: typing.Optional[jsii.Number] = None,
+        title: typing.Optional[builtins.str] = None,
+        width: typing.Optional[jsii.Number] = None,
+    ) -> None:
+        '''Properties for an Alarm Status Widget.
+
+        :param alarms: CloudWatch Alarms to show in widget.
+        :param height: Height of the widget. Default: 3
+        :param title: The title of the widget. Default: 'Alarm Status'
+        :param width: Width of the widget, in a grid of 24 units wide. Default: 6
+        '''
+        self._values: typing.Dict[str, typing.Any] = {
+            "alarms": alarms,
+        }
+        if height is not None:
+            self._values["height"] = height
+        if title is not None:
+            self._values["title"] = title
+        if width is not None:
+            self._values["width"] = width
+
+    @builtins.property
+    def alarms(self) -> typing.List["IAlarm"]:
+        '''CloudWatch Alarms to show in widget.'''
+        result = self._values.get("alarms")
+        assert result is not None, "Required property 'alarms' is missing"
+        return typing.cast(typing.List["IAlarm"], result)
+
+    @builtins.property
+    def height(self) -> typing.Optional[jsii.Number]:
+        '''Height of the widget.
+
+        :default: 3
+        '''
+        result = self._values.get("height")
+        return typing.cast(typing.Optional[jsii.Number], result)
+
+    @builtins.property
+    def title(self) -> typing.Optional[builtins.str]:
+        '''The title of the widget.
+
+        :default: 'Alarm Status'
+        '''
+        result = self._values.get("title")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def width(self) -> typing.Optional[jsii.Number]:
+        '''Width of the widget, in a grid of 24 units wide.
+
+        :default: 6
+        '''
+        result = self._values.get("width")
+        return typing.cast(typing.Optional[jsii.Number], result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "AlarmStatusWidgetProps(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
 
 
 @jsii.implements(aws_cdk.core.IInspectable)
@@ -491,58 +617,40 @@ class CfnAlarm(
     metaclass=jsii.JSIIMeta,
     jsii_type="@aws-cdk/aws-cloudwatch.CfnAlarm",
 ):
-    """A CloudFormation ``AWS::CloudWatch::Alarm``.
+    '''A CloudFormation ``AWS::CloudWatch::Alarm``.
 
-    see
-    :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html
-    cloudformationResource:
-    :cloudformationResource:: AWS::CloudWatch::Alarm
-    """
+    :cloudformationResource: AWS::CloudWatch::Alarm
+    :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html
+    '''
 
     def __init__(
         self,
         scope: aws_cdk.core.Construct,
-        id: str,
+        id: builtins.str,
         *,
-        comparison_operator: str,
+        comparison_operator: builtins.str,
         evaluation_periods: jsii.Number,
-        actions_enabled: typing.Optional[
-            typing.Union[bool, aws_cdk.core.IResolvable]
-        ] = None,
-        alarm_actions: typing.Optional[typing.List[str]] = None,
-        alarm_description: typing.Optional[str] = None,
-        alarm_name: typing.Optional[str] = None,
+        actions_enabled: typing.Optional[typing.Union[builtins.bool, aws_cdk.core.IResolvable]] = None,
+        alarm_actions: typing.Optional[typing.Sequence[builtins.str]] = None,
+        alarm_description: typing.Optional[builtins.str] = None,
+        alarm_name: typing.Optional[builtins.str] = None,
         datapoints_to_alarm: typing.Optional[jsii.Number] = None,
-        dimensions: typing.Optional[
-            typing.Union[
-                aws_cdk.core.IResolvable,
-                typing.List[
-                    typing.Union[aws_cdk.core.IResolvable, "DimensionProperty"]
-                ],
-            ]
-        ] = None,
-        evaluate_low_sample_count_percentile: typing.Optional[str] = None,
-        extended_statistic: typing.Optional[str] = None,
-        insufficient_data_actions: typing.Optional[typing.List[str]] = None,
-        metric_name: typing.Optional[str] = None,
-        metrics: typing.Optional[
-            typing.Union[
-                aws_cdk.core.IResolvable,
-                typing.List[
-                    typing.Union[aws_cdk.core.IResolvable, "MetricDataQueryProperty"]
-                ],
-            ]
-        ] = None,
-        namespace: typing.Optional[str] = None,
-        ok_actions: typing.Optional[typing.List[str]] = None,
+        dimensions: typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.Sequence[typing.Union[aws_cdk.core.IResolvable, "CfnAlarm.DimensionProperty"]]]] = None,
+        evaluate_low_sample_count_percentile: typing.Optional[builtins.str] = None,
+        extended_statistic: typing.Optional[builtins.str] = None,
+        insufficient_data_actions: typing.Optional[typing.Sequence[builtins.str]] = None,
+        metric_name: typing.Optional[builtins.str] = None,
+        metrics: typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.Sequence[typing.Union[aws_cdk.core.IResolvable, "CfnAlarm.MetricDataQueryProperty"]]]] = None,
+        namespace: typing.Optional[builtins.str] = None,
+        ok_actions: typing.Optional[typing.Sequence[builtins.str]] = None,
         period: typing.Optional[jsii.Number] = None,
-        statistic: typing.Optional[str] = None,
+        statistic: typing.Optional[builtins.str] = None,
         threshold: typing.Optional[jsii.Number] = None,
-        threshold_metric_id: typing.Optional[str] = None,
-        treat_missing_data: typing.Optional[str] = None,
-        unit: typing.Optional[str] = None,
+        threshold_metric_id: typing.Optional[builtins.str] = None,
+        treat_missing_data: typing.Optional[builtins.str] = None,
+        unit: typing.Optional[builtins.str] = None,
     ) -> None:
-        """Create a new ``AWS::CloudWatch::Alarm``.
+        '''Create a new ``AWS::CloudWatch::Alarm``.
 
         :param scope: - scope in which this resource is defined.
         :param id: - scoped id of the resource.
@@ -567,7 +675,7 @@ class CfnAlarm(
         :param threshold_metric_id: ``AWS::CloudWatch::Alarm.ThresholdMetricId``.
         :param treat_missing_data: ``AWS::CloudWatch::Alarm.TreatMissingData``.
         :param unit: ``AWS::CloudWatch::Alarm.Unit``.
-        """
+        '''
         props = CfnAlarmProps(
             comparison_operator=comparison_operator,
             evaluation_periods=evaluation_periods,
@@ -594,408 +702,335 @@ class CfnAlarm(
 
         jsii.create(CfnAlarm, self, [scope, id, props])
 
-    @jsii.member(jsii_name="fromCloudFormation")
-    @builtins.classmethod
-    def from_cloud_formation(
-        cls,
-        scope: aws_cdk.core.Construct,
-        id: str,
-        resource_attributes: typing.Any,
-        *,
-        finder: aws_cdk.core.ICfnFinder,
-    ) -> "CfnAlarm":
-        """A factory method that creates a new instance of this class from an object containing the CloudFormation properties of this resource.
-
-        Used in the @aws-cdk/cloudformation-include module.
-
-        :param scope: -
-        :param id: -
-        :param resource_attributes: -
-        :param finder: The finder interface used to resolve references across the template.
-
-        stability
-        :stability: experimental
-        """
-        options = aws_cdk.core.FromCloudFormationOptions(finder=finder)
-
-        return jsii.sinvoke(
-            cls, "fromCloudFormation", [scope, id, resource_attributes, options]
-        )
-
     @jsii.member(jsii_name="inspect")
     def inspect(self, inspector: aws_cdk.core.TreeInspector) -> None:
-        """Examines the CloudFormation resource and discloses attributes.
+        '''Examines the CloudFormation resource and discloses attributes.
 
         :param inspector: - tree inspector to collect and process attributes.
-
-        stability
-        :stability: experimental
-        """
-        return jsii.invoke(self, "inspect", [inspector])
+        '''
+        return typing.cast(None, jsii.invoke(self, "inspect", [inspector]))
 
     @jsii.member(jsii_name="renderProperties")
     def _render_properties(
-        self, props: typing.Mapping[str, typing.Any]
-    ) -> typing.Mapping[str, typing.Any]:
-        """
+        self,
+        props: typing.Mapping[builtins.str, typing.Any],
+    ) -> typing.Mapping[builtins.str, typing.Any]:
+        '''
         :param props: -
-        """
-        return jsii.invoke(self, "renderProperties", [props])
+        '''
+        return typing.cast(typing.Mapping[builtins.str, typing.Any], jsii.invoke(self, "renderProperties", [props]))
 
-    @jsii.python.classproperty
+    @jsii.python.classproperty # type: ignore[misc]
     @jsii.member(jsii_name="CFN_RESOURCE_TYPE_NAME")
-    def CFN_RESOURCE_TYPE_NAME(cls) -> str:
-        """The CloudFormation resource type name for this resource class."""
-        return jsii.sget(cls, "CFN_RESOURCE_TYPE_NAME")
+    def CFN_RESOURCE_TYPE_NAME(cls) -> builtins.str:
+        '''The CloudFormation resource type name for this resource class.'''
+        return typing.cast(builtins.str, jsii.sget(cls, "CFN_RESOURCE_TYPE_NAME"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="attrArn")
-    def attr_arn(self) -> str:
-        """
-        cloudformationAttribute:
-        :cloudformationAttribute:: Arn
-        """
-        return jsii.get(self, "attrArn")
+    def attr_arn(self) -> builtins.str:
+        '''
+        :cloudformationAttribute: Arn
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "attrArn"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="cfnProperties")
-    def _cfn_properties(self) -> typing.Mapping[str, typing.Any]:
-        return jsii.get(self, "cfnProperties")
+    def _cfn_properties(self) -> typing.Mapping[builtins.str, typing.Any]:
+        return typing.cast(typing.Mapping[builtins.str, typing.Any], jsii.get(self, "cfnProperties"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="comparisonOperator")
-    def comparison_operator(self) -> str:
-        """``AWS::CloudWatch::Alarm.ComparisonOperator``.
+    def comparison_operator(self) -> builtins.str:
+        '''``AWS::CloudWatch::Alarm.ComparisonOperator``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-comparisonoperator
-        """
-        return jsii.get(self, "comparisonOperator")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-comparisonoperator
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "comparisonOperator"))
 
     @comparison_operator.setter
-    def comparison_operator(self, value: str) -> None:
+    def comparison_operator(self, value: builtins.str) -> None:
         jsii.set(self, "comparisonOperator", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="evaluationPeriods")
     def evaluation_periods(self) -> jsii.Number:
-        """``AWS::CloudWatch::Alarm.EvaluationPeriods``.
+        '''``AWS::CloudWatch::Alarm.EvaluationPeriods``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-evaluationperiods
-        """
-        return jsii.get(self, "evaluationPeriods")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-evaluationperiods
+        '''
+        return typing.cast(jsii.Number, jsii.get(self, "evaluationPeriods"))
 
     @evaluation_periods.setter
     def evaluation_periods(self, value: jsii.Number) -> None:
         jsii.set(self, "evaluationPeriods", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="actionsEnabled")
     def actions_enabled(
         self,
-    ) -> typing.Optional[typing.Union[bool, aws_cdk.core.IResolvable]]:
-        """``AWS::CloudWatch::Alarm.ActionsEnabled``.
+    ) -> typing.Optional[typing.Union[builtins.bool, aws_cdk.core.IResolvable]]:
+        '''``AWS::CloudWatch::Alarm.ActionsEnabled``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-actionsenabled
-        """
-        return jsii.get(self, "actionsEnabled")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-actionsenabled
+        '''
+        return typing.cast(typing.Optional[typing.Union[builtins.bool, aws_cdk.core.IResolvable]], jsii.get(self, "actionsEnabled"))
 
     @actions_enabled.setter
     def actions_enabled(
-        self, value: typing.Optional[typing.Union[bool, aws_cdk.core.IResolvable]]
+        self,
+        value: typing.Optional[typing.Union[builtins.bool, aws_cdk.core.IResolvable]],
     ) -> None:
         jsii.set(self, "actionsEnabled", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="alarmActions")
-    def alarm_actions(self) -> typing.Optional[typing.List[str]]:
-        """``AWS::CloudWatch::Alarm.AlarmActions``.
+    def alarm_actions(self) -> typing.Optional[typing.List[builtins.str]]:
+        '''``AWS::CloudWatch::Alarm.AlarmActions``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-alarmactions
-        """
-        return jsii.get(self, "alarmActions")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-alarmactions
+        '''
+        return typing.cast(typing.Optional[typing.List[builtins.str]], jsii.get(self, "alarmActions"))
 
     @alarm_actions.setter
-    def alarm_actions(self, value: typing.Optional[typing.List[str]]) -> None:
+    def alarm_actions(self, value: typing.Optional[typing.List[builtins.str]]) -> None:
         jsii.set(self, "alarmActions", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="alarmDescription")
-    def alarm_description(self) -> typing.Optional[str]:
-        """``AWS::CloudWatch::Alarm.AlarmDescription``.
+    def alarm_description(self) -> typing.Optional[builtins.str]:
+        '''``AWS::CloudWatch::Alarm.AlarmDescription``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-alarmdescription
-        """
-        return jsii.get(self, "alarmDescription")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-alarmdescription
+        '''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "alarmDescription"))
 
     @alarm_description.setter
-    def alarm_description(self, value: typing.Optional[str]) -> None:
+    def alarm_description(self, value: typing.Optional[builtins.str]) -> None:
         jsii.set(self, "alarmDescription", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="alarmName")
-    def alarm_name(self) -> typing.Optional[str]:
-        """``AWS::CloudWatch::Alarm.AlarmName``.
+    def alarm_name(self) -> typing.Optional[builtins.str]:
+        '''``AWS::CloudWatch::Alarm.AlarmName``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-alarmname
-        """
-        return jsii.get(self, "alarmName")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-alarmname
+        '''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "alarmName"))
 
     @alarm_name.setter
-    def alarm_name(self, value: typing.Optional[str]) -> None:
+    def alarm_name(self, value: typing.Optional[builtins.str]) -> None:
         jsii.set(self, "alarmName", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="datapointsToAlarm")
     def datapoints_to_alarm(self) -> typing.Optional[jsii.Number]:
-        """``AWS::CloudWatch::Alarm.DatapointsToAlarm``.
+        '''``AWS::CloudWatch::Alarm.DatapointsToAlarm``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarm-datapointstoalarm
-        """
-        return jsii.get(self, "datapointsToAlarm")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarm-datapointstoalarm
+        '''
+        return typing.cast(typing.Optional[jsii.Number], jsii.get(self, "datapointsToAlarm"))
 
     @datapoints_to_alarm.setter
     def datapoints_to_alarm(self, value: typing.Optional[jsii.Number]) -> None:
         jsii.set(self, "datapointsToAlarm", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="dimensions")
     def dimensions(
         self,
-    ) -> typing.Optional[
-        typing.Union[
-            aws_cdk.core.IResolvable,
-            typing.List[typing.Union[aws_cdk.core.IResolvable, "DimensionProperty"]],
-        ]
-    ]:
-        """``AWS::CloudWatch::Alarm.Dimensions``.
+    ) -> typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, "CfnAlarm.DimensionProperty"]]]]:
+        '''``AWS::CloudWatch::Alarm.Dimensions``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-dimension
-        """
-        return jsii.get(self, "dimensions")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-dimension
+        '''
+        return typing.cast(typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, "CfnAlarm.DimensionProperty"]]]], jsii.get(self, "dimensions"))
 
     @dimensions.setter
     def dimensions(
         self,
-        value: typing.Optional[
-            typing.Union[
-                aws_cdk.core.IResolvable,
-                typing.List[
-                    typing.Union[aws_cdk.core.IResolvable, "DimensionProperty"]
-                ],
-            ]
-        ],
+        value: typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, "CfnAlarm.DimensionProperty"]]]],
     ) -> None:
         jsii.set(self, "dimensions", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="evaluateLowSampleCountPercentile")
-    def evaluate_low_sample_count_percentile(self) -> typing.Optional[str]:
-        """``AWS::CloudWatch::Alarm.EvaluateLowSampleCountPercentile``.
+    def evaluate_low_sample_count_percentile(self) -> typing.Optional[builtins.str]:
+        '''``AWS::CloudWatch::Alarm.EvaluateLowSampleCountPercentile``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-evaluatelowsamplecountpercentile
-        """
-        return jsii.get(self, "evaluateLowSampleCountPercentile")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-evaluatelowsamplecountpercentile
+        '''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "evaluateLowSampleCountPercentile"))
 
     @evaluate_low_sample_count_percentile.setter
-    def evaluate_low_sample_count_percentile(self, value: typing.Optional[str]) -> None:
+    def evaluate_low_sample_count_percentile(
+        self,
+        value: typing.Optional[builtins.str],
+    ) -> None:
         jsii.set(self, "evaluateLowSampleCountPercentile", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="extendedStatistic")
-    def extended_statistic(self) -> typing.Optional[str]:
-        """``AWS::CloudWatch::Alarm.ExtendedStatistic``.
+    def extended_statistic(self) -> typing.Optional[builtins.str]:
+        '''``AWS::CloudWatch::Alarm.ExtendedStatistic``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-extendedstatistic
-        """
-        return jsii.get(self, "extendedStatistic")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-extendedstatistic
+        '''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "extendedStatistic"))
 
     @extended_statistic.setter
-    def extended_statistic(self, value: typing.Optional[str]) -> None:
+    def extended_statistic(self, value: typing.Optional[builtins.str]) -> None:
         jsii.set(self, "extendedStatistic", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="insufficientDataActions")
-    def insufficient_data_actions(self) -> typing.Optional[typing.List[str]]:
-        """``AWS::CloudWatch::Alarm.InsufficientDataActions``.
+    def insufficient_data_actions(self) -> typing.Optional[typing.List[builtins.str]]:
+        '''``AWS::CloudWatch::Alarm.InsufficientDataActions``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-insufficientdataactions
-        """
-        return jsii.get(self, "insufficientDataActions")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-insufficientdataactions
+        '''
+        return typing.cast(typing.Optional[typing.List[builtins.str]], jsii.get(self, "insufficientDataActions"))
 
     @insufficient_data_actions.setter
     def insufficient_data_actions(
-        self, value: typing.Optional[typing.List[str]]
+        self,
+        value: typing.Optional[typing.List[builtins.str]],
     ) -> None:
         jsii.set(self, "insufficientDataActions", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="metricName")
-    def metric_name(self) -> typing.Optional[str]:
-        """``AWS::CloudWatch::Alarm.MetricName``.
+    def metric_name(self) -> typing.Optional[builtins.str]:
+        '''``AWS::CloudWatch::Alarm.MetricName``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-metricname
-        """
-        return jsii.get(self, "metricName")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-metricname
+        '''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "metricName"))
 
     @metric_name.setter
-    def metric_name(self, value: typing.Optional[str]) -> None:
+    def metric_name(self, value: typing.Optional[builtins.str]) -> None:
         jsii.set(self, "metricName", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="metrics")
     def metrics(
         self,
-    ) -> typing.Optional[
-        typing.Union[
-            aws_cdk.core.IResolvable,
-            typing.List[
-                typing.Union[aws_cdk.core.IResolvable, "MetricDataQueryProperty"]
-            ],
-        ]
-    ]:
-        """``AWS::CloudWatch::Alarm.Metrics``.
+    ) -> typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, "CfnAlarm.MetricDataQueryProperty"]]]]:
+        '''``AWS::CloudWatch::Alarm.Metrics``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarm-metrics
-        """
-        return jsii.get(self, "metrics")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarm-metrics
+        '''
+        return typing.cast(typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, "CfnAlarm.MetricDataQueryProperty"]]]], jsii.get(self, "metrics"))
 
     @metrics.setter
     def metrics(
         self,
-        value: typing.Optional[
-            typing.Union[
-                aws_cdk.core.IResolvable,
-                typing.List[
-                    typing.Union[aws_cdk.core.IResolvable, "MetricDataQueryProperty"]
-                ],
-            ]
-        ],
+        value: typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, "CfnAlarm.MetricDataQueryProperty"]]]],
     ) -> None:
         jsii.set(self, "metrics", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="namespace")
-    def namespace(self) -> typing.Optional[str]:
-        """``AWS::CloudWatch::Alarm.Namespace``.
+    def namespace(self) -> typing.Optional[builtins.str]:
+        '''``AWS::CloudWatch::Alarm.Namespace``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-namespace
-        """
-        return jsii.get(self, "namespace")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-namespace
+        '''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "namespace"))
 
     @namespace.setter
-    def namespace(self, value: typing.Optional[str]) -> None:
+    def namespace(self, value: typing.Optional[builtins.str]) -> None:
         jsii.set(self, "namespace", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="okActions")
-    def ok_actions(self) -> typing.Optional[typing.List[str]]:
-        """``AWS::CloudWatch::Alarm.OKActions``.
+    def ok_actions(self) -> typing.Optional[typing.List[builtins.str]]:
+        '''``AWS::CloudWatch::Alarm.OKActions``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-okactions
-        """
-        return jsii.get(self, "okActions")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-okactions
+        '''
+        return typing.cast(typing.Optional[typing.List[builtins.str]], jsii.get(self, "okActions"))
 
     @ok_actions.setter
-    def ok_actions(self, value: typing.Optional[typing.List[str]]) -> None:
+    def ok_actions(self, value: typing.Optional[typing.List[builtins.str]]) -> None:
         jsii.set(self, "okActions", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="period")
     def period(self) -> typing.Optional[jsii.Number]:
-        """``AWS::CloudWatch::Alarm.Period``.
+        '''``AWS::CloudWatch::Alarm.Period``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-period
-        """
-        return jsii.get(self, "period")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-period
+        '''
+        return typing.cast(typing.Optional[jsii.Number], jsii.get(self, "period"))
 
     @period.setter
     def period(self, value: typing.Optional[jsii.Number]) -> None:
         jsii.set(self, "period", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="statistic")
-    def statistic(self) -> typing.Optional[str]:
-        """``AWS::CloudWatch::Alarm.Statistic``.
+    def statistic(self) -> typing.Optional[builtins.str]:
+        '''``AWS::CloudWatch::Alarm.Statistic``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-statistic
-        """
-        return jsii.get(self, "statistic")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-statistic
+        '''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "statistic"))
 
     @statistic.setter
-    def statistic(self, value: typing.Optional[str]) -> None:
+    def statistic(self, value: typing.Optional[builtins.str]) -> None:
         jsii.set(self, "statistic", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="threshold")
     def threshold(self) -> typing.Optional[jsii.Number]:
-        """``AWS::CloudWatch::Alarm.Threshold``.
+        '''``AWS::CloudWatch::Alarm.Threshold``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-threshold
-        """
-        return jsii.get(self, "threshold")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-threshold
+        '''
+        return typing.cast(typing.Optional[jsii.Number], jsii.get(self, "threshold"))
 
     @threshold.setter
     def threshold(self, value: typing.Optional[jsii.Number]) -> None:
         jsii.set(self, "threshold", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="thresholdMetricId")
-    def threshold_metric_id(self) -> typing.Optional[str]:
-        """``AWS::CloudWatch::Alarm.ThresholdMetricId``.
+    def threshold_metric_id(self) -> typing.Optional[builtins.str]:
+        '''``AWS::CloudWatch::Alarm.ThresholdMetricId``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-dynamic-threshold
-        """
-        return jsii.get(self, "thresholdMetricId")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-dynamic-threshold
+        '''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "thresholdMetricId"))
 
     @threshold_metric_id.setter
-    def threshold_metric_id(self, value: typing.Optional[str]) -> None:
+    def threshold_metric_id(self, value: typing.Optional[builtins.str]) -> None:
         jsii.set(self, "thresholdMetricId", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="treatMissingData")
-    def treat_missing_data(self) -> typing.Optional[str]:
-        """``AWS::CloudWatch::Alarm.TreatMissingData``.
+    def treat_missing_data(self) -> typing.Optional[builtins.str]:
+        '''``AWS::CloudWatch::Alarm.TreatMissingData``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-treatmissingdata
-        """
-        return jsii.get(self, "treatMissingData")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-treatmissingdata
+        '''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "treatMissingData"))
 
     @treat_missing_data.setter
-    def treat_missing_data(self, value: typing.Optional[str]) -> None:
+    def treat_missing_data(self, value: typing.Optional[builtins.str]) -> None:
         jsii.set(self, "treatMissingData", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="unit")
-    def unit(self) -> typing.Optional[str]:
-        """``AWS::CloudWatch::Alarm.Unit``.
+    def unit(self) -> typing.Optional[builtins.str]:
+        '''``AWS::CloudWatch::Alarm.Unit``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-unit
-        """
-        return jsii.get(self, "unit")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-unit
+        '''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "unit"))
 
     @unit.setter
-    def unit(self, value: typing.Optional[str]) -> None:
+    def unit(self, value: typing.Optional[builtins.str]) -> None:
         jsii.set(self, "unit", value)
 
     @jsii.data_type(
@@ -1004,41 +1039,42 @@ class CfnAlarm(
         name_mapping={"name": "name", "value": "value"},
     )
     class DimensionProperty:
-        def __init__(self, *, name: str, value: str) -> None:
-            """
+        def __init__(self, *, name: builtins.str, value: builtins.str) -> None:
+            '''
             :param name: ``CfnAlarm.DimensionProperty.Name``.
             :param value: ``CfnAlarm.DimensionProperty.Value``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-dimension.html
-            """
-            self._values = {
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-dimension.html
+            '''
+            self._values: typing.Dict[str, typing.Any] = {
                 "name": name,
                 "value": value,
             }
 
         @builtins.property
-        def name(self) -> str:
-            """``CfnAlarm.DimensionProperty.Name``.
+        def name(self) -> builtins.str:
+            '''``CfnAlarm.DimensionProperty.Name``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-dimension.html#cfn-cloudwatch-alarm-dimension-name
-            """
-            return self._values.get("name")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-dimension.html#cfn-cloudwatch-alarm-dimension-name
+            '''
+            result = self._values.get("name")
+            assert result is not None, "Required property 'name' is missing"
+            return typing.cast(builtins.str, result)
 
         @builtins.property
-        def value(self) -> str:
-            """``CfnAlarm.DimensionProperty.Value``.
+        def value(self) -> builtins.str:
+            '''``CfnAlarm.DimensionProperty.Value``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-dimension.html#cfn-cloudwatch-alarm-dimension-value
-            """
-            return self._values.get("value")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-dimension.html#cfn-cloudwatch-alarm-dimension-value
+            '''
+            result = self._values.get("value")
+            assert result is not None, "Required property 'value' is missing"
+            return typing.cast(builtins.str, result)
 
-        def __eq__(self, rhs) -> bool:
+        def __eq__(self, rhs: typing.Any) -> builtins.bool:
             return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-        def __ne__(self, rhs) -> bool:
+        def __ne__(self, rhs: typing.Any) -> builtins.bool:
             return not (rhs == self)
 
         def __repr__(self) -> str:
@@ -1062,18 +1098,14 @@ class CfnAlarm(
         def __init__(
             self,
             *,
-            id: str,
-            expression: typing.Optional[str] = None,
-            label: typing.Optional[str] = None,
-            metric_stat: typing.Optional[
-                typing.Union[aws_cdk.core.IResolvable, "CfnAlarm.MetricStatProperty"]
-            ] = None,
+            id: builtins.str,
+            expression: typing.Optional[builtins.str] = None,
+            label: typing.Optional[builtins.str] = None,
+            metric_stat: typing.Optional[typing.Union[aws_cdk.core.IResolvable, "CfnAlarm.MetricStatProperty"]] = None,
             period: typing.Optional[jsii.Number] = None,
-            return_data: typing.Optional[
-                typing.Union[bool, aws_cdk.core.IResolvable]
-            ] = None,
+            return_data: typing.Optional[typing.Union[builtins.bool, aws_cdk.core.IResolvable]] = None,
         ) -> None:
-            """
+            '''
             :param id: ``CfnAlarm.MetricDataQueryProperty.Id``.
             :param expression: ``CfnAlarm.MetricDataQueryProperty.Expression``.
             :param label: ``CfnAlarm.MetricDataQueryProperty.Label``.
@@ -1081,10 +1113,9 @@ class CfnAlarm(
             :param period: ``CfnAlarm.MetricDataQueryProperty.Period``.
             :param return_data: ``CfnAlarm.MetricDataQueryProperty.ReturnData``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudwatch-alarm-metricdataquery.html
-            """
-            self._values = {
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudwatch-alarm-metricdataquery.html
+            '''
+            self._values: typing.Dict[str, typing.Any] = {
                 "id": id,
             }
             if expression is not None:
@@ -1099,65 +1130,65 @@ class CfnAlarm(
                 self._values["return_data"] = return_data
 
         @builtins.property
-        def id(self) -> str:
-            """``CfnAlarm.MetricDataQueryProperty.Id``.
+        def id(self) -> builtins.str:
+            '''``CfnAlarm.MetricDataQueryProperty.Id``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudwatch-alarm-metricdataquery.html#cfn-cloudwatch-alarm-metricdataquery-id
-            """
-            return self._values.get("id")
-
-        @builtins.property
-        def expression(self) -> typing.Optional[str]:
-            """``CfnAlarm.MetricDataQueryProperty.Expression``.
-
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudwatch-alarm-metricdataquery.html#cfn-cloudwatch-alarm-metricdataquery-expression
-            """
-            return self._values.get("expression")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudwatch-alarm-metricdataquery.html#cfn-cloudwatch-alarm-metricdataquery-id
+            '''
+            result = self._values.get("id")
+            assert result is not None, "Required property 'id' is missing"
+            return typing.cast(builtins.str, result)
 
         @builtins.property
-        def label(self) -> typing.Optional[str]:
-            """``CfnAlarm.MetricDataQueryProperty.Label``.
+        def expression(self) -> typing.Optional[builtins.str]:
+            '''``CfnAlarm.MetricDataQueryProperty.Expression``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudwatch-alarm-metricdataquery.html#cfn-cloudwatch-alarm-metricdataquery-label
-            """
-            return self._values.get("label")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudwatch-alarm-metricdataquery.html#cfn-cloudwatch-alarm-metricdataquery-expression
+            '''
+            result = self._values.get("expression")
+            return typing.cast(typing.Optional[builtins.str], result)
+
+        @builtins.property
+        def label(self) -> typing.Optional[builtins.str]:
+            '''``CfnAlarm.MetricDataQueryProperty.Label``.
+
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudwatch-alarm-metricdataquery.html#cfn-cloudwatch-alarm-metricdataquery-label
+            '''
+            result = self._values.get("label")
+            return typing.cast(typing.Optional[builtins.str], result)
 
         @builtins.property
         def metric_stat(
             self,
-        ) -> typing.Optional[
-            typing.Union[aws_cdk.core.IResolvable, "CfnAlarm.MetricStatProperty"]
-        ]:
-            """``CfnAlarm.MetricDataQueryProperty.MetricStat``.
+        ) -> typing.Optional[typing.Union[aws_cdk.core.IResolvable, "CfnAlarm.MetricStatProperty"]]:
+            '''``CfnAlarm.MetricDataQueryProperty.MetricStat``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudwatch-alarm-metricdataquery.html#cfn-cloudwatch-alarm-metricdataquery-metricstat
-            """
-            return self._values.get("metric_stat")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudwatch-alarm-metricdataquery.html#cfn-cloudwatch-alarm-metricdataquery-metricstat
+            '''
+            result = self._values.get("metric_stat")
+            return typing.cast(typing.Optional[typing.Union[aws_cdk.core.IResolvable, "CfnAlarm.MetricStatProperty"]], result)
 
         @builtins.property
         def period(self) -> typing.Optional[jsii.Number]:
-            """``CfnAlarm.MetricDataQueryProperty.Period``."""
-            return self._values.get("period")
+            '''``CfnAlarm.MetricDataQueryProperty.Period``.'''
+            result = self._values.get("period")
+            return typing.cast(typing.Optional[jsii.Number], result)
 
         @builtins.property
         def return_data(
             self,
-        ) -> typing.Optional[typing.Union[bool, aws_cdk.core.IResolvable]]:
-            """``CfnAlarm.MetricDataQueryProperty.ReturnData``.
+        ) -> typing.Optional[typing.Union[builtins.bool, aws_cdk.core.IResolvable]]:
+            '''``CfnAlarm.MetricDataQueryProperty.ReturnData``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudwatch-alarm-metricdataquery.html#cfn-cloudwatch-alarm-metricdataquery-returndata
-            """
-            return self._values.get("return_data")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudwatch-alarm-metricdataquery.html#cfn-cloudwatch-alarm-metricdataquery-returndata
+            '''
+            result = self._values.get("return_data")
+            return typing.cast(typing.Optional[typing.Union[builtins.bool, aws_cdk.core.IResolvable]], result)
 
-        def __eq__(self, rhs) -> bool:
+        def __eq__(self, rhs: typing.Any) -> builtins.bool:
             return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-        def __ne__(self, rhs) -> bool:
+        def __ne__(self, rhs: typing.Any) -> builtins.bool:
             return not (rhs == self)
 
         def __repr__(self) -> str:
@@ -1178,28 +1209,18 @@ class CfnAlarm(
         def __init__(
             self,
             *,
-            dimensions: typing.Optional[
-                typing.Union[
-                    aws_cdk.core.IResolvable,
-                    typing.List[
-                        typing.Union[
-                            aws_cdk.core.IResolvable, "CfnAlarm.DimensionProperty"
-                        ]
-                    ],
-                ]
-            ] = None,
-            metric_name: typing.Optional[str] = None,
-            namespace: typing.Optional[str] = None,
+            dimensions: typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.Sequence[typing.Union[aws_cdk.core.IResolvable, "CfnAlarm.DimensionProperty"]]]] = None,
+            metric_name: typing.Optional[builtins.str] = None,
+            namespace: typing.Optional[builtins.str] = None,
         ) -> None:
-            """
+            '''
             :param dimensions: ``CfnAlarm.MetricProperty.Dimensions``.
             :param metric_name: ``CfnAlarm.MetricProperty.MetricName``.
             :param namespace: ``CfnAlarm.MetricProperty.Namespace``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudwatch-alarm-metric.html
-            """
-            self._values = {}
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudwatch-alarm-metric.html
+            '''
+            self._values: typing.Dict[str, typing.Any] = {}
             if dimensions is not None:
                 self._values["dimensions"] = dimensions
             if metric_name is not None:
@@ -1210,43 +1231,36 @@ class CfnAlarm(
         @builtins.property
         def dimensions(
             self,
-        ) -> typing.Optional[
-            typing.Union[
-                aws_cdk.core.IResolvable,
-                typing.List[
-                    typing.Union[aws_cdk.core.IResolvable, "CfnAlarm.DimensionProperty"]
-                ],
-            ]
-        ]:
-            """``CfnAlarm.MetricProperty.Dimensions``.
+        ) -> typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, "CfnAlarm.DimensionProperty"]]]]:
+            '''``CfnAlarm.MetricProperty.Dimensions``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudwatch-alarm-metric.html#cfn-cloudwatch-alarm-metric-dimensions
-            """
-            return self._values.get("dimensions")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudwatch-alarm-metric.html#cfn-cloudwatch-alarm-metric-dimensions
+            '''
+            result = self._values.get("dimensions")
+            return typing.cast(typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, "CfnAlarm.DimensionProperty"]]]], result)
 
         @builtins.property
-        def metric_name(self) -> typing.Optional[str]:
-            """``CfnAlarm.MetricProperty.MetricName``.
+        def metric_name(self) -> typing.Optional[builtins.str]:
+            '''``CfnAlarm.MetricProperty.MetricName``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudwatch-alarm-metric.html#cfn-cloudwatch-alarm-metric-metricname
-            """
-            return self._values.get("metric_name")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudwatch-alarm-metric.html#cfn-cloudwatch-alarm-metric-metricname
+            '''
+            result = self._values.get("metric_name")
+            return typing.cast(typing.Optional[builtins.str], result)
 
         @builtins.property
-        def namespace(self) -> typing.Optional[str]:
-            """``CfnAlarm.MetricProperty.Namespace``.
+        def namespace(self) -> typing.Optional[builtins.str]:
+            '''``CfnAlarm.MetricProperty.Namespace``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudwatch-alarm-metric.html#cfn-cloudwatch-alarm-metric-namespace
-            """
-            return self._values.get("namespace")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudwatch-alarm-metric.html#cfn-cloudwatch-alarm-metric-namespace
+            '''
+            result = self._values.get("namespace")
+            return typing.cast(typing.Optional[builtins.str], result)
 
-        def __eq__(self, rhs) -> bool:
+        def __eq__(self, rhs: typing.Any) -> builtins.bool:
             return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-        def __ne__(self, rhs) -> bool:
+        def __ne__(self, rhs: typing.Any) -> builtins.bool:
             return not (rhs == self)
 
         def __repr__(self) -> str:
@@ -1270,19 +1284,18 @@ class CfnAlarm(
             *,
             metric: typing.Union[aws_cdk.core.IResolvable, "CfnAlarm.MetricProperty"],
             period: jsii.Number,
-            stat: str,
-            unit: typing.Optional[str] = None,
+            stat: builtins.str,
+            unit: typing.Optional[builtins.str] = None,
         ) -> None:
-            """
+            '''
             :param metric: ``CfnAlarm.MetricStatProperty.Metric``.
             :param period: ``CfnAlarm.MetricStatProperty.Period``.
             :param stat: ``CfnAlarm.MetricStatProperty.Stat``.
             :param unit: ``CfnAlarm.MetricStatProperty.Unit``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudwatch-alarm-metricstat.html
-            """
-            self._values = {
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudwatch-alarm-metricstat.html
+            '''
+            self._values: typing.Dict[str, typing.Any] = {
                 "metric": metric,
                 "period": period,
                 "stat": stat,
@@ -1294,44 +1307,47 @@ class CfnAlarm(
         def metric(
             self,
         ) -> typing.Union[aws_cdk.core.IResolvable, "CfnAlarm.MetricProperty"]:
-            """``CfnAlarm.MetricStatProperty.Metric``.
+            '''``CfnAlarm.MetricStatProperty.Metric``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudwatch-alarm-metricstat.html#cfn-cloudwatch-alarm-metricstat-metric
-            """
-            return self._values.get("metric")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudwatch-alarm-metricstat.html#cfn-cloudwatch-alarm-metricstat-metric
+            '''
+            result = self._values.get("metric")
+            assert result is not None, "Required property 'metric' is missing"
+            return typing.cast(typing.Union[aws_cdk.core.IResolvable, "CfnAlarm.MetricProperty"], result)
 
         @builtins.property
         def period(self) -> jsii.Number:
-            """``CfnAlarm.MetricStatProperty.Period``.
+            '''``CfnAlarm.MetricStatProperty.Period``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudwatch-alarm-metricstat.html#cfn-cloudwatch-alarm-metricstat-period
-            """
-            return self._values.get("period")
-
-        @builtins.property
-        def stat(self) -> str:
-            """``CfnAlarm.MetricStatProperty.Stat``.
-
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudwatch-alarm-metricstat.html#cfn-cloudwatch-alarm-metricstat-stat
-            """
-            return self._values.get("stat")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudwatch-alarm-metricstat.html#cfn-cloudwatch-alarm-metricstat-period
+            '''
+            result = self._values.get("period")
+            assert result is not None, "Required property 'period' is missing"
+            return typing.cast(jsii.Number, result)
 
         @builtins.property
-        def unit(self) -> typing.Optional[str]:
-            """``CfnAlarm.MetricStatProperty.Unit``.
+        def stat(self) -> builtins.str:
+            '''``CfnAlarm.MetricStatProperty.Stat``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudwatch-alarm-metricstat.html#cfn-cloudwatch-alarm-metricstat-unit
-            """
-            return self._values.get("unit")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudwatch-alarm-metricstat.html#cfn-cloudwatch-alarm-metricstat-stat
+            '''
+            result = self._values.get("stat")
+            assert result is not None, "Required property 'stat' is missing"
+            return typing.cast(builtins.str, result)
 
-        def __eq__(self, rhs) -> bool:
+        @builtins.property
+        def unit(self) -> typing.Optional[builtins.str]:
+            '''``CfnAlarm.MetricStatProperty.Unit``.
+
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudwatch-alarm-metricstat.html#cfn-cloudwatch-alarm-metricstat-unit
+            '''
+            result = self._values.get("unit")
+            return typing.cast(typing.Optional[builtins.str], result)
+
+        def __eq__(self, rhs: typing.Any) -> builtins.bool:
             return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-        def __ne__(self, rhs) -> bool:
+        def __ne__(self, rhs: typing.Any) -> builtins.bool:
             return not (rhs == self)
 
         def __repr__(self) -> str:
@@ -1371,47 +1387,29 @@ class CfnAlarmProps:
     def __init__(
         self,
         *,
-        comparison_operator: str,
+        comparison_operator: builtins.str,
         evaluation_periods: jsii.Number,
-        actions_enabled: typing.Optional[
-            typing.Union[bool, aws_cdk.core.IResolvable]
-        ] = None,
-        alarm_actions: typing.Optional[typing.List[str]] = None,
-        alarm_description: typing.Optional[str] = None,
-        alarm_name: typing.Optional[str] = None,
+        actions_enabled: typing.Optional[typing.Union[builtins.bool, aws_cdk.core.IResolvable]] = None,
+        alarm_actions: typing.Optional[typing.Sequence[builtins.str]] = None,
+        alarm_description: typing.Optional[builtins.str] = None,
+        alarm_name: typing.Optional[builtins.str] = None,
         datapoints_to_alarm: typing.Optional[jsii.Number] = None,
-        dimensions: typing.Optional[
-            typing.Union[
-                aws_cdk.core.IResolvable,
-                typing.List[
-                    typing.Union[aws_cdk.core.IResolvable, "CfnAlarm.DimensionProperty"]
-                ],
-            ]
-        ] = None,
-        evaluate_low_sample_count_percentile: typing.Optional[str] = None,
-        extended_statistic: typing.Optional[str] = None,
-        insufficient_data_actions: typing.Optional[typing.List[str]] = None,
-        metric_name: typing.Optional[str] = None,
-        metrics: typing.Optional[
-            typing.Union[
-                aws_cdk.core.IResolvable,
-                typing.List[
-                    typing.Union[
-                        aws_cdk.core.IResolvable, "CfnAlarm.MetricDataQueryProperty"
-                    ]
-                ],
-            ]
-        ] = None,
-        namespace: typing.Optional[str] = None,
-        ok_actions: typing.Optional[typing.List[str]] = None,
+        dimensions: typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.Sequence[typing.Union[aws_cdk.core.IResolvable, CfnAlarm.DimensionProperty]]]] = None,
+        evaluate_low_sample_count_percentile: typing.Optional[builtins.str] = None,
+        extended_statistic: typing.Optional[builtins.str] = None,
+        insufficient_data_actions: typing.Optional[typing.Sequence[builtins.str]] = None,
+        metric_name: typing.Optional[builtins.str] = None,
+        metrics: typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.Sequence[typing.Union[aws_cdk.core.IResolvable, CfnAlarm.MetricDataQueryProperty]]]] = None,
+        namespace: typing.Optional[builtins.str] = None,
+        ok_actions: typing.Optional[typing.Sequence[builtins.str]] = None,
         period: typing.Optional[jsii.Number] = None,
-        statistic: typing.Optional[str] = None,
+        statistic: typing.Optional[builtins.str] = None,
         threshold: typing.Optional[jsii.Number] = None,
-        threshold_metric_id: typing.Optional[str] = None,
-        treat_missing_data: typing.Optional[str] = None,
-        unit: typing.Optional[str] = None,
+        threshold_metric_id: typing.Optional[builtins.str] = None,
+        treat_missing_data: typing.Optional[builtins.str] = None,
+        unit: typing.Optional[builtins.str] = None,
     ) -> None:
-        """Properties for defining a ``AWS::CloudWatch::Alarm``.
+        '''Properties for defining a ``AWS::CloudWatch::Alarm``.
 
         :param comparison_operator: ``AWS::CloudWatch::Alarm.ComparisonOperator``.
         :param evaluation_periods: ``AWS::CloudWatch::Alarm.EvaluationPeriods``.
@@ -1435,10 +1433,9 @@ class CfnAlarmProps:
         :param treat_missing_data: ``AWS::CloudWatch::Alarm.TreatMissingData``.
         :param unit: ``AWS::CloudWatch::Alarm.Unit``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html
-        """
-        self._values = {
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html
+        '''
+        self._values: typing.Dict[str, typing.Any] = {
             "comparison_operator": comparison_operator,
             "evaluation_periods": evaluation_periods,
         }
@@ -1455,9 +1452,7 @@ class CfnAlarmProps:
         if dimensions is not None:
             self._values["dimensions"] = dimensions
         if evaluate_low_sample_count_percentile is not None:
-            self._values[
-                "evaluate_low_sample_count_percentile"
-            ] = evaluate_low_sample_count_percentile
+            self._values["evaluate_low_sample_count_percentile"] = evaluate_low_sample_count_percentile
         if extended_statistic is not None:
             self._values["extended_statistic"] = extended_statistic
         if insufficient_data_actions is not None:
@@ -1484,220 +1479,206 @@ class CfnAlarmProps:
             self._values["unit"] = unit
 
     @builtins.property
-    def comparison_operator(self) -> str:
-        """``AWS::CloudWatch::Alarm.ComparisonOperator``.
+    def comparison_operator(self) -> builtins.str:
+        '''``AWS::CloudWatch::Alarm.ComparisonOperator``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-comparisonoperator
-        """
-        return self._values.get("comparison_operator")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-comparisonoperator
+        '''
+        result = self._values.get("comparison_operator")
+        assert result is not None, "Required property 'comparison_operator' is missing"
+        return typing.cast(builtins.str, result)
 
     @builtins.property
     def evaluation_periods(self) -> jsii.Number:
-        """``AWS::CloudWatch::Alarm.EvaluationPeriods``.
+        '''``AWS::CloudWatch::Alarm.EvaluationPeriods``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-evaluationperiods
-        """
-        return self._values.get("evaluation_periods")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-evaluationperiods
+        '''
+        result = self._values.get("evaluation_periods")
+        assert result is not None, "Required property 'evaluation_periods' is missing"
+        return typing.cast(jsii.Number, result)
 
     @builtins.property
     def actions_enabled(
         self,
-    ) -> typing.Optional[typing.Union[bool, aws_cdk.core.IResolvable]]:
-        """``AWS::CloudWatch::Alarm.ActionsEnabled``.
+    ) -> typing.Optional[typing.Union[builtins.bool, aws_cdk.core.IResolvable]]:
+        '''``AWS::CloudWatch::Alarm.ActionsEnabled``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-actionsenabled
-        """
-        return self._values.get("actions_enabled")
-
-    @builtins.property
-    def alarm_actions(self) -> typing.Optional[typing.List[str]]:
-        """``AWS::CloudWatch::Alarm.AlarmActions``.
-
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-alarmactions
-        """
-        return self._values.get("alarm_actions")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-actionsenabled
+        '''
+        result = self._values.get("actions_enabled")
+        return typing.cast(typing.Optional[typing.Union[builtins.bool, aws_cdk.core.IResolvable]], result)
 
     @builtins.property
-    def alarm_description(self) -> typing.Optional[str]:
-        """``AWS::CloudWatch::Alarm.AlarmDescription``.
+    def alarm_actions(self) -> typing.Optional[typing.List[builtins.str]]:
+        '''``AWS::CloudWatch::Alarm.AlarmActions``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-alarmdescription
-        """
-        return self._values.get("alarm_description")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-alarmactions
+        '''
+        result = self._values.get("alarm_actions")
+        return typing.cast(typing.Optional[typing.List[builtins.str]], result)
 
     @builtins.property
-    def alarm_name(self) -> typing.Optional[str]:
-        """``AWS::CloudWatch::Alarm.AlarmName``.
+    def alarm_description(self) -> typing.Optional[builtins.str]:
+        '''``AWS::CloudWatch::Alarm.AlarmDescription``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-alarmname
-        """
-        return self._values.get("alarm_name")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-alarmdescription
+        '''
+        result = self._values.get("alarm_description")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def alarm_name(self) -> typing.Optional[builtins.str]:
+        '''``AWS::CloudWatch::Alarm.AlarmName``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-alarmname
+        '''
+        result = self._values.get("alarm_name")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def datapoints_to_alarm(self) -> typing.Optional[jsii.Number]:
-        """``AWS::CloudWatch::Alarm.DatapointsToAlarm``.
+        '''``AWS::CloudWatch::Alarm.DatapointsToAlarm``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarm-datapointstoalarm
-        """
-        return self._values.get("datapoints_to_alarm")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarm-datapointstoalarm
+        '''
+        result = self._values.get("datapoints_to_alarm")
+        return typing.cast(typing.Optional[jsii.Number], result)
 
     @builtins.property
     def dimensions(
         self,
-    ) -> typing.Optional[
-        typing.Union[
-            aws_cdk.core.IResolvable,
-            typing.List[
-                typing.Union[aws_cdk.core.IResolvable, "CfnAlarm.DimensionProperty"]
-            ],
-        ]
-    ]:
-        """``AWS::CloudWatch::Alarm.Dimensions``.
+    ) -> typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, CfnAlarm.DimensionProperty]]]]:
+        '''``AWS::CloudWatch::Alarm.Dimensions``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-dimension
-        """
-        return self._values.get("dimensions")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-dimension
+        '''
+        result = self._values.get("dimensions")
+        return typing.cast(typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, CfnAlarm.DimensionProperty]]]], result)
 
     @builtins.property
-    def evaluate_low_sample_count_percentile(self) -> typing.Optional[str]:
-        """``AWS::CloudWatch::Alarm.EvaluateLowSampleCountPercentile``.
+    def evaluate_low_sample_count_percentile(self) -> typing.Optional[builtins.str]:
+        '''``AWS::CloudWatch::Alarm.EvaluateLowSampleCountPercentile``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-evaluatelowsamplecountpercentile
-        """
-        return self._values.get("evaluate_low_sample_count_percentile")
-
-    @builtins.property
-    def extended_statistic(self) -> typing.Optional[str]:
-        """``AWS::CloudWatch::Alarm.ExtendedStatistic``.
-
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-extendedstatistic
-        """
-        return self._values.get("extended_statistic")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-evaluatelowsamplecountpercentile
+        '''
+        result = self._values.get("evaluate_low_sample_count_percentile")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
-    def insufficient_data_actions(self) -> typing.Optional[typing.List[str]]:
-        """``AWS::CloudWatch::Alarm.InsufficientDataActions``.
+    def extended_statistic(self) -> typing.Optional[builtins.str]:
+        '''``AWS::CloudWatch::Alarm.ExtendedStatistic``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-insufficientdataactions
-        """
-        return self._values.get("insufficient_data_actions")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-extendedstatistic
+        '''
+        result = self._values.get("extended_statistic")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
-    def metric_name(self) -> typing.Optional[str]:
-        """``AWS::CloudWatch::Alarm.MetricName``.
+    def insufficient_data_actions(self) -> typing.Optional[typing.List[builtins.str]]:
+        '''``AWS::CloudWatch::Alarm.InsufficientDataActions``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-metricname
-        """
-        return self._values.get("metric_name")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-insufficientdataactions
+        '''
+        result = self._values.get("insufficient_data_actions")
+        return typing.cast(typing.Optional[typing.List[builtins.str]], result)
+
+    @builtins.property
+    def metric_name(self) -> typing.Optional[builtins.str]:
+        '''``AWS::CloudWatch::Alarm.MetricName``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-metricname
+        '''
+        result = self._values.get("metric_name")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def metrics(
         self,
-    ) -> typing.Optional[
-        typing.Union[
-            aws_cdk.core.IResolvable,
-            typing.List[
-                typing.Union[
-                    aws_cdk.core.IResolvable, "CfnAlarm.MetricDataQueryProperty"
-                ]
-            ],
-        ]
-    ]:
-        """``AWS::CloudWatch::Alarm.Metrics``.
+    ) -> typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, CfnAlarm.MetricDataQueryProperty]]]]:
+        '''``AWS::CloudWatch::Alarm.Metrics``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarm-metrics
-        """
-        return self._values.get("metrics")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarm-metrics
+        '''
+        result = self._values.get("metrics")
+        return typing.cast(typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, CfnAlarm.MetricDataQueryProperty]]]], result)
 
     @builtins.property
-    def namespace(self) -> typing.Optional[str]:
-        """``AWS::CloudWatch::Alarm.Namespace``.
+    def namespace(self) -> typing.Optional[builtins.str]:
+        '''``AWS::CloudWatch::Alarm.Namespace``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-namespace
-        """
-        return self._values.get("namespace")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-namespace
+        '''
+        result = self._values.get("namespace")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
-    def ok_actions(self) -> typing.Optional[typing.List[str]]:
-        """``AWS::CloudWatch::Alarm.OKActions``.
+    def ok_actions(self) -> typing.Optional[typing.List[builtins.str]]:
+        '''``AWS::CloudWatch::Alarm.OKActions``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-okactions
-        """
-        return self._values.get("ok_actions")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-okactions
+        '''
+        result = self._values.get("ok_actions")
+        return typing.cast(typing.Optional[typing.List[builtins.str]], result)
 
     @builtins.property
     def period(self) -> typing.Optional[jsii.Number]:
-        """``AWS::CloudWatch::Alarm.Period``.
+        '''``AWS::CloudWatch::Alarm.Period``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-period
-        """
-        return self._values.get("period")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-period
+        '''
+        result = self._values.get("period")
+        return typing.cast(typing.Optional[jsii.Number], result)
 
     @builtins.property
-    def statistic(self) -> typing.Optional[str]:
-        """``AWS::CloudWatch::Alarm.Statistic``.
+    def statistic(self) -> typing.Optional[builtins.str]:
+        '''``AWS::CloudWatch::Alarm.Statistic``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-statistic
-        """
-        return self._values.get("statistic")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-statistic
+        '''
+        result = self._values.get("statistic")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def threshold(self) -> typing.Optional[jsii.Number]:
-        """``AWS::CloudWatch::Alarm.Threshold``.
+        '''``AWS::CloudWatch::Alarm.Threshold``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-threshold
-        """
-        return self._values.get("threshold")
-
-    @builtins.property
-    def threshold_metric_id(self) -> typing.Optional[str]:
-        """``AWS::CloudWatch::Alarm.ThresholdMetricId``.
-
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-dynamic-threshold
-        """
-        return self._values.get("threshold_metric_id")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-threshold
+        '''
+        result = self._values.get("threshold")
+        return typing.cast(typing.Optional[jsii.Number], result)
 
     @builtins.property
-    def treat_missing_data(self) -> typing.Optional[str]:
-        """``AWS::CloudWatch::Alarm.TreatMissingData``.
+    def threshold_metric_id(self) -> typing.Optional[builtins.str]:
+        '''``AWS::CloudWatch::Alarm.ThresholdMetricId``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-treatmissingdata
-        """
-        return self._values.get("treat_missing_data")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-dynamic-threshold
+        '''
+        result = self._values.get("threshold_metric_id")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
-    def unit(self) -> typing.Optional[str]:
-        """``AWS::CloudWatch::Alarm.Unit``.
+    def treat_missing_data(self) -> typing.Optional[builtins.str]:
+        '''``AWS::CloudWatch::Alarm.TreatMissingData``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-unit
-        """
-        return self._values.get("unit")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-treatmissingdata
+        '''
+        result = self._values.get("treat_missing_data")
+        return typing.cast(typing.Optional[builtins.str], result)
 
-    def __eq__(self, rhs) -> bool:
+    @builtins.property
+    def unit(self) -> typing.Optional[builtins.str]:
+        '''``AWS::CloudWatch::Alarm.Unit``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-unit
+        '''
+        result = self._values.get("unit")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
@@ -1712,35 +1693,24 @@ class CfnAnomalyDetector(
     metaclass=jsii.JSIIMeta,
     jsii_type="@aws-cdk/aws-cloudwatch.CfnAnomalyDetector",
 ):
-    """A CloudFormation ``AWS::CloudWatch::AnomalyDetector``.
+    '''A CloudFormation ``AWS::CloudWatch::AnomalyDetector``.
 
-    see
-    :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-anomalydetector.html
-    cloudformationResource:
-    :cloudformationResource:: AWS::CloudWatch::AnomalyDetector
-    """
+    :cloudformationResource: AWS::CloudWatch::AnomalyDetector
+    :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-anomalydetector.html
+    '''
 
     def __init__(
         self,
         scope: aws_cdk.core.Construct,
-        id: str,
+        id: builtins.str,
         *,
-        metric_name: str,
-        namespace: str,
-        stat: str,
-        configuration: typing.Optional[
-            typing.Union[aws_cdk.core.IResolvable, "ConfigurationProperty"]
-        ] = None,
-        dimensions: typing.Optional[
-            typing.Union[
-                aws_cdk.core.IResolvable,
-                typing.List[
-                    typing.Union[aws_cdk.core.IResolvable, "DimensionProperty"]
-                ],
-            ]
-        ] = None,
+        metric_name: builtins.str,
+        namespace: builtins.str,
+        stat: builtins.str,
+        configuration: typing.Optional[typing.Union[aws_cdk.core.IResolvable, "CfnAnomalyDetector.ConfigurationProperty"]] = None,
+        dimensions: typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.Sequence[typing.Union[aws_cdk.core.IResolvable, "CfnAnomalyDetector.DimensionProperty"]]]] = None,
     ) -> None:
-        """Create a new ``AWS::CloudWatch::AnomalyDetector``.
+        '''Create a new ``AWS::CloudWatch::AnomalyDetector``.
 
         :param scope: - scope in which this resource is defined.
         :param id: - scoped id of the resource.
@@ -1749,7 +1719,7 @@ class CfnAnomalyDetector(
         :param stat: ``AWS::CloudWatch::AnomalyDetector.Stat``.
         :param configuration: ``AWS::CloudWatch::AnomalyDetector.Configuration``.
         :param dimensions: ``AWS::CloudWatch::AnomalyDetector.Dimensions``.
-        """
+        '''
         props = CfnAnomalyDetectorProps(
             metric_name=metric_name,
             namespace=namespace,
@@ -1760,158 +1730,107 @@ class CfnAnomalyDetector(
 
         jsii.create(CfnAnomalyDetector, self, [scope, id, props])
 
-    @jsii.member(jsii_name="fromCloudFormation")
-    @builtins.classmethod
-    def from_cloud_formation(
-        cls,
-        scope: aws_cdk.core.Construct,
-        id: str,
-        resource_attributes: typing.Any,
-        *,
-        finder: aws_cdk.core.ICfnFinder,
-    ) -> "CfnAnomalyDetector":
-        """A factory method that creates a new instance of this class from an object containing the CloudFormation properties of this resource.
-
-        Used in the @aws-cdk/cloudformation-include module.
-
-        :param scope: -
-        :param id: -
-        :param resource_attributes: -
-        :param finder: The finder interface used to resolve references across the template.
-
-        stability
-        :stability: experimental
-        """
-        options = aws_cdk.core.FromCloudFormationOptions(finder=finder)
-
-        return jsii.sinvoke(
-            cls, "fromCloudFormation", [scope, id, resource_attributes, options]
-        )
-
     @jsii.member(jsii_name="inspect")
     def inspect(self, inspector: aws_cdk.core.TreeInspector) -> None:
-        """Examines the CloudFormation resource and discloses attributes.
+        '''Examines the CloudFormation resource and discloses attributes.
 
         :param inspector: - tree inspector to collect and process attributes.
-
-        stability
-        :stability: experimental
-        """
-        return jsii.invoke(self, "inspect", [inspector])
+        '''
+        return typing.cast(None, jsii.invoke(self, "inspect", [inspector]))
 
     @jsii.member(jsii_name="renderProperties")
     def _render_properties(
-        self, props: typing.Mapping[str, typing.Any]
-    ) -> typing.Mapping[str, typing.Any]:
-        """
+        self,
+        props: typing.Mapping[builtins.str, typing.Any],
+    ) -> typing.Mapping[builtins.str, typing.Any]:
+        '''
         :param props: -
-        """
-        return jsii.invoke(self, "renderProperties", [props])
+        '''
+        return typing.cast(typing.Mapping[builtins.str, typing.Any], jsii.invoke(self, "renderProperties", [props]))
 
-    @jsii.python.classproperty
+    @jsii.python.classproperty # type: ignore[misc]
     @jsii.member(jsii_name="CFN_RESOURCE_TYPE_NAME")
-    def CFN_RESOURCE_TYPE_NAME(cls) -> str:
-        """The CloudFormation resource type name for this resource class."""
-        return jsii.sget(cls, "CFN_RESOURCE_TYPE_NAME")
+    def CFN_RESOURCE_TYPE_NAME(cls) -> builtins.str:
+        '''The CloudFormation resource type name for this resource class.'''
+        return typing.cast(builtins.str, jsii.sget(cls, "CFN_RESOURCE_TYPE_NAME"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="cfnProperties")
-    def _cfn_properties(self) -> typing.Mapping[str, typing.Any]:
-        return jsii.get(self, "cfnProperties")
+    def _cfn_properties(self) -> typing.Mapping[builtins.str, typing.Any]:
+        return typing.cast(typing.Mapping[builtins.str, typing.Any], jsii.get(self, "cfnProperties"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="metricName")
-    def metric_name(self) -> str:
-        """``AWS::CloudWatch::AnomalyDetector.MetricName``.
+    def metric_name(self) -> builtins.str:
+        '''``AWS::CloudWatch::AnomalyDetector.MetricName``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-anomalydetector.html#cfn-cloudwatch-anomalydetector-metricname
-        """
-        return jsii.get(self, "metricName")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-anomalydetector.html#cfn-cloudwatch-anomalydetector-metricname
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "metricName"))
 
     @metric_name.setter
-    def metric_name(self, value: str) -> None:
+    def metric_name(self, value: builtins.str) -> None:
         jsii.set(self, "metricName", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="namespace")
-    def namespace(self) -> str:
-        """``AWS::CloudWatch::AnomalyDetector.Namespace``.
+    def namespace(self) -> builtins.str:
+        '''``AWS::CloudWatch::AnomalyDetector.Namespace``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-anomalydetector.html#cfn-cloudwatch-anomalydetector-namespace
-        """
-        return jsii.get(self, "namespace")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-anomalydetector.html#cfn-cloudwatch-anomalydetector-namespace
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "namespace"))
 
     @namespace.setter
-    def namespace(self, value: str) -> None:
+    def namespace(self, value: builtins.str) -> None:
         jsii.set(self, "namespace", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="stat")
-    def stat(self) -> str:
-        """``AWS::CloudWatch::AnomalyDetector.Stat``.
+    def stat(self) -> builtins.str:
+        '''``AWS::CloudWatch::AnomalyDetector.Stat``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-anomalydetector.html#cfn-cloudwatch-anomalydetector-stat
-        """
-        return jsii.get(self, "stat")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-anomalydetector.html#cfn-cloudwatch-anomalydetector-stat
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "stat"))
 
     @stat.setter
-    def stat(self, value: str) -> None:
+    def stat(self, value: builtins.str) -> None:
         jsii.set(self, "stat", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="configuration")
     def configuration(
         self,
-    ) -> typing.Optional[
-        typing.Union[aws_cdk.core.IResolvable, "ConfigurationProperty"]
-    ]:
-        """``AWS::CloudWatch::AnomalyDetector.Configuration``.
+    ) -> typing.Optional[typing.Union[aws_cdk.core.IResolvable, "CfnAnomalyDetector.ConfigurationProperty"]]:
+        '''``AWS::CloudWatch::AnomalyDetector.Configuration``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-anomalydetector.html#cfn-cloudwatch-anomalydetector-configuration
-        """
-        return jsii.get(self, "configuration")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-anomalydetector.html#cfn-cloudwatch-anomalydetector-configuration
+        '''
+        return typing.cast(typing.Optional[typing.Union[aws_cdk.core.IResolvable, "CfnAnomalyDetector.ConfigurationProperty"]], jsii.get(self, "configuration"))
 
     @configuration.setter
     def configuration(
         self,
-        value: typing.Optional[
-            typing.Union[aws_cdk.core.IResolvable, "ConfigurationProperty"]
-        ],
+        value: typing.Optional[typing.Union[aws_cdk.core.IResolvable, "CfnAnomalyDetector.ConfigurationProperty"]],
     ) -> None:
         jsii.set(self, "configuration", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="dimensions")
     def dimensions(
         self,
-    ) -> typing.Optional[
-        typing.Union[
-            aws_cdk.core.IResolvable,
-            typing.List[typing.Union[aws_cdk.core.IResolvable, "DimensionProperty"]],
-        ]
-    ]:
-        """``AWS::CloudWatch::AnomalyDetector.Dimensions``.
+    ) -> typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, "CfnAnomalyDetector.DimensionProperty"]]]]:
+        '''``AWS::CloudWatch::AnomalyDetector.Dimensions``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-anomalydetector.html#cfn-cloudwatch-anomalydetector-dimensions
-        """
-        return jsii.get(self, "dimensions")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-anomalydetector.html#cfn-cloudwatch-anomalydetector-dimensions
+        '''
+        return typing.cast(typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, "CfnAnomalyDetector.DimensionProperty"]]]], jsii.get(self, "dimensions"))
 
     @dimensions.setter
     def dimensions(
         self,
-        value: typing.Optional[
-            typing.Union[
-                aws_cdk.core.IResolvable,
-                typing.List[
-                    typing.Union[aws_cdk.core.IResolvable, "DimensionProperty"]
-                ],
-            ]
-        ],
+        value: typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, "CfnAnomalyDetector.DimensionProperty"]]]],
     ) -> None:
         jsii.set(self, "dimensions", value)
 
@@ -1927,26 +1846,16 @@ class CfnAnomalyDetector(
         def __init__(
             self,
             *,
-            excluded_time_ranges: typing.Optional[
-                typing.Union[
-                    aws_cdk.core.IResolvable,
-                    typing.List[
-                        typing.Union[
-                            aws_cdk.core.IResolvable, "CfnAnomalyDetector.RangeProperty"
-                        ]
-                    ],
-                ]
-            ] = None,
-            metric_time_zone: typing.Optional[str] = None,
+            excluded_time_ranges: typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.Sequence[typing.Union[aws_cdk.core.IResolvable, "CfnAnomalyDetector.RangeProperty"]]]] = None,
+            metric_time_zone: typing.Optional[builtins.str] = None,
         ) -> None:
-            """
+            '''
             :param excluded_time_ranges: ``CfnAnomalyDetector.ConfigurationProperty.ExcludedTimeRanges``.
             :param metric_time_zone: ``CfnAnomalyDetector.ConfigurationProperty.MetricTimeZone``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudwatch-anomalydetector-configuration.html
-            """
-            self._values = {}
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudwatch-anomalydetector-configuration.html
+            '''
+            self._values: typing.Dict[str, typing.Any] = {}
             if excluded_time_ranges is not None:
                 self._values["excluded_time_ranges"] = excluded_time_ranges
             if metric_time_zone is not None:
@@ -1955,36 +1864,27 @@ class CfnAnomalyDetector(
         @builtins.property
         def excluded_time_ranges(
             self,
-        ) -> typing.Optional[
-            typing.Union[
-                aws_cdk.core.IResolvable,
-                typing.List[
-                    typing.Union[
-                        aws_cdk.core.IResolvable, "CfnAnomalyDetector.RangeProperty"
-                    ]
-                ],
-            ]
-        ]:
-            """``CfnAnomalyDetector.ConfigurationProperty.ExcludedTimeRanges``.
+        ) -> typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, "CfnAnomalyDetector.RangeProperty"]]]]:
+            '''``CfnAnomalyDetector.ConfigurationProperty.ExcludedTimeRanges``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudwatch-anomalydetector-configuration.html#cfn-cloudwatch-anomalydetector-configuration-excludedtimeranges
-            """
-            return self._values.get("excluded_time_ranges")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudwatch-anomalydetector-configuration.html#cfn-cloudwatch-anomalydetector-configuration-excludedtimeranges
+            '''
+            result = self._values.get("excluded_time_ranges")
+            return typing.cast(typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, "CfnAnomalyDetector.RangeProperty"]]]], result)
 
         @builtins.property
-        def metric_time_zone(self) -> typing.Optional[str]:
-            """``CfnAnomalyDetector.ConfigurationProperty.MetricTimeZone``.
+        def metric_time_zone(self) -> typing.Optional[builtins.str]:
+            '''``CfnAnomalyDetector.ConfigurationProperty.MetricTimeZone``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudwatch-anomalydetector-configuration.html#cfn-cloudwatch-anomalydetector-configuration-metrictimezone
-            """
-            return self._values.get("metric_time_zone")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudwatch-anomalydetector-configuration.html#cfn-cloudwatch-anomalydetector-configuration-metrictimezone
+            '''
+            result = self._values.get("metric_time_zone")
+            return typing.cast(typing.Optional[builtins.str], result)
 
-        def __eq__(self, rhs) -> bool:
+        def __eq__(self, rhs: typing.Any) -> builtins.bool:
             return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-        def __ne__(self, rhs) -> bool:
+        def __ne__(self, rhs: typing.Any) -> builtins.bool:
             return not (rhs == self)
 
         def __repr__(self) -> str:
@@ -1998,41 +1898,42 @@ class CfnAnomalyDetector(
         name_mapping={"name": "name", "value": "value"},
     )
     class DimensionProperty:
-        def __init__(self, *, name: str, value: str) -> None:
-            """
+        def __init__(self, *, name: builtins.str, value: builtins.str) -> None:
+            '''
             :param name: ``CfnAnomalyDetector.DimensionProperty.Name``.
             :param value: ``CfnAnomalyDetector.DimensionProperty.Value``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudwatch-anomalydetector-dimension.html
-            """
-            self._values = {
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudwatch-anomalydetector-dimension.html
+            '''
+            self._values: typing.Dict[str, typing.Any] = {
                 "name": name,
                 "value": value,
             }
 
         @builtins.property
-        def name(self) -> str:
-            """``CfnAnomalyDetector.DimensionProperty.Name``.
+        def name(self) -> builtins.str:
+            '''``CfnAnomalyDetector.DimensionProperty.Name``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudwatch-anomalydetector-dimension.html#cfn-cloudwatch-anomalydetector-dimension-name
-            """
-            return self._values.get("name")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudwatch-anomalydetector-dimension.html#cfn-cloudwatch-anomalydetector-dimension-name
+            '''
+            result = self._values.get("name")
+            assert result is not None, "Required property 'name' is missing"
+            return typing.cast(builtins.str, result)
 
         @builtins.property
-        def value(self) -> str:
-            """``CfnAnomalyDetector.DimensionProperty.Value``.
+        def value(self) -> builtins.str:
+            '''``CfnAnomalyDetector.DimensionProperty.Value``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudwatch-anomalydetector-dimension.html#cfn-cloudwatch-anomalydetector-dimension-value
-            """
-            return self._values.get("value")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudwatch-anomalydetector-dimension.html#cfn-cloudwatch-anomalydetector-dimension-value
+            '''
+            result = self._values.get("value")
+            assert result is not None, "Required property 'value' is missing"
+            return typing.cast(builtins.str, result)
 
-        def __eq__(self, rhs) -> bool:
+        def __eq__(self, rhs: typing.Any) -> builtins.bool:
             return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-        def __ne__(self, rhs) -> bool:
+        def __ne__(self, rhs: typing.Any) -> builtins.bool:
             return not (rhs == self)
 
         def __repr__(self) -> str:
@@ -2046,41 +1947,42 @@ class CfnAnomalyDetector(
         name_mapping={"end_time": "endTime", "start_time": "startTime"},
     )
     class RangeProperty:
-        def __init__(self, *, end_time: str, start_time: str) -> None:
-            """
+        def __init__(self, *, end_time: builtins.str, start_time: builtins.str) -> None:
+            '''
             :param end_time: ``CfnAnomalyDetector.RangeProperty.EndTime``.
             :param start_time: ``CfnAnomalyDetector.RangeProperty.StartTime``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudwatch-anomalydetector-range.html
-            """
-            self._values = {
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudwatch-anomalydetector-range.html
+            '''
+            self._values: typing.Dict[str, typing.Any] = {
                 "end_time": end_time,
                 "start_time": start_time,
             }
 
         @builtins.property
-        def end_time(self) -> str:
-            """``CfnAnomalyDetector.RangeProperty.EndTime``.
+        def end_time(self) -> builtins.str:
+            '''``CfnAnomalyDetector.RangeProperty.EndTime``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudwatch-anomalydetector-range.html#cfn-cloudwatch-anomalydetector-range-endtime
-            """
-            return self._values.get("end_time")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudwatch-anomalydetector-range.html#cfn-cloudwatch-anomalydetector-range-endtime
+            '''
+            result = self._values.get("end_time")
+            assert result is not None, "Required property 'end_time' is missing"
+            return typing.cast(builtins.str, result)
 
         @builtins.property
-        def start_time(self) -> str:
-            """``CfnAnomalyDetector.RangeProperty.StartTime``.
+        def start_time(self) -> builtins.str:
+            '''``CfnAnomalyDetector.RangeProperty.StartTime``.
 
-            see
-            :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudwatch-anomalydetector-range.html#cfn-cloudwatch-anomalydetector-range-starttime
-            """
-            return self._values.get("start_time")
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudwatch-anomalydetector-range.html#cfn-cloudwatch-anomalydetector-range-starttime
+            '''
+            result = self._values.get("start_time")
+            assert result is not None, "Required property 'start_time' is missing"
+            return typing.cast(builtins.str, result)
 
-        def __eq__(self, rhs) -> bool:
+        def __eq__(self, rhs: typing.Any) -> builtins.bool:
             return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-        def __ne__(self, rhs) -> bool:
+        def __ne__(self, rhs: typing.Any) -> builtins.bool:
             return not (rhs == self)
 
         def __repr__(self) -> str:
@@ -2104,26 +2006,13 @@ class CfnAnomalyDetectorProps:
     def __init__(
         self,
         *,
-        metric_name: str,
-        namespace: str,
-        stat: str,
-        configuration: typing.Optional[
-            typing.Union[
-                aws_cdk.core.IResolvable, "CfnAnomalyDetector.ConfigurationProperty"
-            ]
-        ] = None,
-        dimensions: typing.Optional[
-            typing.Union[
-                aws_cdk.core.IResolvable,
-                typing.List[
-                    typing.Union[
-                        aws_cdk.core.IResolvable, "CfnAnomalyDetector.DimensionProperty"
-                    ]
-                ],
-            ]
-        ] = None,
+        metric_name: builtins.str,
+        namespace: builtins.str,
+        stat: builtins.str,
+        configuration: typing.Optional[typing.Union[aws_cdk.core.IResolvable, CfnAnomalyDetector.ConfigurationProperty]] = None,
+        dimensions: typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.Sequence[typing.Union[aws_cdk.core.IResolvable, CfnAnomalyDetector.DimensionProperty]]]] = None,
     ) -> None:
-        """Properties for defining a ``AWS::CloudWatch::AnomalyDetector``.
+        '''Properties for defining a ``AWS::CloudWatch::AnomalyDetector``.
 
         :param metric_name: ``AWS::CloudWatch::AnomalyDetector.MetricName``.
         :param namespace: ``AWS::CloudWatch::AnomalyDetector.Namespace``.
@@ -2131,10 +2020,9 @@ class CfnAnomalyDetectorProps:
         :param configuration: ``AWS::CloudWatch::AnomalyDetector.Configuration``.
         :param dimensions: ``AWS::CloudWatch::AnomalyDetector.Dimensions``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-anomalydetector.html
-        """
-        self._values = {
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-anomalydetector.html
+        '''
+        self._values: typing.Dict[str, typing.Any] = {
             "metric_name": metric_name,
             "namespace": namespace,
             "stat": stat,
@@ -2145,71 +2033,61 @@ class CfnAnomalyDetectorProps:
             self._values["dimensions"] = dimensions
 
     @builtins.property
-    def metric_name(self) -> str:
-        """``AWS::CloudWatch::AnomalyDetector.MetricName``.
+    def metric_name(self) -> builtins.str:
+        '''``AWS::CloudWatch::AnomalyDetector.MetricName``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-anomalydetector.html#cfn-cloudwatch-anomalydetector-metricname
-        """
-        return self._values.get("metric_name")
-
-    @builtins.property
-    def namespace(self) -> str:
-        """``AWS::CloudWatch::AnomalyDetector.Namespace``.
-
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-anomalydetector.html#cfn-cloudwatch-anomalydetector-namespace
-        """
-        return self._values.get("namespace")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-anomalydetector.html#cfn-cloudwatch-anomalydetector-metricname
+        '''
+        result = self._values.get("metric_name")
+        assert result is not None, "Required property 'metric_name' is missing"
+        return typing.cast(builtins.str, result)
 
     @builtins.property
-    def stat(self) -> str:
-        """``AWS::CloudWatch::AnomalyDetector.Stat``.
+    def namespace(self) -> builtins.str:
+        '''``AWS::CloudWatch::AnomalyDetector.Namespace``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-anomalydetector.html#cfn-cloudwatch-anomalydetector-stat
-        """
-        return self._values.get("stat")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-anomalydetector.html#cfn-cloudwatch-anomalydetector-namespace
+        '''
+        result = self._values.get("namespace")
+        assert result is not None, "Required property 'namespace' is missing"
+        return typing.cast(builtins.str, result)
+
+    @builtins.property
+    def stat(self) -> builtins.str:
+        '''``AWS::CloudWatch::AnomalyDetector.Stat``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-anomalydetector.html#cfn-cloudwatch-anomalydetector-stat
+        '''
+        result = self._values.get("stat")
+        assert result is not None, "Required property 'stat' is missing"
+        return typing.cast(builtins.str, result)
 
     @builtins.property
     def configuration(
         self,
-    ) -> typing.Optional[
-        typing.Union[
-            aws_cdk.core.IResolvable, "CfnAnomalyDetector.ConfigurationProperty"
-        ]
-    ]:
-        """``AWS::CloudWatch::AnomalyDetector.Configuration``.
+    ) -> typing.Optional[typing.Union[aws_cdk.core.IResolvable, CfnAnomalyDetector.ConfigurationProperty]]:
+        '''``AWS::CloudWatch::AnomalyDetector.Configuration``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-anomalydetector.html#cfn-cloudwatch-anomalydetector-configuration
-        """
-        return self._values.get("configuration")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-anomalydetector.html#cfn-cloudwatch-anomalydetector-configuration
+        '''
+        result = self._values.get("configuration")
+        return typing.cast(typing.Optional[typing.Union[aws_cdk.core.IResolvable, CfnAnomalyDetector.ConfigurationProperty]], result)
 
     @builtins.property
     def dimensions(
         self,
-    ) -> typing.Optional[
-        typing.Union[
-            aws_cdk.core.IResolvable,
-            typing.List[
-                typing.Union[
-                    aws_cdk.core.IResolvable, "CfnAnomalyDetector.DimensionProperty"
-                ]
-            ],
-        ]
-    ]:
-        """``AWS::CloudWatch::AnomalyDetector.Dimensions``.
+    ) -> typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, CfnAnomalyDetector.DimensionProperty]]]]:
+        '''``AWS::CloudWatch::AnomalyDetector.Dimensions``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-anomalydetector.html#cfn-cloudwatch-anomalydetector-dimensions
-        """
-        return self._values.get("dimensions")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-anomalydetector.html#cfn-cloudwatch-anomalydetector-dimensions
+        '''
+        result = self._values.get("dimensions")
+        return typing.cast(typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, CfnAnomalyDetector.DimensionProperty]]]], result)
 
-    def __eq__(self, rhs) -> bool:
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
@@ -2224,30 +2102,26 @@ class CfnCompositeAlarm(
     metaclass=jsii.JSIIMeta,
     jsii_type="@aws-cdk/aws-cloudwatch.CfnCompositeAlarm",
 ):
-    """A CloudFormation ``AWS::CloudWatch::CompositeAlarm``.
+    '''A CloudFormation ``AWS::CloudWatch::CompositeAlarm``.
 
-    see
-    :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-compositealarm.html
-    cloudformationResource:
-    :cloudformationResource:: AWS::CloudWatch::CompositeAlarm
-    """
+    :cloudformationResource: AWS::CloudWatch::CompositeAlarm
+    :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-compositealarm.html
+    '''
 
     def __init__(
         self,
         scope: aws_cdk.core.Construct,
-        id: str,
+        id: builtins.str,
         *,
-        alarm_name: str,
-        alarm_rule: str,
-        actions_enabled: typing.Optional[
-            typing.Union[bool, aws_cdk.core.IResolvable]
-        ] = None,
-        alarm_actions: typing.Optional[typing.List[str]] = None,
-        alarm_description: typing.Optional[str] = None,
-        insufficient_data_actions: typing.Optional[typing.List[str]] = None,
-        ok_actions: typing.Optional[typing.List[str]] = None,
+        alarm_name: builtins.str,
+        alarm_rule: builtins.str,
+        actions_enabled: typing.Optional[typing.Union[builtins.bool, aws_cdk.core.IResolvable]] = None,
+        alarm_actions: typing.Optional[typing.Sequence[builtins.str]] = None,
+        alarm_description: typing.Optional[builtins.str] = None,
+        insufficient_data_actions: typing.Optional[typing.Sequence[builtins.str]] = None,
+        ok_actions: typing.Optional[typing.Sequence[builtins.str]] = None,
     ) -> None:
-        """Create a new ``AWS::CloudWatch::CompositeAlarm``.
+        '''Create a new ``AWS::CloudWatch::CompositeAlarm``.
 
         :param scope: - scope in which this resource is defined.
         :param id: - scoped id of the resource.
@@ -2258,7 +2132,7 @@ class CfnCompositeAlarm(
         :param alarm_description: ``AWS::CloudWatch::CompositeAlarm.AlarmDescription``.
         :param insufficient_data_actions: ``AWS::CloudWatch::CompositeAlarm.InsufficientDataActions``.
         :param ok_actions: ``AWS::CloudWatch::CompositeAlarm.OKActions``.
-        """
+        '''
         props = CfnCompositeAlarmProps(
             alarm_name=alarm_name,
             alarm_rule=alarm_rule,
@@ -2271,176 +2145,140 @@ class CfnCompositeAlarm(
 
         jsii.create(CfnCompositeAlarm, self, [scope, id, props])
 
-    @jsii.member(jsii_name="fromCloudFormation")
-    @builtins.classmethod
-    def from_cloud_formation(
-        cls,
-        scope: aws_cdk.core.Construct,
-        id: str,
-        resource_attributes: typing.Any,
-        *,
-        finder: aws_cdk.core.ICfnFinder,
-    ) -> "CfnCompositeAlarm":
-        """A factory method that creates a new instance of this class from an object containing the CloudFormation properties of this resource.
-
-        Used in the @aws-cdk/cloudformation-include module.
-
-        :param scope: -
-        :param id: -
-        :param resource_attributes: -
-        :param finder: The finder interface used to resolve references across the template.
-
-        stability
-        :stability: experimental
-        """
-        options = aws_cdk.core.FromCloudFormationOptions(finder=finder)
-
-        return jsii.sinvoke(
-            cls, "fromCloudFormation", [scope, id, resource_attributes, options]
-        )
-
     @jsii.member(jsii_name="inspect")
     def inspect(self, inspector: aws_cdk.core.TreeInspector) -> None:
-        """Examines the CloudFormation resource and discloses attributes.
+        '''Examines the CloudFormation resource and discloses attributes.
 
         :param inspector: - tree inspector to collect and process attributes.
-
-        stability
-        :stability: experimental
-        """
-        return jsii.invoke(self, "inspect", [inspector])
+        '''
+        return typing.cast(None, jsii.invoke(self, "inspect", [inspector]))
 
     @jsii.member(jsii_name="renderProperties")
     def _render_properties(
-        self, props: typing.Mapping[str, typing.Any]
-    ) -> typing.Mapping[str, typing.Any]:
-        """
+        self,
+        props: typing.Mapping[builtins.str, typing.Any],
+    ) -> typing.Mapping[builtins.str, typing.Any]:
+        '''
         :param props: -
-        """
-        return jsii.invoke(self, "renderProperties", [props])
+        '''
+        return typing.cast(typing.Mapping[builtins.str, typing.Any], jsii.invoke(self, "renderProperties", [props]))
 
-    @jsii.python.classproperty
+    @jsii.python.classproperty # type: ignore[misc]
     @jsii.member(jsii_name="CFN_RESOURCE_TYPE_NAME")
-    def CFN_RESOURCE_TYPE_NAME(cls) -> str:
-        """The CloudFormation resource type name for this resource class."""
-        return jsii.sget(cls, "CFN_RESOURCE_TYPE_NAME")
+    def CFN_RESOURCE_TYPE_NAME(cls) -> builtins.str:
+        '''The CloudFormation resource type name for this resource class.'''
+        return typing.cast(builtins.str, jsii.sget(cls, "CFN_RESOURCE_TYPE_NAME"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="attrArn")
-    def attr_arn(self) -> str:
-        """
-        cloudformationAttribute:
-        :cloudformationAttribute:: Arn
-        """
-        return jsii.get(self, "attrArn")
+    def attr_arn(self) -> builtins.str:
+        '''
+        :cloudformationAttribute: Arn
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "attrArn"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="cfnProperties")
-    def _cfn_properties(self) -> typing.Mapping[str, typing.Any]:
-        return jsii.get(self, "cfnProperties")
+    def _cfn_properties(self) -> typing.Mapping[builtins.str, typing.Any]:
+        return typing.cast(typing.Mapping[builtins.str, typing.Any], jsii.get(self, "cfnProperties"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="alarmName")
-    def alarm_name(self) -> str:
-        """``AWS::CloudWatch::CompositeAlarm.AlarmName``.
+    def alarm_name(self) -> builtins.str:
+        '''``AWS::CloudWatch::CompositeAlarm.AlarmName``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-compositealarm.html#cfn-cloudwatch-compositealarm-alarmname
-        """
-        return jsii.get(self, "alarmName")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-compositealarm.html#cfn-cloudwatch-compositealarm-alarmname
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "alarmName"))
 
     @alarm_name.setter
-    def alarm_name(self, value: str) -> None:
+    def alarm_name(self, value: builtins.str) -> None:
         jsii.set(self, "alarmName", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="alarmRule")
-    def alarm_rule(self) -> str:
-        """``AWS::CloudWatch::CompositeAlarm.AlarmRule``.
+    def alarm_rule(self) -> builtins.str:
+        '''``AWS::CloudWatch::CompositeAlarm.AlarmRule``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-compositealarm.html#cfn-cloudwatch-compositealarm-alarmrule
-        """
-        return jsii.get(self, "alarmRule")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-compositealarm.html#cfn-cloudwatch-compositealarm-alarmrule
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "alarmRule"))
 
     @alarm_rule.setter
-    def alarm_rule(self, value: str) -> None:
+    def alarm_rule(self, value: builtins.str) -> None:
         jsii.set(self, "alarmRule", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="actionsEnabled")
     def actions_enabled(
         self,
-    ) -> typing.Optional[typing.Union[bool, aws_cdk.core.IResolvable]]:
-        """``AWS::CloudWatch::CompositeAlarm.ActionsEnabled``.
+    ) -> typing.Optional[typing.Union[builtins.bool, aws_cdk.core.IResolvable]]:
+        '''``AWS::CloudWatch::CompositeAlarm.ActionsEnabled``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-compositealarm.html#cfn-cloudwatch-compositealarm-actionsenabled
-        """
-        return jsii.get(self, "actionsEnabled")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-compositealarm.html#cfn-cloudwatch-compositealarm-actionsenabled
+        '''
+        return typing.cast(typing.Optional[typing.Union[builtins.bool, aws_cdk.core.IResolvable]], jsii.get(self, "actionsEnabled"))
 
     @actions_enabled.setter
     def actions_enabled(
-        self, value: typing.Optional[typing.Union[bool, aws_cdk.core.IResolvable]]
+        self,
+        value: typing.Optional[typing.Union[builtins.bool, aws_cdk.core.IResolvable]],
     ) -> None:
         jsii.set(self, "actionsEnabled", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="alarmActions")
-    def alarm_actions(self) -> typing.Optional[typing.List[str]]:
-        """``AWS::CloudWatch::CompositeAlarm.AlarmActions``.
+    def alarm_actions(self) -> typing.Optional[typing.List[builtins.str]]:
+        '''``AWS::CloudWatch::CompositeAlarm.AlarmActions``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-compositealarm.html#cfn-cloudwatch-compositealarm-alarmactions
-        """
-        return jsii.get(self, "alarmActions")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-compositealarm.html#cfn-cloudwatch-compositealarm-alarmactions
+        '''
+        return typing.cast(typing.Optional[typing.List[builtins.str]], jsii.get(self, "alarmActions"))
 
     @alarm_actions.setter
-    def alarm_actions(self, value: typing.Optional[typing.List[str]]) -> None:
+    def alarm_actions(self, value: typing.Optional[typing.List[builtins.str]]) -> None:
         jsii.set(self, "alarmActions", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="alarmDescription")
-    def alarm_description(self) -> typing.Optional[str]:
-        """``AWS::CloudWatch::CompositeAlarm.AlarmDescription``.
+    def alarm_description(self) -> typing.Optional[builtins.str]:
+        '''``AWS::CloudWatch::CompositeAlarm.AlarmDescription``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-compositealarm.html#cfn-cloudwatch-compositealarm-alarmdescription
-        """
-        return jsii.get(self, "alarmDescription")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-compositealarm.html#cfn-cloudwatch-compositealarm-alarmdescription
+        '''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "alarmDescription"))
 
     @alarm_description.setter
-    def alarm_description(self, value: typing.Optional[str]) -> None:
+    def alarm_description(self, value: typing.Optional[builtins.str]) -> None:
         jsii.set(self, "alarmDescription", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="insufficientDataActions")
-    def insufficient_data_actions(self) -> typing.Optional[typing.List[str]]:
-        """``AWS::CloudWatch::CompositeAlarm.InsufficientDataActions``.
+    def insufficient_data_actions(self) -> typing.Optional[typing.List[builtins.str]]:
+        '''``AWS::CloudWatch::CompositeAlarm.InsufficientDataActions``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-compositealarm.html#cfn-cloudwatch-compositealarm-insufficientdataactions
-        """
-        return jsii.get(self, "insufficientDataActions")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-compositealarm.html#cfn-cloudwatch-compositealarm-insufficientdataactions
+        '''
+        return typing.cast(typing.Optional[typing.List[builtins.str]], jsii.get(self, "insufficientDataActions"))
 
     @insufficient_data_actions.setter
     def insufficient_data_actions(
-        self, value: typing.Optional[typing.List[str]]
+        self,
+        value: typing.Optional[typing.List[builtins.str]],
     ) -> None:
         jsii.set(self, "insufficientDataActions", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="okActions")
-    def ok_actions(self) -> typing.Optional[typing.List[str]]:
-        """``AWS::CloudWatch::CompositeAlarm.OKActions``.
+    def ok_actions(self) -> typing.Optional[typing.List[builtins.str]]:
+        '''``AWS::CloudWatch::CompositeAlarm.OKActions``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-compositealarm.html#cfn-cloudwatch-compositealarm-okactions
-        """
-        return jsii.get(self, "okActions")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-compositealarm.html#cfn-cloudwatch-compositealarm-okactions
+        '''
+        return typing.cast(typing.Optional[typing.List[builtins.str]], jsii.get(self, "okActions"))
 
     @ok_actions.setter
-    def ok_actions(self, value: typing.Optional[typing.List[str]]) -> None:
+    def ok_actions(self, value: typing.Optional[typing.List[builtins.str]]) -> None:
         jsii.set(self, "okActions", value)
 
 
@@ -2461,17 +2299,15 @@ class CfnCompositeAlarmProps:
     def __init__(
         self,
         *,
-        alarm_name: str,
-        alarm_rule: str,
-        actions_enabled: typing.Optional[
-            typing.Union[bool, aws_cdk.core.IResolvable]
-        ] = None,
-        alarm_actions: typing.Optional[typing.List[str]] = None,
-        alarm_description: typing.Optional[str] = None,
-        insufficient_data_actions: typing.Optional[typing.List[str]] = None,
-        ok_actions: typing.Optional[typing.List[str]] = None,
+        alarm_name: builtins.str,
+        alarm_rule: builtins.str,
+        actions_enabled: typing.Optional[typing.Union[builtins.bool, aws_cdk.core.IResolvable]] = None,
+        alarm_actions: typing.Optional[typing.Sequence[builtins.str]] = None,
+        alarm_description: typing.Optional[builtins.str] = None,
+        insufficient_data_actions: typing.Optional[typing.Sequence[builtins.str]] = None,
+        ok_actions: typing.Optional[typing.Sequence[builtins.str]] = None,
     ) -> None:
-        """Properties for defining a ``AWS::CloudWatch::CompositeAlarm``.
+        '''Properties for defining a ``AWS::CloudWatch::CompositeAlarm``.
 
         :param alarm_name: ``AWS::CloudWatch::CompositeAlarm.AlarmName``.
         :param alarm_rule: ``AWS::CloudWatch::CompositeAlarm.AlarmRule``.
@@ -2481,10 +2317,9 @@ class CfnCompositeAlarmProps:
         :param insufficient_data_actions: ``AWS::CloudWatch::CompositeAlarm.InsufficientDataActions``.
         :param ok_actions: ``AWS::CloudWatch::CompositeAlarm.OKActions``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-compositealarm.html
-        """
-        self._values = {
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-compositealarm.html
+        '''
+        self._values: typing.Dict[str, typing.Any] = {
             "alarm_name": alarm_name,
             "alarm_rule": alarm_rule,
         }
@@ -2500,74 +2335,76 @@ class CfnCompositeAlarmProps:
             self._values["ok_actions"] = ok_actions
 
     @builtins.property
-    def alarm_name(self) -> str:
-        """``AWS::CloudWatch::CompositeAlarm.AlarmName``.
+    def alarm_name(self) -> builtins.str:
+        '''``AWS::CloudWatch::CompositeAlarm.AlarmName``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-compositealarm.html#cfn-cloudwatch-compositealarm-alarmname
-        """
-        return self._values.get("alarm_name")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-compositealarm.html#cfn-cloudwatch-compositealarm-alarmname
+        '''
+        result = self._values.get("alarm_name")
+        assert result is not None, "Required property 'alarm_name' is missing"
+        return typing.cast(builtins.str, result)
 
     @builtins.property
-    def alarm_rule(self) -> str:
-        """``AWS::CloudWatch::CompositeAlarm.AlarmRule``.
+    def alarm_rule(self) -> builtins.str:
+        '''``AWS::CloudWatch::CompositeAlarm.AlarmRule``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-compositealarm.html#cfn-cloudwatch-compositealarm-alarmrule
-        """
-        return self._values.get("alarm_rule")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-compositealarm.html#cfn-cloudwatch-compositealarm-alarmrule
+        '''
+        result = self._values.get("alarm_rule")
+        assert result is not None, "Required property 'alarm_rule' is missing"
+        return typing.cast(builtins.str, result)
 
     @builtins.property
     def actions_enabled(
         self,
-    ) -> typing.Optional[typing.Union[bool, aws_cdk.core.IResolvable]]:
-        """``AWS::CloudWatch::CompositeAlarm.ActionsEnabled``.
+    ) -> typing.Optional[typing.Union[builtins.bool, aws_cdk.core.IResolvable]]:
+        '''``AWS::CloudWatch::CompositeAlarm.ActionsEnabled``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-compositealarm.html#cfn-cloudwatch-compositealarm-actionsenabled
-        """
-        return self._values.get("actions_enabled")
-
-    @builtins.property
-    def alarm_actions(self) -> typing.Optional[typing.List[str]]:
-        """``AWS::CloudWatch::CompositeAlarm.AlarmActions``.
-
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-compositealarm.html#cfn-cloudwatch-compositealarm-alarmactions
-        """
-        return self._values.get("alarm_actions")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-compositealarm.html#cfn-cloudwatch-compositealarm-actionsenabled
+        '''
+        result = self._values.get("actions_enabled")
+        return typing.cast(typing.Optional[typing.Union[builtins.bool, aws_cdk.core.IResolvable]], result)
 
     @builtins.property
-    def alarm_description(self) -> typing.Optional[str]:
-        """``AWS::CloudWatch::CompositeAlarm.AlarmDescription``.
+    def alarm_actions(self) -> typing.Optional[typing.List[builtins.str]]:
+        '''``AWS::CloudWatch::CompositeAlarm.AlarmActions``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-compositealarm.html#cfn-cloudwatch-compositealarm-alarmdescription
-        """
-        return self._values.get("alarm_description")
-
-    @builtins.property
-    def insufficient_data_actions(self) -> typing.Optional[typing.List[str]]:
-        """``AWS::CloudWatch::CompositeAlarm.InsufficientDataActions``.
-
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-compositealarm.html#cfn-cloudwatch-compositealarm-insufficientdataactions
-        """
-        return self._values.get("insufficient_data_actions")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-compositealarm.html#cfn-cloudwatch-compositealarm-alarmactions
+        '''
+        result = self._values.get("alarm_actions")
+        return typing.cast(typing.Optional[typing.List[builtins.str]], result)
 
     @builtins.property
-    def ok_actions(self) -> typing.Optional[typing.List[str]]:
-        """``AWS::CloudWatch::CompositeAlarm.OKActions``.
+    def alarm_description(self) -> typing.Optional[builtins.str]:
+        '''``AWS::CloudWatch::CompositeAlarm.AlarmDescription``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-compositealarm.html#cfn-cloudwatch-compositealarm-okactions
-        """
-        return self._values.get("ok_actions")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-compositealarm.html#cfn-cloudwatch-compositealarm-alarmdescription
+        '''
+        result = self._values.get("alarm_description")
+        return typing.cast(typing.Optional[builtins.str], result)
 
-    def __eq__(self, rhs) -> bool:
+    @builtins.property
+    def insufficient_data_actions(self) -> typing.Optional[typing.List[builtins.str]]:
+        '''``AWS::CloudWatch::CompositeAlarm.InsufficientDataActions``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-compositealarm.html#cfn-cloudwatch-compositealarm-insufficientdataactions
+        '''
+        result = self._values.get("insufficient_data_actions")
+        return typing.cast(typing.Optional[typing.List[builtins.str]], result)
+
+    @builtins.property
+    def ok_actions(self) -> typing.Optional[typing.List[builtins.str]]:
+        '''``AWS::CloudWatch::CompositeAlarm.OKActions``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-compositealarm.html#cfn-cloudwatch-compositealarm-okactions
+        '''
+        result = self._values.get("ok_actions")
+        return typing.cast(typing.Optional[typing.List[builtins.str]], result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
@@ -2582,168 +2419,140 @@ class CfnDashboard(
     metaclass=jsii.JSIIMeta,
     jsii_type="@aws-cdk/aws-cloudwatch.CfnDashboard",
 ):
-    """A CloudFormation ``AWS::CloudWatch::Dashboard``.
+    '''A CloudFormation ``AWS::CloudWatch::Dashboard``.
 
-    see
-    :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-dashboard.html
-    cloudformationResource:
-    :cloudformationResource:: AWS::CloudWatch::Dashboard
-    """
+    :cloudformationResource: AWS::CloudWatch::Dashboard
+    :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-dashboard.html
+    '''
 
     def __init__(
         self,
         scope: aws_cdk.core.Construct,
-        id: str,
+        id: builtins.str,
         *,
-        dashboard_body: str,
-        dashboard_name: typing.Optional[str] = None,
+        dashboard_body: builtins.str,
+        dashboard_name: typing.Optional[builtins.str] = None,
     ) -> None:
-        """Create a new ``AWS::CloudWatch::Dashboard``.
+        '''Create a new ``AWS::CloudWatch::Dashboard``.
 
         :param scope: - scope in which this resource is defined.
         :param id: - scoped id of the resource.
         :param dashboard_body: ``AWS::CloudWatch::Dashboard.DashboardBody``.
         :param dashboard_name: ``AWS::CloudWatch::Dashboard.DashboardName``.
-        """
+        '''
         props = CfnDashboardProps(
             dashboard_body=dashboard_body, dashboard_name=dashboard_name
         )
 
         jsii.create(CfnDashboard, self, [scope, id, props])
 
-    @jsii.member(jsii_name="fromCloudFormation")
-    @builtins.classmethod
-    def from_cloud_formation(
-        cls,
-        scope: aws_cdk.core.Construct,
-        id: str,
-        resource_attributes: typing.Any,
-        *,
-        finder: aws_cdk.core.ICfnFinder,
-    ) -> "CfnDashboard":
-        """A factory method that creates a new instance of this class from an object containing the CloudFormation properties of this resource.
-
-        Used in the @aws-cdk/cloudformation-include module.
-
-        :param scope: -
-        :param id: -
-        :param resource_attributes: -
-        :param finder: The finder interface used to resolve references across the template.
-
-        stability
-        :stability: experimental
-        """
-        options = aws_cdk.core.FromCloudFormationOptions(finder=finder)
-
-        return jsii.sinvoke(
-            cls, "fromCloudFormation", [scope, id, resource_attributes, options]
-        )
-
     @jsii.member(jsii_name="inspect")
     def inspect(self, inspector: aws_cdk.core.TreeInspector) -> None:
-        """Examines the CloudFormation resource and discloses attributes.
+        '''Examines the CloudFormation resource and discloses attributes.
 
         :param inspector: - tree inspector to collect and process attributes.
-
-        stability
-        :stability: experimental
-        """
-        return jsii.invoke(self, "inspect", [inspector])
+        '''
+        return typing.cast(None, jsii.invoke(self, "inspect", [inspector]))
 
     @jsii.member(jsii_name="renderProperties")
     def _render_properties(
-        self, props: typing.Mapping[str, typing.Any]
-    ) -> typing.Mapping[str, typing.Any]:
-        """
+        self,
+        props: typing.Mapping[builtins.str, typing.Any],
+    ) -> typing.Mapping[builtins.str, typing.Any]:
+        '''
         :param props: -
-        """
-        return jsii.invoke(self, "renderProperties", [props])
+        '''
+        return typing.cast(typing.Mapping[builtins.str, typing.Any], jsii.invoke(self, "renderProperties", [props]))
 
-    @jsii.python.classproperty
+    @jsii.python.classproperty # type: ignore[misc]
     @jsii.member(jsii_name="CFN_RESOURCE_TYPE_NAME")
-    def CFN_RESOURCE_TYPE_NAME(cls) -> str:
-        """The CloudFormation resource type name for this resource class."""
-        return jsii.sget(cls, "CFN_RESOURCE_TYPE_NAME")
+    def CFN_RESOURCE_TYPE_NAME(cls) -> builtins.str:
+        '''The CloudFormation resource type name for this resource class.'''
+        return typing.cast(builtins.str, jsii.sget(cls, "CFN_RESOURCE_TYPE_NAME"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="cfnProperties")
-    def _cfn_properties(self) -> typing.Mapping[str, typing.Any]:
-        return jsii.get(self, "cfnProperties")
+    def _cfn_properties(self) -> typing.Mapping[builtins.str, typing.Any]:
+        return typing.cast(typing.Mapping[builtins.str, typing.Any], jsii.get(self, "cfnProperties"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="dashboardBody")
-    def dashboard_body(self) -> str:
-        """``AWS::CloudWatch::Dashboard.DashboardBody``.
+    def dashboard_body(self) -> builtins.str:
+        '''``AWS::CloudWatch::Dashboard.DashboardBody``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-dashboard.html#cfn-cloudwatch-dashboard-dashboardbody
-        """
-        return jsii.get(self, "dashboardBody")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-dashboard.html#cfn-cloudwatch-dashboard-dashboardbody
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "dashboardBody"))
 
     @dashboard_body.setter
-    def dashboard_body(self, value: str) -> None:
+    def dashboard_body(self, value: builtins.str) -> None:
         jsii.set(self, "dashboardBody", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="dashboardName")
-    def dashboard_name(self) -> typing.Optional[str]:
-        """``AWS::CloudWatch::Dashboard.DashboardName``.
+    def dashboard_name(self) -> typing.Optional[builtins.str]:
+        '''``AWS::CloudWatch::Dashboard.DashboardName``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-dashboard.html#cfn-cloudwatch-dashboard-dashboardname
-        """
-        return jsii.get(self, "dashboardName")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-dashboard.html#cfn-cloudwatch-dashboard-dashboardname
+        '''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "dashboardName"))
 
     @dashboard_name.setter
-    def dashboard_name(self, value: typing.Optional[str]) -> None:
+    def dashboard_name(self, value: typing.Optional[builtins.str]) -> None:
         jsii.set(self, "dashboardName", value)
 
 
 @jsii.data_type(
     jsii_type="@aws-cdk/aws-cloudwatch.CfnDashboardProps",
     jsii_struct_bases=[],
-    name_mapping={"dashboard_body": "dashboardBody", "dashboard_name": "dashboardName"},
+    name_mapping={
+        "dashboard_body": "dashboardBody",
+        "dashboard_name": "dashboardName",
+    },
 )
 class CfnDashboardProps:
     def __init__(
-        self, *, dashboard_body: str, dashboard_name: typing.Optional[str] = None
+        self,
+        *,
+        dashboard_body: builtins.str,
+        dashboard_name: typing.Optional[builtins.str] = None,
     ) -> None:
-        """Properties for defining a ``AWS::CloudWatch::Dashboard``.
+        '''Properties for defining a ``AWS::CloudWatch::Dashboard``.
 
         :param dashboard_body: ``AWS::CloudWatch::Dashboard.DashboardBody``.
         :param dashboard_name: ``AWS::CloudWatch::Dashboard.DashboardName``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-dashboard.html
-        """
-        self._values = {
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-dashboard.html
+        '''
+        self._values: typing.Dict[str, typing.Any] = {
             "dashboard_body": dashboard_body,
         }
         if dashboard_name is not None:
             self._values["dashboard_name"] = dashboard_name
 
     @builtins.property
-    def dashboard_body(self) -> str:
-        """``AWS::CloudWatch::Dashboard.DashboardBody``.
+    def dashboard_body(self) -> builtins.str:
+        '''``AWS::CloudWatch::Dashboard.DashboardBody``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-dashboard.html#cfn-cloudwatch-dashboard-dashboardbody
-        """
-        return self._values.get("dashboard_body")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-dashboard.html#cfn-cloudwatch-dashboard-dashboardbody
+        '''
+        result = self._values.get("dashboard_body")
+        assert result is not None, "Required property 'dashboard_body' is missing"
+        return typing.cast(builtins.str, result)
 
     @builtins.property
-    def dashboard_name(self) -> typing.Optional[str]:
-        """``AWS::CloudWatch::Dashboard.DashboardName``.
+    def dashboard_name(self) -> typing.Optional[builtins.str]:
+        '''``AWS::CloudWatch::Dashboard.DashboardName``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-dashboard.html#cfn-cloudwatch-dashboard-dashboardname
-        """
-        return self._values.get("dashboard_name")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-dashboard.html#cfn-cloudwatch-dashboard-dashboardname
+        '''
+        result = self._values.get("dashboard_name")
+        return typing.cast(typing.Optional[builtins.str], result)
 
-    def __eq__(self, rhs) -> bool:
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
@@ -2758,32 +2567,23 @@ class CfnInsightRule(
     metaclass=jsii.JSIIMeta,
     jsii_type="@aws-cdk/aws-cloudwatch.CfnInsightRule",
 ):
-    """A CloudFormation ``AWS::CloudWatch::InsightRule``.
+    '''A CloudFormation ``AWS::CloudWatch::InsightRule``.
 
-    see
-    :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-insightrule.html
-    cloudformationResource:
-    :cloudformationResource:: AWS::CloudWatch::InsightRule
-    """
+    :cloudformationResource: AWS::CloudWatch::InsightRule
+    :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-insightrule.html
+    '''
 
     def __init__(
         self,
         scope: aws_cdk.core.Construct,
-        id: str,
+        id: builtins.str,
         *,
-        rule_body: str,
-        rule_name: str,
-        rule_state: str,
-        tags: typing.Optional[
-            typing.Union[
-                aws_cdk.core.IResolvable,
-                typing.List[
-                    typing.Union[aws_cdk.core.IResolvable, aws_cdk.core.CfnTag]
-                ],
-            ]
-        ] = None,
+        rule_body: builtins.str,
+        rule_name: builtins.str,
+        rule_state: builtins.str,
+        tags: typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.Sequence[typing.Union[aws_cdk.core.IResolvable, aws_cdk.core.CfnTag]]]] = None,
     ) -> None:
-        """Create a new ``AWS::CloudWatch::InsightRule``.
+        '''Create a new ``AWS::CloudWatch::InsightRule``.
 
         :param scope: - scope in which this resource is defined.
         :param id: - scoped id of the resource.
@@ -2791,140 +2591,104 @@ class CfnInsightRule(
         :param rule_name: ``AWS::CloudWatch::InsightRule.RuleName``.
         :param rule_state: ``AWS::CloudWatch::InsightRule.RuleState``.
         :param tags: ``AWS::CloudWatch::InsightRule.Tags``.
-        """
+        '''
         props = CfnInsightRuleProps(
             rule_body=rule_body, rule_name=rule_name, rule_state=rule_state, tags=tags
         )
 
         jsii.create(CfnInsightRule, self, [scope, id, props])
 
-    @jsii.member(jsii_name="fromCloudFormation")
-    @builtins.classmethod
-    def from_cloud_formation(
-        cls,
-        scope: aws_cdk.core.Construct,
-        id: str,
-        resource_attributes: typing.Any,
-        *,
-        finder: aws_cdk.core.ICfnFinder,
-    ) -> "CfnInsightRule":
-        """A factory method that creates a new instance of this class from an object containing the CloudFormation properties of this resource.
-
-        Used in the @aws-cdk/cloudformation-include module.
-
-        :param scope: -
-        :param id: -
-        :param resource_attributes: -
-        :param finder: The finder interface used to resolve references across the template.
-
-        stability
-        :stability: experimental
-        """
-        options = aws_cdk.core.FromCloudFormationOptions(finder=finder)
-
-        return jsii.sinvoke(
-            cls, "fromCloudFormation", [scope, id, resource_attributes, options]
-        )
-
     @jsii.member(jsii_name="inspect")
     def inspect(self, inspector: aws_cdk.core.TreeInspector) -> None:
-        """Examines the CloudFormation resource and discloses attributes.
+        '''Examines the CloudFormation resource and discloses attributes.
 
         :param inspector: - tree inspector to collect and process attributes.
-
-        stability
-        :stability: experimental
-        """
-        return jsii.invoke(self, "inspect", [inspector])
+        '''
+        return typing.cast(None, jsii.invoke(self, "inspect", [inspector]))
 
     @jsii.member(jsii_name="renderProperties")
     def _render_properties(
-        self, props: typing.Mapping[str, typing.Any]
-    ) -> typing.Mapping[str, typing.Any]:
-        """
+        self,
+        props: typing.Mapping[builtins.str, typing.Any],
+    ) -> typing.Mapping[builtins.str, typing.Any]:
+        '''
         :param props: -
-        """
-        return jsii.invoke(self, "renderProperties", [props])
+        '''
+        return typing.cast(typing.Mapping[builtins.str, typing.Any], jsii.invoke(self, "renderProperties", [props]))
 
-    @jsii.python.classproperty
+    @jsii.python.classproperty # type: ignore[misc]
     @jsii.member(jsii_name="CFN_RESOURCE_TYPE_NAME")
-    def CFN_RESOURCE_TYPE_NAME(cls) -> str:
-        """The CloudFormation resource type name for this resource class."""
-        return jsii.sget(cls, "CFN_RESOURCE_TYPE_NAME")
+    def CFN_RESOURCE_TYPE_NAME(cls) -> builtins.str:
+        '''The CloudFormation resource type name for this resource class.'''
+        return typing.cast(builtins.str, jsii.sget(cls, "CFN_RESOURCE_TYPE_NAME"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="attrArn")
-    def attr_arn(self) -> str:
-        """
-        cloudformationAttribute:
-        :cloudformationAttribute:: Arn
-        """
-        return jsii.get(self, "attrArn")
+    def attr_arn(self) -> builtins.str:
+        '''
+        :cloudformationAttribute: Arn
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "attrArn"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="attrRuleName")
-    def attr_rule_name(self) -> str:
-        """
-        cloudformationAttribute:
-        :cloudformationAttribute:: RuleName
-        """
-        return jsii.get(self, "attrRuleName")
+    def attr_rule_name(self) -> builtins.str:
+        '''
+        :cloudformationAttribute: RuleName
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "attrRuleName"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="cfnProperties")
-    def _cfn_properties(self) -> typing.Mapping[str, typing.Any]:
-        return jsii.get(self, "cfnProperties")
+    def _cfn_properties(self) -> typing.Mapping[builtins.str, typing.Any]:
+        return typing.cast(typing.Mapping[builtins.str, typing.Any], jsii.get(self, "cfnProperties"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="tags")
     def tags(self) -> aws_cdk.core.TagManager:
-        """``AWS::CloudWatch::InsightRule.Tags``.
+        '''``AWS::CloudWatch::InsightRule.Tags``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-insightrule.html#cfn-cloudwatch-insightrule-tags
-        """
-        return jsii.get(self, "tags")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-insightrule.html#cfn-cloudwatch-insightrule-tags
+        '''
+        return typing.cast(aws_cdk.core.TagManager, jsii.get(self, "tags"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="ruleBody")
-    def rule_body(self) -> str:
-        """``AWS::CloudWatch::InsightRule.RuleBody``.
+    def rule_body(self) -> builtins.str:
+        '''``AWS::CloudWatch::InsightRule.RuleBody``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-insightrule.html#cfn-cloudwatch-insightrule-rulebody
-        """
-        return jsii.get(self, "ruleBody")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-insightrule.html#cfn-cloudwatch-insightrule-rulebody
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "ruleBody"))
 
     @rule_body.setter
-    def rule_body(self, value: str) -> None:
+    def rule_body(self, value: builtins.str) -> None:
         jsii.set(self, "ruleBody", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="ruleName")
-    def rule_name(self) -> str:
-        """``AWS::CloudWatch::InsightRule.RuleName``.
+    def rule_name(self) -> builtins.str:
+        '''``AWS::CloudWatch::InsightRule.RuleName``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-insightrule.html#cfn-cloudwatch-insightrule-rulename
-        """
-        return jsii.get(self, "ruleName")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-insightrule.html#cfn-cloudwatch-insightrule-rulename
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "ruleName"))
 
     @rule_name.setter
-    def rule_name(self, value: str) -> None:
+    def rule_name(self, value: builtins.str) -> None:
         jsii.set(self, "ruleName", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="ruleState")
-    def rule_state(self) -> str:
-        """``AWS::CloudWatch::InsightRule.RuleState``.
+    def rule_state(self) -> builtins.str:
+        '''``AWS::CloudWatch::InsightRule.RuleState``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-insightrule.html#cfn-cloudwatch-insightrule-rulestate
-        """
-        return jsii.get(self, "ruleState")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-insightrule.html#cfn-cloudwatch-insightrule-rulestate
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "ruleState"))
 
     @rule_state.setter
-    def rule_state(self, value: str) -> None:
+    def rule_state(self, value: builtins.str) -> None:
         jsii.set(self, "ruleState", value)
 
 
@@ -2942,29 +2706,21 @@ class CfnInsightRuleProps:
     def __init__(
         self,
         *,
-        rule_body: str,
-        rule_name: str,
-        rule_state: str,
-        tags: typing.Optional[
-            typing.Union[
-                aws_cdk.core.IResolvable,
-                typing.List[
-                    typing.Union[aws_cdk.core.IResolvable, aws_cdk.core.CfnTag]
-                ],
-            ]
-        ] = None,
+        rule_body: builtins.str,
+        rule_name: builtins.str,
+        rule_state: builtins.str,
+        tags: typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.Sequence[typing.Union[aws_cdk.core.IResolvable, aws_cdk.core.CfnTag]]]] = None,
     ) -> None:
-        """Properties for defining a ``AWS::CloudWatch::InsightRule``.
+        '''Properties for defining a ``AWS::CloudWatch::InsightRule``.
 
         :param rule_body: ``AWS::CloudWatch::InsightRule.RuleBody``.
         :param rule_name: ``AWS::CloudWatch::InsightRule.RuleName``.
         :param rule_state: ``AWS::CloudWatch::InsightRule.RuleState``.
         :param tags: ``AWS::CloudWatch::InsightRule.Tags``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-insightrule.html
-        """
-        self._values = {
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-insightrule.html
+        '''
+        self._values: typing.Dict[str, typing.Any] = {
             "rule_body": rule_body,
             "rule_name": rule_name,
             "rule_state": rule_state,
@@ -2973,52 +2729,50 @@ class CfnInsightRuleProps:
             self._values["tags"] = tags
 
     @builtins.property
-    def rule_body(self) -> str:
-        """``AWS::CloudWatch::InsightRule.RuleBody``.
+    def rule_body(self) -> builtins.str:
+        '''``AWS::CloudWatch::InsightRule.RuleBody``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-insightrule.html#cfn-cloudwatch-insightrule-rulebody
-        """
-        return self._values.get("rule_body")
-
-    @builtins.property
-    def rule_name(self) -> str:
-        """``AWS::CloudWatch::InsightRule.RuleName``.
-
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-insightrule.html#cfn-cloudwatch-insightrule-rulename
-        """
-        return self._values.get("rule_name")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-insightrule.html#cfn-cloudwatch-insightrule-rulebody
+        '''
+        result = self._values.get("rule_body")
+        assert result is not None, "Required property 'rule_body' is missing"
+        return typing.cast(builtins.str, result)
 
     @builtins.property
-    def rule_state(self) -> str:
-        """``AWS::CloudWatch::InsightRule.RuleState``.
+    def rule_name(self) -> builtins.str:
+        '''``AWS::CloudWatch::InsightRule.RuleName``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-insightrule.html#cfn-cloudwatch-insightrule-rulestate
-        """
-        return self._values.get("rule_state")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-insightrule.html#cfn-cloudwatch-insightrule-rulename
+        '''
+        result = self._values.get("rule_name")
+        assert result is not None, "Required property 'rule_name' is missing"
+        return typing.cast(builtins.str, result)
+
+    @builtins.property
+    def rule_state(self) -> builtins.str:
+        '''``AWS::CloudWatch::InsightRule.RuleState``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-insightrule.html#cfn-cloudwatch-insightrule-rulestate
+        '''
+        result = self._values.get("rule_state")
+        assert result is not None, "Required property 'rule_state' is missing"
+        return typing.cast(builtins.str, result)
 
     @builtins.property
     def tags(
         self,
-    ) -> typing.Optional[
-        typing.Union[
-            aws_cdk.core.IResolvable,
-            typing.List[typing.Union[aws_cdk.core.IResolvable, aws_cdk.core.CfnTag]],
-        ]
-    ]:
-        """``AWS::CloudWatch::InsightRule.Tags``.
+    ) -> typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, aws_cdk.core.CfnTag]]]]:
+        '''``AWS::CloudWatch::InsightRule.Tags``.
 
-        see
-        :see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-insightrule.html#cfn-cloudwatch-insightrule-tags
-        """
-        return self._values.get("tags")
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-insightrule.html#cfn-cloudwatch-insightrule-tags
+        '''
+        result = self._values.get("tags")
+        return typing.cast(typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, aws_cdk.core.CfnTag]]]], result)
 
-    def __eq__(self, rhs) -> bool:
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
@@ -3027,59 +2781,437 @@ class CfnInsightRuleProps:
         )
 
 
+@jsii.implements(aws_cdk.core.IInspectable)
+class CfnMetricStream(
+    aws_cdk.core.CfnResource,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@aws-cdk/aws-cloudwatch.CfnMetricStream",
+):
+    '''A CloudFormation ``AWS::CloudWatch::MetricStream``.
+
+    :cloudformationResource: AWS::CloudWatch::MetricStream
+    :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-metricstream.html
+    '''
+
+    def __init__(
+        self,
+        scope: aws_cdk.core.Construct,
+        id: builtins.str,
+        *,
+        firehose_arn: builtins.str,
+        output_format: builtins.str,
+        role_arn: builtins.str,
+        exclude_filters: typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.Sequence[typing.Union[aws_cdk.core.IResolvable, "CfnMetricStream.MetricStreamFilterProperty"]]]] = None,
+        include_filters: typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.Sequence[typing.Union[aws_cdk.core.IResolvable, "CfnMetricStream.MetricStreamFilterProperty"]]]] = None,
+        name: typing.Optional[builtins.str] = None,
+        tags: typing.Optional[typing.Sequence[aws_cdk.core.CfnTag]] = None,
+    ) -> None:
+        '''Create a new ``AWS::CloudWatch::MetricStream``.
+
+        :param scope: - scope in which this resource is defined.
+        :param id: - scoped id of the resource.
+        :param firehose_arn: ``AWS::CloudWatch::MetricStream.FirehoseArn``.
+        :param output_format: ``AWS::CloudWatch::MetricStream.OutputFormat``.
+        :param role_arn: ``AWS::CloudWatch::MetricStream.RoleArn``.
+        :param exclude_filters: ``AWS::CloudWatch::MetricStream.ExcludeFilters``.
+        :param include_filters: ``AWS::CloudWatch::MetricStream.IncludeFilters``.
+        :param name: ``AWS::CloudWatch::MetricStream.Name``.
+        :param tags: ``AWS::CloudWatch::MetricStream.Tags``.
+        '''
+        props = CfnMetricStreamProps(
+            firehose_arn=firehose_arn,
+            output_format=output_format,
+            role_arn=role_arn,
+            exclude_filters=exclude_filters,
+            include_filters=include_filters,
+            name=name,
+            tags=tags,
+        )
+
+        jsii.create(CfnMetricStream, self, [scope, id, props])
+
+    @jsii.member(jsii_name="inspect")
+    def inspect(self, inspector: aws_cdk.core.TreeInspector) -> None:
+        '''Examines the CloudFormation resource and discloses attributes.
+
+        :param inspector: - tree inspector to collect and process attributes.
+        '''
+        return typing.cast(None, jsii.invoke(self, "inspect", [inspector]))
+
+    @jsii.member(jsii_name="renderProperties")
+    def _render_properties(
+        self,
+        props: typing.Mapping[builtins.str, typing.Any],
+    ) -> typing.Mapping[builtins.str, typing.Any]:
+        '''
+        :param props: -
+        '''
+        return typing.cast(typing.Mapping[builtins.str, typing.Any], jsii.invoke(self, "renderProperties", [props]))
+
+    @jsii.python.classproperty # type: ignore[misc]
+    @jsii.member(jsii_name="CFN_RESOURCE_TYPE_NAME")
+    def CFN_RESOURCE_TYPE_NAME(cls) -> builtins.str:
+        '''The CloudFormation resource type name for this resource class.'''
+        return typing.cast(builtins.str, jsii.sget(cls, "CFN_RESOURCE_TYPE_NAME"))
+
+    @builtins.property # type: ignore[misc]
+    @jsii.member(jsii_name="attrArn")
+    def attr_arn(self) -> builtins.str:
+        '''
+        :cloudformationAttribute: Arn
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "attrArn"))
+
+    @builtins.property # type: ignore[misc]
+    @jsii.member(jsii_name="attrCreationDate")
+    def attr_creation_date(self) -> builtins.str:
+        '''
+        :cloudformationAttribute: CreationDate
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "attrCreationDate"))
+
+    @builtins.property # type: ignore[misc]
+    @jsii.member(jsii_name="attrLastUpdateDate")
+    def attr_last_update_date(self) -> builtins.str:
+        '''
+        :cloudformationAttribute: LastUpdateDate
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "attrLastUpdateDate"))
+
+    @builtins.property # type: ignore[misc]
+    @jsii.member(jsii_name="attrState")
+    def attr_state(self) -> builtins.str:
+        '''
+        :cloudformationAttribute: State
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "attrState"))
+
+    @builtins.property # type: ignore[misc]
+    @jsii.member(jsii_name="cfnProperties")
+    def _cfn_properties(self) -> typing.Mapping[builtins.str, typing.Any]:
+        return typing.cast(typing.Mapping[builtins.str, typing.Any], jsii.get(self, "cfnProperties"))
+
+    @builtins.property # type: ignore[misc]
+    @jsii.member(jsii_name="tags")
+    def tags(self) -> aws_cdk.core.TagManager:
+        '''``AWS::CloudWatch::MetricStream.Tags``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-metricstream.html#cfn-cloudwatch-metricstream-tags
+        '''
+        return typing.cast(aws_cdk.core.TagManager, jsii.get(self, "tags"))
+
+    @builtins.property # type: ignore[misc]
+    @jsii.member(jsii_name="firehoseArn")
+    def firehose_arn(self) -> builtins.str:
+        '''``AWS::CloudWatch::MetricStream.FirehoseArn``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-metricstream.html#cfn-cloudwatch-metricstream-firehosearn
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "firehoseArn"))
+
+    @firehose_arn.setter
+    def firehose_arn(self, value: builtins.str) -> None:
+        jsii.set(self, "firehoseArn", value)
+
+    @builtins.property # type: ignore[misc]
+    @jsii.member(jsii_name="outputFormat")
+    def output_format(self) -> builtins.str:
+        '''``AWS::CloudWatch::MetricStream.OutputFormat``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-metricstream.html#cfn-cloudwatch-metricstream-outputformat
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "outputFormat"))
+
+    @output_format.setter
+    def output_format(self, value: builtins.str) -> None:
+        jsii.set(self, "outputFormat", value)
+
+    @builtins.property # type: ignore[misc]
+    @jsii.member(jsii_name="roleArn")
+    def role_arn(self) -> builtins.str:
+        '''``AWS::CloudWatch::MetricStream.RoleArn``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-metricstream.html#cfn-cloudwatch-metricstream-rolearn
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "roleArn"))
+
+    @role_arn.setter
+    def role_arn(self, value: builtins.str) -> None:
+        jsii.set(self, "roleArn", value)
+
+    @builtins.property # type: ignore[misc]
+    @jsii.member(jsii_name="excludeFilters")
+    def exclude_filters(
+        self,
+    ) -> typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, "CfnMetricStream.MetricStreamFilterProperty"]]]]:
+        '''``AWS::CloudWatch::MetricStream.ExcludeFilters``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-metricstream.html#cfn-cloudwatch-metricstream-excludefilters
+        '''
+        return typing.cast(typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, "CfnMetricStream.MetricStreamFilterProperty"]]]], jsii.get(self, "excludeFilters"))
+
+    @exclude_filters.setter
+    def exclude_filters(
+        self,
+        value: typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, "CfnMetricStream.MetricStreamFilterProperty"]]]],
+    ) -> None:
+        jsii.set(self, "excludeFilters", value)
+
+    @builtins.property # type: ignore[misc]
+    @jsii.member(jsii_name="includeFilters")
+    def include_filters(
+        self,
+    ) -> typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, "CfnMetricStream.MetricStreamFilterProperty"]]]]:
+        '''``AWS::CloudWatch::MetricStream.IncludeFilters``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-metricstream.html#cfn-cloudwatch-metricstream-includefilters
+        '''
+        return typing.cast(typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, "CfnMetricStream.MetricStreamFilterProperty"]]]], jsii.get(self, "includeFilters"))
+
+    @include_filters.setter
+    def include_filters(
+        self,
+        value: typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, "CfnMetricStream.MetricStreamFilterProperty"]]]],
+    ) -> None:
+        jsii.set(self, "includeFilters", value)
+
+    @builtins.property # type: ignore[misc]
+    @jsii.member(jsii_name="name")
+    def name(self) -> typing.Optional[builtins.str]:
+        '''``AWS::CloudWatch::MetricStream.Name``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-metricstream.html#cfn-cloudwatch-metricstream-name
+        '''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "name"))
+
+    @name.setter
+    def name(self, value: typing.Optional[builtins.str]) -> None:
+        jsii.set(self, "name", value)
+
+    @jsii.data_type(
+        jsii_type="@aws-cdk/aws-cloudwatch.CfnMetricStream.MetricStreamFilterProperty",
+        jsii_struct_bases=[],
+        name_mapping={"namespace": "namespace"},
+    )
+    class MetricStreamFilterProperty:
+        def __init__(self, *, namespace: builtins.str) -> None:
+            '''
+            :param namespace: ``CfnMetricStream.MetricStreamFilterProperty.Namespace``.
+
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudwatch-metricstream-metricstreamfilter.html
+            '''
+            self._values: typing.Dict[str, typing.Any] = {
+                "namespace": namespace,
+            }
+
+        @builtins.property
+        def namespace(self) -> builtins.str:
+            '''``CfnMetricStream.MetricStreamFilterProperty.Namespace``.
+
+            :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudwatch-metricstream-metricstreamfilter.html#cfn-cloudwatch-metricstream-metricstreamfilter-namespace
+            '''
+            result = self._values.get("namespace")
+            assert result is not None, "Required property 'namespace' is missing"
+            return typing.cast(builtins.str, result)
+
+        def __eq__(self, rhs: typing.Any) -> builtins.bool:
+            return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+        def __ne__(self, rhs: typing.Any) -> builtins.bool:
+            return not (rhs == self)
+
+        def __repr__(self) -> str:
+            return "MetricStreamFilterProperty(%s)" % ", ".join(
+                k + "=" + repr(v) for k, v in self._values.items()
+            )
+
+
+@jsii.data_type(
+    jsii_type="@aws-cdk/aws-cloudwatch.CfnMetricStreamProps",
+    jsii_struct_bases=[],
+    name_mapping={
+        "firehose_arn": "firehoseArn",
+        "output_format": "outputFormat",
+        "role_arn": "roleArn",
+        "exclude_filters": "excludeFilters",
+        "include_filters": "includeFilters",
+        "name": "name",
+        "tags": "tags",
+    },
+)
+class CfnMetricStreamProps:
+    def __init__(
+        self,
+        *,
+        firehose_arn: builtins.str,
+        output_format: builtins.str,
+        role_arn: builtins.str,
+        exclude_filters: typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.Sequence[typing.Union[aws_cdk.core.IResolvable, CfnMetricStream.MetricStreamFilterProperty]]]] = None,
+        include_filters: typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.Sequence[typing.Union[aws_cdk.core.IResolvable, CfnMetricStream.MetricStreamFilterProperty]]]] = None,
+        name: typing.Optional[builtins.str] = None,
+        tags: typing.Optional[typing.Sequence[aws_cdk.core.CfnTag]] = None,
+    ) -> None:
+        '''Properties for defining a ``AWS::CloudWatch::MetricStream``.
+
+        :param firehose_arn: ``AWS::CloudWatch::MetricStream.FirehoseArn``.
+        :param output_format: ``AWS::CloudWatch::MetricStream.OutputFormat``.
+        :param role_arn: ``AWS::CloudWatch::MetricStream.RoleArn``.
+        :param exclude_filters: ``AWS::CloudWatch::MetricStream.ExcludeFilters``.
+        :param include_filters: ``AWS::CloudWatch::MetricStream.IncludeFilters``.
+        :param name: ``AWS::CloudWatch::MetricStream.Name``.
+        :param tags: ``AWS::CloudWatch::MetricStream.Tags``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-metricstream.html
+        '''
+        self._values: typing.Dict[str, typing.Any] = {
+            "firehose_arn": firehose_arn,
+            "output_format": output_format,
+            "role_arn": role_arn,
+        }
+        if exclude_filters is not None:
+            self._values["exclude_filters"] = exclude_filters
+        if include_filters is not None:
+            self._values["include_filters"] = include_filters
+        if name is not None:
+            self._values["name"] = name
+        if tags is not None:
+            self._values["tags"] = tags
+
+    @builtins.property
+    def firehose_arn(self) -> builtins.str:
+        '''``AWS::CloudWatch::MetricStream.FirehoseArn``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-metricstream.html#cfn-cloudwatch-metricstream-firehosearn
+        '''
+        result = self._values.get("firehose_arn")
+        assert result is not None, "Required property 'firehose_arn' is missing"
+        return typing.cast(builtins.str, result)
+
+    @builtins.property
+    def output_format(self) -> builtins.str:
+        '''``AWS::CloudWatch::MetricStream.OutputFormat``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-metricstream.html#cfn-cloudwatch-metricstream-outputformat
+        '''
+        result = self._values.get("output_format")
+        assert result is not None, "Required property 'output_format' is missing"
+        return typing.cast(builtins.str, result)
+
+    @builtins.property
+    def role_arn(self) -> builtins.str:
+        '''``AWS::CloudWatch::MetricStream.RoleArn``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-metricstream.html#cfn-cloudwatch-metricstream-rolearn
+        '''
+        result = self._values.get("role_arn")
+        assert result is not None, "Required property 'role_arn' is missing"
+        return typing.cast(builtins.str, result)
+
+    @builtins.property
+    def exclude_filters(
+        self,
+    ) -> typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, CfnMetricStream.MetricStreamFilterProperty]]]]:
+        '''``AWS::CloudWatch::MetricStream.ExcludeFilters``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-metricstream.html#cfn-cloudwatch-metricstream-excludefilters
+        '''
+        result = self._values.get("exclude_filters")
+        return typing.cast(typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, CfnMetricStream.MetricStreamFilterProperty]]]], result)
+
+    @builtins.property
+    def include_filters(
+        self,
+    ) -> typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, CfnMetricStream.MetricStreamFilterProperty]]]]:
+        '''``AWS::CloudWatch::MetricStream.IncludeFilters``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-metricstream.html#cfn-cloudwatch-metricstream-includefilters
+        '''
+        result = self._values.get("include_filters")
+        return typing.cast(typing.Optional[typing.Union[aws_cdk.core.IResolvable, typing.List[typing.Union[aws_cdk.core.IResolvable, CfnMetricStream.MetricStreamFilterProperty]]]], result)
+
+    @builtins.property
+    def name(self) -> typing.Optional[builtins.str]:
+        '''``AWS::CloudWatch::MetricStream.Name``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-metricstream.html#cfn-cloudwatch-metricstream-name
+        '''
+        result = self._values.get("name")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def tags(self) -> typing.Optional[typing.List[aws_cdk.core.CfnTag]]:
+        '''``AWS::CloudWatch::MetricStream.Tags``.
+
+        :link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-metricstream.html#cfn-cloudwatch-metricstream-tags
+        '''
+        result = self._values.get("tags")
+        return typing.cast(typing.Optional[typing.List[aws_cdk.core.CfnTag]], result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "CfnMetricStreamProps(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
 class Color(metaclass=jsii.JSIIMeta, jsii_type="@aws-cdk/aws-cloudwatch.Color"):
-    """A set of standard colours that can be used in annotations in a GraphWidget."""
+    '''A set of standard colours that can be used in annotations in a GraphWidget.'''
 
     def __init__(self) -> None:
         jsii.create(Color, self, [])
 
-    @jsii.python.classproperty
+    @jsii.python.classproperty # type: ignore[misc]
     @jsii.member(jsii_name="BLUE")
-    def BLUE(cls) -> str:
-        """blue - hex #1f77b4."""
-        return jsii.sget(cls, "BLUE")
+    def BLUE(cls) -> builtins.str:
+        '''blue - hex #1f77b4.'''
+        return typing.cast(builtins.str, jsii.sget(cls, "BLUE"))
 
-    @jsii.python.classproperty
+    @jsii.python.classproperty # type: ignore[misc]
     @jsii.member(jsii_name="BROWN")
-    def BROWN(cls) -> str:
-        """brown - hex #8c564b."""
-        return jsii.sget(cls, "BROWN")
+    def BROWN(cls) -> builtins.str:
+        '''brown - hex #8c564b.'''
+        return typing.cast(builtins.str, jsii.sget(cls, "BROWN"))
 
-    @jsii.python.classproperty
+    @jsii.python.classproperty # type: ignore[misc]
     @jsii.member(jsii_name="GREEN")
-    def GREEN(cls) -> str:
-        """green - hex #2ca02c."""
-        return jsii.sget(cls, "GREEN")
+    def GREEN(cls) -> builtins.str:
+        '''green - hex #2ca02c.'''
+        return typing.cast(builtins.str, jsii.sget(cls, "GREEN"))
 
-    @jsii.python.classproperty
+    @jsii.python.classproperty # type: ignore[misc]
     @jsii.member(jsii_name="GREY")
-    def GREY(cls) -> str:
-        """grey - hex #7f7f7f."""
-        return jsii.sget(cls, "GREY")
+    def GREY(cls) -> builtins.str:
+        '''grey - hex #7f7f7f.'''
+        return typing.cast(builtins.str, jsii.sget(cls, "GREY"))
 
-    @jsii.python.classproperty
+    @jsii.python.classproperty # type: ignore[misc]
     @jsii.member(jsii_name="ORANGE")
-    def ORANGE(cls) -> str:
-        """orange - hex #ff7f0e."""
-        return jsii.sget(cls, "ORANGE")
+    def ORANGE(cls) -> builtins.str:
+        '''orange - hex #ff7f0e.'''
+        return typing.cast(builtins.str, jsii.sget(cls, "ORANGE"))
 
-    @jsii.python.classproperty
+    @jsii.python.classproperty # type: ignore[misc]
     @jsii.member(jsii_name="PINK")
-    def PINK(cls) -> str:
-        """pink - hex #e377c2."""
-        return jsii.sget(cls, "PINK")
+    def PINK(cls) -> builtins.str:
+        '''pink - hex #e377c2.'''
+        return typing.cast(builtins.str, jsii.sget(cls, "PINK"))
 
-    @jsii.python.classproperty
+    @jsii.python.classproperty # type: ignore[misc]
     @jsii.member(jsii_name="PURPLE")
-    def PURPLE(cls) -> str:
-        """purple - hex #9467bd."""
-        return jsii.sget(cls, "PURPLE")
+    def PURPLE(cls) -> builtins.str:
+        '''purple - hex #9467bd.'''
+        return typing.cast(builtins.str, jsii.sget(cls, "PURPLE"))
 
-    @jsii.python.classproperty
+    @jsii.python.classproperty # type: ignore[misc]
     @jsii.member(jsii_name="RED")
-    def RED(cls) -> str:
-        """red - hex #d62728."""
-        return jsii.sget(cls, "RED")
+    def RED(cls) -> builtins.str:
+        '''red - hex #d62728.'''
+        return typing.cast(builtins.str, jsii.sget(cls, "RED"))
 
 
 @jsii.data_type(
@@ -3089,6 +3221,7 @@ class Color(metaclass=jsii.JSIIMeta, jsii_type="@aws-cdk/aws-cloudwatch.Color"):
         "account": "account",
         "color": "color",
         "dimensions": "dimensions",
+        "dimensions_map": "dimensionsMap",
         "label": "label",
         "period": "period",
         "region": "region",
@@ -3100,33 +3233,37 @@ class CommonMetricOptions:
     def __init__(
         self,
         *,
-        account: typing.Optional[str] = None,
-        color: typing.Optional[str] = None,
-        dimensions: typing.Optional[typing.Mapping[str, typing.Any]] = None,
-        label: typing.Optional[str] = None,
+        account: typing.Optional[builtins.str] = None,
+        color: typing.Optional[builtins.str] = None,
+        dimensions: typing.Optional[typing.Mapping[builtins.str, typing.Any]] = None,
+        dimensions_map: typing.Optional[typing.Mapping[builtins.str, builtins.str]] = None,
+        label: typing.Optional[builtins.str] = None,
         period: typing.Optional[aws_cdk.core.Duration] = None,
-        region: typing.Optional[str] = None,
-        statistic: typing.Optional[str] = None,
+        region: typing.Optional[builtins.str] = None,
+        statistic: typing.Optional[builtins.str] = None,
         unit: typing.Optional["Unit"] = None,
     ) -> None:
-        """Options shared by most methods accepting metric options.
+        '''Options shared by most methods accepting metric options.
 
         :param account: Account which this metric comes from. Default: - Deployment account.
         :param color: The hex color code, prefixed with '#' (e.g. '#00ff00'), to use when this metric is rendered on a graph. The ``Color`` class has a set of standard colors that can be used here. Default: - Automatic color
-        :param dimensions: Dimensions of the metric. Default: - No dimensions.
+        :param dimensions: (deprecated) Dimensions of the metric. Default: - No dimensions.
+        :param dimensions_map: Dimensions of the metric. Default: - No dimensions.
         :param label: Label for this metric when added to a Graph in a Dashboard. Default: - No label
         :param period: The period over which the specified statistic is applied. Default: Duration.minutes(5)
         :param region: Region which this metric comes from. Default: - Deployment region.
         :param statistic: What function to use for aggregating. Can be one of the following: - "Minimum" | "min" - "Maximum" | "max" - "Average" | "avg" - "Sum" | "sum" - "SampleCount | "n" - "pNN.NN" Default: Average
         :param unit: Unit used to filter the metric stream. Only refer to datums emitted to the metric stream with the given unit and ignore all others. Only useful when datums are being emitted to the same metric stream under different units. The default is to use all matric datums in the stream, regardless of unit, which is recommended in nearly all cases. CloudWatch does not honor this property for graphs. Default: - All metric datums in the given metric stream
-        """
-        self._values = {}
+        '''
+        self._values: typing.Dict[str, typing.Any] = {}
         if account is not None:
             self._values["account"] = account
         if color is not None:
             self._values["color"] = color
         if dimensions is not None:
             self._values["dimensions"] = dimensions
+        if dimensions_map is not None:
+            self._values["dimensions_map"] = dimensions_map
         if label is not None:
             self._values["label"] = label
         if period is not None:
@@ -3139,62 +3276,77 @@ class CommonMetricOptions:
             self._values["unit"] = unit
 
     @builtins.property
-    def account(self) -> typing.Optional[str]:
-        """Account which this metric comes from.
+    def account(self) -> typing.Optional[builtins.str]:
+        '''Account which this metric comes from.
 
-        default
         :default: - Deployment account.
-        """
-        return self._values.get("account")
+        '''
+        result = self._values.get("account")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
-    def color(self) -> typing.Optional[str]:
-        """The hex color code, prefixed with '#' (e.g. '#00ff00'), to use when this metric is rendered on a graph. The ``Color`` class has a set of standard colors that can be used here.
+    def color(self) -> typing.Optional[builtins.str]:
+        '''The hex color code, prefixed with '#' (e.g. '#00ff00'), to use when this metric is rendered on a graph. The ``Color`` class has a set of standard colors that can be used here.
 
-        default
         :default: - Automatic color
-        """
-        return self._values.get("color")
+        '''
+        result = self._values.get("color")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
-    def dimensions(self) -> typing.Optional[typing.Mapping[str, typing.Any]]:
-        """Dimensions of the metric.
+    def dimensions(self) -> typing.Optional[typing.Mapping[builtins.str, typing.Any]]:
+        '''(deprecated) Dimensions of the metric.
 
-        default
         :default: - No dimensions.
-        """
-        return self._values.get("dimensions")
+
+        :deprecated: Use 'dimensionsMap' instead.
+
+        :stability: deprecated
+        '''
+        result = self._values.get("dimensions")
+        return typing.cast(typing.Optional[typing.Mapping[builtins.str, typing.Any]], result)
 
     @builtins.property
-    def label(self) -> typing.Optional[str]:
-        """Label for this metric when added to a Graph in a Dashboard.
+    def dimensions_map(
+        self,
+    ) -> typing.Optional[typing.Mapping[builtins.str, builtins.str]]:
+        '''Dimensions of the metric.
 
-        default
+        :default: - No dimensions.
+        '''
+        result = self._values.get("dimensions_map")
+        return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
+
+    @builtins.property
+    def label(self) -> typing.Optional[builtins.str]:
+        '''Label for this metric when added to a Graph in a Dashboard.
+
         :default: - No label
-        """
-        return self._values.get("label")
+        '''
+        result = self._values.get("label")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def period(self) -> typing.Optional[aws_cdk.core.Duration]:
-        """The period over which the specified statistic is applied.
+        '''The period over which the specified statistic is applied.
 
-        default
         :default: Duration.minutes(5)
-        """
-        return self._values.get("period")
+        '''
+        result = self._values.get("period")
+        return typing.cast(typing.Optional[aws_cdk.core.Duration], result)
 
     @builtins.property
-    def region(self) -> typing.Optional[str]:
-        """Region which this metric comes from.
+    def region(self) -> typing.Optional[builtins.str]:
+        '''Region which this metric comes from.
 
-        default
         :default: - Deployment region.
-        """
-        return self._values.get("region")
+        '''
+        result = self._values.get("region")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
-    def statistic(self) -> typing.Optional[str]:
-        """What function to use for aggregating.
+    def statistic(self) -> typing.Optional[builtins.str]:
+        '''What function to use for aggregating.
 
         Can be one of the following:
 
@@ -3205,14 +3357,14 @@ class CommonMetricOptions:
         - "SampleCount | "n"
         - "pNN.NN"
 
-        default
         :default: Average
-        """
-        return self._values.get("statistic")
+        '''
+        result = self._values.get("statistic")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def unit(self) -> typing.Optional["Unit"]:
-        """Unit used to filter the metric stream.
+        '''Unit used to filter the metric stream.
 
         Only refer to datums emitted to the metric stream with the given unit and
         ignore all others. Only useful when datums are being emitted to the same
@@ -3223,15 +3375,15 @@ class CommonMetricOptions:
 
         CloudWatch does not honor this property for graphs.
 
-        default
         :default: - All metric datums in the given metric stream
-        """
-        return self._values.get("unit")
+        '''
+        result = self._values.get("unit")
+        return typing.cast(typing.Optional["Unit"], result)
 
-    def __eq__(self, rhs) -> bool:
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
@@ -3242,33 +3394,31 @@ class CommonMetricOptions:
 
 @jsii.enum(jsii_type="@aws-cdk/aws-cloudwatch.ComparisonOperator")
 class ComparisonOperator(enum.Enum):
-    """Comparison operator for evaluating alarms."""
+    '''Comparison operator for evaluating alarms.'''
 
     GREATER_THAN_OR_EQUAL_TO_THRESHOLD = "GREATER_THAN_OR_EQUAL_TO_THRESHOLD"
-    """Specified statistic is greater than or equal to the threshold."""
+    '''Specified statistic is greater than or equal to the threshold.'''
     GREATER_THAN_THRESHOLD = "GREATER_THAN_THRESHOLD"
-    """Specified statistic is strictly greater than the threshold."""
+    '''Specified statistic is strictly greater than the threshold.'''
     LESS_THAN_THRESHOLD = "LESS_THAN_THRESHOLD"
-    """Specified statistic is strictly less than the threshold."""
+    '''Specified statistic is strictly less than the threshold.'''
     LESS_THAN_OR_EQUAL_TO_THRESHOLD = "LESS_THAN_OR_EQUAL_TO_THRESHOLD"
-    """Specified statistic is less than or equal to the threshold."""
-    LESS_THAN_LOWER_OR_GREATER_THAN_UPPER_THRESHOLD = (
-        "LESS_THAN_LOWER_OR_GREATER_THAN_UPPER_THRESHOLD"
-    )
-    """Specified statistic is lower than or greater than the anomaly model band.
+    '''Specified statistic is less than or equal to the threshold.'''
+    LESS_THAN_LOWER_OR_GREATER_THAN_UPPER_THRESHOLD = "LESS_THAN_LOWER_OR_GREATER_THAN_UPPER_THRESHOLD"
+    '''Specified statistic is lower than or greater than the anomaly model band.
 
     Used only for alarms based on anomaly detection models
-    """
+    '''
     GREATER_THAN_UPPER_THRESHOLD = "GREATER_THAN_UPPER_THRESHOLD"
-    """Specified statistic is greater than the anomaly model band.
+    '''Specified statistic is greater than the anomaly model band.
 
     Used only for alarms based on anomaly detection models
-    """
+    '''
     LESS_THAN_LOWER_THRESHOLD = "LESS_THAN_LOWER_THRESHOLD"
-    """Specified statistic is lower than the anomaly model band.
+    '''Specified statistic is lower than the anomaly model band.
 
     Used only for alarms based on anomaly detection models
-    """
+    '''
 
 
 @jsii.data_type(
@@ -3286,18 +3436,18 @@ class CompositeAlarmProps:
         self,
         *,
         alarm_rule: "IAlarmRule",
-        actions_enabled: typing.Optional[bool] = None,
-        alarm_description: typing.Optional[str] = None,
-        composite_alarm_name: typing.Optional[str] = None,
+        actions_enabled: typing.Optional[builtins.bool] = None,
+        alarm_description: typing.Optional[builtins.str] = None,
+        composite_alarm_name: typing.Optional[builtins.str] = None,
     ) -> None:
-        """Properties for creating a Composite Alarm.
+        '''Properties for creating a Composite Alarm.
 
         :param alarm_rule: Expression that specifies which other alarms are to be evaluated to determine this composite alarm's state.
         :param actions_enabled: Whether the actions for this alarm are enabled. Default: true
         :param alarm_description: Description for the alarm. Default: No description
         :param composite_alarm_name: Name of the alarm. Default: Automatically generated name
-        """
-        self._values = {
+        '''
+        self._values: typing.Dict[str, typing.Any] = {
             "alarm_rule": alarm_rule,
         }
         if actions_enabled is not None:
@@ -3309,40 +3459,42 @@ class CompositeAlarmProps:
 
     @builtins.property
     def alarm_rule(self) -> "IAlarmRule":
-        """Expression that specifies which other alarms are to be evaluated to determine this composite alarm's state."""
-        return self._values.get("alarm_rule")
+        '''Expression that specifies which other alarms are to be evaluated to determine this composite alarm's state.'''
+        result = self._values.get("alarm_rule")
+        assert result is not None, "Required property 'alarm_rule' is missing"
+        return typing.cast("IAlarmRule", result)
 
     @builtins.property
-    def actions_enabled(self) -> typing.Optional[bool]:
-        """Whether the actions for this alarm are enabled.
+    def actions_enabled(self) -> typing.Optional[builtins.bool]:
+        '''Whether the actions for this alarm are enabled.
 
-        default
         :default: true
-        """
-        return self._values.get("actions_enabled")
+        '''
+        result = self._values.get("actions_enabled")
+        return typing.cast(typing.Optional[builtins.bool], result)
 
     @builtins.property
-    def alarm_description(self) -> typing.Optional[str]:
-        """Description for the alarm.
+    def alarm_description(self) -> typing.Optional[builtins.str]:
+        '''Description for the alarm.
 
-        default
         :default: No description
-        """
-        return self._values.get("alarm_description")
+        '''
+        result = self._values.get("alarm_description")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
-    def composite_alarm_name(self) -> typing.Optional[str]:
-        """Name of the alarm.
+    def composite_alarm_name(self) -> typing.Optional[builtins.str]:
+        '''Name of the alarm.
 
-        default
         :default: Automatically generated name
-        """
-        return self._values.get("composite_alarm_name")
+        '''
+        result = self._values.get("composite_alarm_name")
+        return typing.cast(typing.Optional[builtins.str], result)
 
-    def __eq__(self, rhs) -> bool:
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
@@ -3374,17 +3526,17 @@ class CreateAlarmOptions:
         *,
         evaluation_periods: jsii.Number,
         threshold: jsii.Number,
-        actions_enabled: typing.Optional[bool] = None,
-        alarm_description: typing.Optional[str] = None,
-        alarm_name: typing.Optional[str] = None,
-        comparison_operator: typing.Optional["ComparisonOperator"] = None,
+        actions_enabled: typing.Optional[builtins.bool] = None,
+        alarm_description: typing.Optional[builtins.str] = None,
+        alarm_name: typing.Optional[builtins.str] = None,
+        comparison_operator: typing.Optional[ComparisonOperator] = None,
         datapoints_to_alarm: typing.Optional[jsii.Number] = None,
-        evaluate_low_sample_count_percentile: typing.Optional[str] = None,
+        evaluate_low_sample_count_percentile: typing.Optional[builtins.str] = None,
         period: typing.Optional[aws_cdk.core.Duration] = None,
-        statistic: typing.Optional[str] = None,
+        statistic: typing.Optional[builtins.str] = None,
         treat_missing_data: typing.Optional["TreatMissingData"] = None,
     ) -> None:
-        """Properties needed to make an alarm from a metric.
+        '''Properties needed to make an alarm from a metric.
 
         :param evaluation_periods: The number of periods over which data is compared to the specified threshold.
         :param threshold: The value against which the specified statistic is compared.
@@ -3394,11 +3546,11 @@ class CreateAlarmOptions:
         :param comparison_operator: Comparison to use to check if metric is breaching. Default: GreaterThanOrEqualToThreshold
         :param datapoints_to_alarm: The number of datapoints that must be breaching to trigger the alarm. This is used only if you are setting an "M out of N" alarm. In that case, this value is the M. For more information, see Evaluating an Alarm in the Amazon CloudWatch User Guide. Default: ``evaluationPeriods``
         :param evaluate_low_sample_count_percentile: Specifies whether to evaluate the data and potentially change the alarm state if there are too few data points to be statistically significant. Used only for alarms that are based on percentiles. Default: - Not configured.
-        :param period: The period over which the specified statistic is applied. Cannot be used with ``MathExpression`` objects. Default: - The period from the metric
-        :param statistic: What function to use for aggregating. Can be one of the following: - "Minimum" | "min" - "Maximum" | "max" - "Average" | "avg" - "Sum" | "sum" - "SampleCount | "n" - "pNN.NN" Cannot be used with ``MathExpression`` objects. Default: - The statistic from the metric
+        :param period: (deprecated) The period over which the specified statistic is applied. Cannot be used with ``MathExpression`` objects. Default: - The period from the metric
+        :param statistic: (deprecated) What function to use for aggregating. Can be one of the following: - "Minimum" | "min" - "Maximum" | "max" - "Average" | "avg" - "Sum" | "sum" - "SampleCount | "n" - "pNN.NN" Cannot be used with ``MathExpression`` objects. Default: - The statistic from the metric
         :param treat_missing_data: Sets how this alarm is to handle missing data points. Default: TreatMissingData.Missing
-        """
-        self._values = {
+        '''
+        self._values: typing.Dict[str, typing.Any] = {
             "evaluation_periods": evaluation_periods,
             "threshold": threshold,
         }
@@ -3413,9 +3565,7 @@ class CreateAlarmOptions:
         if datapoints_to_alarm is not None:
             self._values["datapoints_to_alarm"] = datapoints_to_alarm
         if evaluate_low_sample_count_percentile is not None:
-            self._values[
-                "evaluate_low_sample_count_percentile"
-            ] = evaluate_low_sample_count_percentile
+            self._values["evaluate_low_sample_count_percentile"] = evaluate_low_sample_count_percentile
         if period is not None:
             self._values["period"] = period
         if statistic is not None:
@@ -3425,97 +3575,98 @@ class CreateAlarmOptions:
 
     @builtins.property
     def evaluation_periods(self) -> jsii.Number:
-        """The number of periods over which data is compared to the specified threshold."""
-        return self._values.get("evaluation_periods")
+        '''The number of periods over which data is compared to the specified threshold.'''
+        result = self._values.get("evaluation_periods")
+        assert result is not None, "Required property 'evaluation_periods' is missing"
+        return typing.cast(jsii.Number, result)
 
     @builtins.property
     def threshold(self) -> jsii.Number:
-        """The value against which the specified statistic is compared."""
-        return self._values.get("threshold")
+        '''The value against which the specified statistic is compared.'''
+        result = self._values.get("threshold")
+        assert result is not None, "Required property 'threshold' is missing"
+        return typing.cast(jsii.Number, result)
 
     @builtins.property
-    def actions_enabled(self) -> typing.Optional[bool]:
-        """Whether the actions for this alarm are enabled.
+    def actions_enabled(self) -> typing.Optional[builtins.bool]:
+        '''Whether the actions for this alarm are enabled.
 
-        default
         :default: true
-        """
-        return self._values.get("actions_enabled")
+        '''
+        result = self._values.get("actions_enabled")
+        return typing.cast(typing.Optional[builtins.bool], result)
 
     @builtins.property
-    def alarm_description(self) -> typing.Optional[str]:
-        """Description for the alarm.
+    def alarm_description(self) -> typing.Optional[builtins.str]:
+        '''Description for the alarm.
 
-        default
         :default: No description
-        """
-        return self._values.get("alarm_description")
+        '''
+        result = self._values.get("alarm_description")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
-    def alarm_name(self) -> typing.Optional[str]:
-        """Name of the alarm.
+    def alarm_name(self) -> typing.Optional[builtins.str]:
+        '''Name of the alarm.
 
-        default
         :default: Automatically generated name
-        """
-        return self._values.get("alarm_name")
+        '''
+        result = self._values.get("alarm_name")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
-    def comparison_operator(self) -> typing.Optional["ComparisonOperator"]:
-        """Comparison to use to check if metric is breaching.
+    def comparison_operator(self) -> typing.Optional[ComparisonOperator]:
+        '''Comparison to use to check if metric is breaching.
 
-        default
         :default: GreaterThanOrEqualToThreshold
-        """
-        return self._values.get("comparison_operator")
+        '''
+        result = self._values.get("comparison_operator")
+        return typing.cast(typing.Optional[ComparisonOperator], result)
 
     @builtins.property
     def datapoints_to_alarm(self) -> typing.Optional[jsii.Number]:
-        """The number of datapoints that must be breaching to trigger the alarm.
+        '''The number of datapoints that must be breaching to trigger the alarm.
 
         This is used only if you are setting an "M
         out of N" alarm. In that case, this value is the M. For more information, see Evaluating an Alarm in the Amazon
         CloudWatch User Guide.
 
-        default
         :default: ``evaluationPeriods``
 
-        see
         :see: https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/AlarmThatSendsEmail.html#alarm-evaluation
-        """
-        return self._values.get("datapoints_to_alarm")
+        '''
+        result = self._values.get("datapoints_to_alarm")
+        return typing.cast(typing.Optional[jsii.Number], result)
 
     @builtins.property
-    def evaluate_low_sample_count_percentile(self) -> typing.Optional[str]:
-        """Specifies whether to evaluate the data and potentially change the alarm state if there are too few data points to be statistically significant.
+    def evaluate_low_sample_count_percentile(self) -> typing.Optional[builtins.str]:
+        '''Specifies whether to evaluate the data and potentially change the alarm state if there are too few data points to be statistically significant.
 
         Used only for alarms that are based on percentiles.
 
-        default
         :default: - Not configured.
-        """
-        return self._values.get("evaluate_low_sample_count_percentile")
+        '''
+        result = self._values.get("evaluate_low_sample_count_percentile")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def period(self) -> typing.Optional[aws_cdk.core.Duration]:
-        """The period over which the specified statistic is applied.
+        '''(deprecated) The period over which the specified statistic is applied.
 
         Cannot be used with ``MathExpression`` objects.
 
-        default
         :default: - The period from the metric
 
-        deprecated
         :deprecated: Use ``metric.with({ period: ... })`` to encode the period into the Metric object
 
-        stability
         :stability: deprecated
-        """
-        return self._values.get("period")
+        '''
+        result = self._values.get("period")
+        return typing.cast(typing.Optional[aws_cdk.core.Duration], result)
 
     @builtins.property
-    def statistic(self) -> typing.Optional[str]:
-        """What function to use for aggregating.
+    def statistic(self) -> typing.Optional[builtins.str]:
+        '''(deprecated) What function to use for aggregating.
 
         Can be one of the following:
 
@@ -3528,30 +3679,28 @@ class CreateAlarmOptions:
 
         Cannot be used with ``MathExpression`` objects.
 
-        default
         :default: - The statistic from the metric
 
-        deprecated
         :deprecated: Use ``metric.with({ statistic: ... })`` to encode the period into the Metric object
 
-        stability
         :stability: deprecated
-        """
-        return self._values.get("statistic")
+        '''
+        result = self._values.get("statistic")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def treat_missing_data(self) -> typing.Optional["TreatMissingData"]:
-        """Sets how this alarm is to handle missing data points.
+        '''Sets how this alarm is to handle missing data points.
 
-        default
         :default: TreatMissingData.Missing
-        """
-        return self._values.get("treat_missing_data")
+        '''
+        result = self._values.get("treat_missing_data")
+        return typing.cast(typing.Optional["TreatMissingData"], result)
 
-    def __eq__(self, rhs) -> bool:
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
@@ -3565,20 +3714,20 @@ class Dashboard(
     metaclass=jsii.JSIIMeta,
     jsii_type="@aws-cdk/aws-cloudwatch.Dashboard",
 ):
-    """A CloudWatch dashboard."""
+    '''A CloudWatch dashboard.'''
 
     def __init__(
         self,
-        scope: aws_cdk.core.Construct,
-        id: str,
+        scope: constructs.Construct,
+        id: builtins.str,
         *,
-        dashboard_name: typing.Optional[str] = None,
-        end: typing.Optional[str] = None,
+        dashboard_name: typing.Optional[builtins.str] = None,
+        end: typing.Optional[builtins.str] = None,
         period_override: typing.Optional["PeriodOverride"] = None,
-        start: typing.Optional[str] = None,
-        widgets: typing.Optional[typing.List[typing.List["IWidget"]]] = None,
+        start: typing.Optional[builtins.str] = None,
+        widgets: typing.Optional[typing.Sequence[typing.Sequence["IWidget"]]] = None,
     ) -> None:
-        """
+        '''
         :param scope: -
         :param id: -
         :param dashboard_name: Name of the dashboard. If set, must only contain alphanumerics, dash (-) and underscore (_) Default: - automatically generated name
@@ -3586,7 +3735,7 @@ class Dashboard(
         :param period_override: Use this field to specify the period for the graphs when the dashboard loads. Specifying ``Auto`` causes the period of all graphs on the dashboard to automatically adapt to the time range of the dashboard. Specifying ``Inherit`` ensures that the period set for each graph is always obeyed. Default: Auto
         :param start: The start of the time range to use for each widget on the dashboard. You can specify start without specifying end to specify a relative time range that ends with the current time. In this case, the value of start must begin with -P, and you can use M, H, D, W and M as abbreviations for minutes, hours, days, weeks and months. For example, -PT8H shows the last 8 hours and -P3M shows the last three months. You can also use start along with an end field, to specify an absolute time range. When specifying an absolute time range, use the ISO 8601 format. For example, 2018-12-17T06:00:00.000Z. Default: When the dashboard loads, the start time will be the default time range.
         :param widgets: Initial set of widgets on the dashboard. One array represents a row of widgets. Default: - No widgets
-        """
+        '''
         props = DashboardProps(
             dashboard_name=dashboard_name,
             end=end,
@@ -3599,7 +3748,7 @@ class Dashboard(
 
     @jsii.member(jsii_name="addWidgets")
     def add_widgets(self, *widgets: "IWidget") -> None:
-        """Add a widget to the dashboard.
+        '''Add a widget to the dashboard.
 
         Widgets given in multiple calls to add() will be laid out stacked on
         top of each other.
@@ -3608,8 +3757,8 @@ class Dashboard(
         to each other.
 
         :param widgets: -
-        """
-        return jsii.invoke(self, "addWidgets", [*widgets])
+        '''
+        return typing.cast(None, jsii.invoke(self, "addWidgets", [*widgets]))
 
 
 @jsii.data_type(
@@ -3627,21 +3776,21 @@ class DashboardProps:
     def __init__(
         self,
         *,
-        dashboard_name: typing.Optional[str] = None,
-        end: typing.Optional[str] = None,
+        dashboard_name: typing.Optional[builtins.str] = None,
+        end: typing.Optional[builtins.str] = None,
         period_override: typing.Optional["PeriodOverride"] = None,
-        start: typing.Optional[str] = None,
-        widgets: typing.Optional[typing.List[typing.List["IWidget"]]] = None,
+        start: typing.Optional[builtins.str] = None,
+        widgets: typing.Optional[typing.Sequence[typing.Sequence["IWidget"]]] = None,
     ) -> None:
-        """Properties for defining a CloudWatch Dashboard.
+        '''Properties for defining a CloudWatch Dashboard.
 
         :param dashboard_name: Name of the dashboard. If set, must only contain alphanumerics, dash (-) and underscore (_) Default: - automatically generated name
         :param end: The end of the time range to use for each widget on the dashboard when the dashboard loads. If you specify a value for end, you must also specify a value for start. Specify an absolute time in the ISO 8601 format. For example, 2018-12-17T06:00:00.000Z. Default: When the dashboard loads, the end date will be the current time.
         :param period_override: Use this field to specify the period for the graphs when the dashboard loads. Specifying ``Auto`` causes the period of all graphs on the dashboard to automatically adapt to the time range of the dashboard. Specifying ``Inherit`` ensures that the period set for each graph is always obeyed. Default: Auto
         :param start: The start of the time range to use for each widget on the dashboard. You can specify start without specifying end to specify a relative time range that ends with the current time. In this case, the value of start must begin with -P, and you can use M, H, D, W and M as abbreviations for minutes, hours, days, weeks and months. For example, -PT8H shows the last 8 hours and -P3M shows the last three months. You can also use start along with an end field, to specify an absolute time range. When specifying an absolute time range, use the ISO 8601 format. For example, 2018-12-17T06:00:00.000Z. Default: When the dashboard loads, the start time will be the default time range.
         :param widgets: Initial set of widgets on the dashboard. One array represents a row of widgets. Default: - No widgets
-        """
-        self._values = {}
+        '''
+        self._values: typing.Dict[str, typing.Any] = {}
         if dashboard_name is not None:
             self._values["dashboard_name"] = dashboard_name
         if end is not None:
@@ -3654,43 +3803,43 @@ class DashboardProps:
             self._values["widgets"] = widgets
 
     @builtins.property
-    def dashboard_name(self) -> typing.Optional[str]:
-        """Name of the dashboard.
+    def dashboard_name(self) -> typing.Optional[builtins.str]:
+        '''Name of the dashboard.
 
         If set, must only contain alphanumerics, dash (-) and underscore (_)
 
-        default
         :default: - automatically generated name
-        """
-        return self._values.get("dashboard_name")
+        '''
+        result = self._values.get("dashboard_name")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
-    def end(self) -> typing.Optional[str]:
-        """The end of the time range to use for each widget on the dashboard when the dashboard loads.
+    def end(self) -> typing.Optional[builtins.str]:
+        '''The end of the time range to use for each widget on the dashboard when the dashboard loads.
 
         If you specify a value for end, you must also specify a value for start.
         Specify an absolute time in the ISO 8601 format. For example, 2018-12-17T06:00:00.000Z.
 
-        default
         :default: When the dashboard loads, the end date will be the current time.
-        """
-        return self._values.get("end")
+        '''
+        result = self._values.get("end")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def period_override(self) -> typing.Optional["PeriodOverride"]:
-        """Use this field to specify the period for the graphs when the dashboard loads.
+        '''Use this field to specify the period for the graphs when the dashboard loads.
 
         Specifying ``Auto`` causes the period of all graphs on the dashboard to automatically adapt to the time range of the dashboard.
         Specifying ``Inherit`` ensures that the period set for each graph is always obeyed.
 
-        default
         :default: Auto
-        """
-        return self._values.get("period_override")
+        '''
+        result = self._values.get("period_override")
+        return typing.cast(typing.Optional["PeriodOverride"], result)
 
     @builtins.property
-    def start(self) -> typing.Optional[str]:
-        """The start of the time range to use for each widget on the dashboard.
+    def start(self) -> typing.Optional[builtins.str]:
+        '''The start of the time range to use for each widget on the dashboard.
 
         You can specify start without specifying end to specify a relative time range that ends with the current time.
         In this case, the value of start must begin with -P, and you can use M, H, D, W and M as abbreviations for
@@ -3698,26 +3847,26 @@ class DashboardProps:
         You can also use start along with an end field, to specify an absolute time range.
         When specifying an absolute time range, use the ISO 8601 format. For example, 2018-12-17T06:00:00.000Z.
 
-        default
         :default: When the dashboard loads, the start time will be the default time range.
-        """
-        return self._values.get("start")
+        '''
+        result = self._values.get("start")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def widgets(self) -> typing.Optional[typing.List[typing.List["IWidget"]]]:
-        """Initial set of widgets on the dashboard.
+        '''Initial set of widgets on the dashboard.
 
         One array represents a row of widgets.
 
-        default
         :default: - No widgets
-        """
-        return self._values.get("widgets")
+        '''
+        result = self._values.get("widgets")
+        return typing.cast(typing.Optional[typing.List[typing.List["IWidget"]]], result)
 
-    def __eq__(self, rhs) -> bool:
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
@@ -3732,37 +3881,55 @@ class DashboardProps:
     name_mapping={"name": "name", "value": "value"},
 )
 class Dimension:
-    def __init__(self, *, name: str, value: typing.Any) -> None:
-        """Metric dimension.
+    def __init__(self, *, name: builtins.str, value: typing.Any) -> None:
+        '''Metric dimension.
 
         :param name: Name of the dimension.
         :param value: Value of the dimension.
-        """
-        self._values = {
+
+        :see: https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-dimension.html
+        '''
+        self._values: typing.Dict[str, typing.Any] = {
             "name": name,
             "value": value,
         }
 
     @builtins.property
-    def name(self) -> str:
-        """Name of the dimension."""
-        return self._values.get("name")
+    def name(self) -> builtins.str:
+        '''Name of the dimension.'''
+        result = self._values.get("name")
+        assert result is not None, "Required property 'name' is missing"
+        return typing.cast(builtins.str, result)
 
     @builtins.property
     def value(self) -> typing.Any:
-        """Value of the dimension."""
-        return self._values.get("value")
+        '''Value of the dimension.'''
+        result = self._values.get("value")
+        assert result is not None, "Required property 'value' is missing"
+        return typing.cast(typing.Any, result)
 
-    def __eq__(self, rhs) -> bool:
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
         return "Dimension(%s)" % ", ".join(
             k + "=" + repr(v) for k, v in self._values.items()
         )
+
+
+@jsii.enum(jsii_type="@aws-cdk/aws-cloudwatch.GraphWidgetView")
+class GraphWidgetView(enum.Enum):
+    '''Types of view.'''
+
+    TIME_SERIES = "TIME_SERIES"
+    '''Display as a line graph.'''
+    BAR = "BAR"
+    '''Display as a bar graph.'''
+    PIE = "PIE"
+    '''Display as a pie graph.'''
 
 
 @jsii.data_type(
@@ -3781,20 +3948,20 @@ class HorizontalAnnotation:
         self,
         *,
         value: jsii.Number,
-        color: typing.Optional[str] = None,
+        color: typing.Optional[builtins.str] = None,
         fill: typing.Optional["Shading"] = None,
-        label: typing.Optional[str] = None,
-        visible: typing.Optional[bool] = None,
+        label: typing.Optional[builtins.str] = None,
+        visible: typing.Optional[builtins.bool] = None,
     ) -> None:
-        """Horizontal annotation to be added to a graph.
+        '''Horizontal annotation to be added to a graph.
 
         :param value: The value of the annotation.
         :param color: The hex color code, prefixed with '#' (e.g. '#00ff00'), to be used for the annotation. The ``Color`` class has a set of standard colors that can be used here. Default: - Automatic color
         :param fill: Add shading above or below the annotation. Default: No shading
         :param label: Label for the annotation. Default: - No label
         :param visible: Whether the annotation is visible. Default: true
-        """
-        self._values = {
+        '''
+        self._values: typing.Dict[str, typing.Any] = {
             "value": value,
         }
         if color is not None:
@@ -3808,49 +3975,51 @@ class HorizontalAnnotation:
 
     @builtins.property
     def value(self) -> jsii.Number:
-        """The value of the annotation."""
-        return self._values.get("value")
+        '''The value of the annotation.'''
+        result = self._values.get("value")
+        assert result is not None, "Required property 'value' is missing"
+        return typing.cast(jsii.Number, result)
 
     @builtins.property
-    def color(self) -> typing.Optional[str]:
-        """The hex color code, prefixed with '#' (e.g. '#00ff00'), to be used for the annotation. The ``Color`` class has a set of standard colors that can be used here.
+    def color(self) -> typing.Optional[builtins.str]:
+        '''The hex color code, prefixed with '#' (e.g. '#00ff00'), to be used for the annotation. The ``Color`` class has a set of standard colors that can be used here.
 
-        default
         :default: - Automatic color
-        """
-        return self._values.get("color")
+        '''
+        result = self._values.get("color")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def fill(self) -> typing.Optional["Shading"]:
-        """Add shading above or below the annotation.
+        '''Add shading above or below the annotation.
 
-        default
         :default: No shading
-        """
-        return self._values.get("fill")
+        '''
+        result = self._values.get("fill")
+        return typing.cast(typing.Optional["Shading"], result)
 
     @builtins.property
-    def label(self) -> typing.Optional[str]:
-        """Label for the annotation.
+    def label(self) -> typing.Optional[builtins.str]:
+        '''Label for the annotation.
 
-        default
         :default: - No label
-        """
-        return self._values.get("label")
+        '''
+        result = self._values.get("label")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
-    def visible(self) -> typing.Optional[bool]:
-        """Whether the annotation is visible.
+    def visible(self) -> typing.Optional[builtins.bool]:
+        '''Whether the annotation is visible.
 
-        default
         :default: true
-        """
-        return self._values.get("visible")
+        '''
+        result = self._values.get("visible")
+        return typing.cast(typing.Optional[builtins.bool], result)
 
-    def __eq__(self, rhs) -> bool:
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
@@ -3860,217 +4029,217 @@ class HorizontalAnnotation:
 
 
 @jsii.interface(jsii_type="@aws-cdk/aws-cloudwatch.IAlarmAction")
-class IAlarmAction(jsii.compat.Protocol):
-    """Interface for objects that can be the targets of CloudWatch alarm actions."""
-
-    @builtins.staticmethod
-    def __jsii_proxy_class__():
-        return _IAlarmActionProxy
+class IAlarmAction(typing_extensions.Protocol):
+    '''Interface for objects that can be the targets of CloudWatch alarm actions.'''
 
     @jsii.member(jsii_name="bind")
-    def bind(
-        self, scope: aws_cdk.core.Construct, alarm: "IAlarm"
-    ) -> "AlarmActionConfig":
-        """Return the properties required to send alarm actions to this CloudWatch alarm.
+    def bind(self, scope: aws_cdk.core.Construct, alarm: "IAlarm") -> AlarmActionConfig:
+        '''Return the properties required to send alarm actions to this CloudWatch alarm.
 
         :param scope: root Construct that allows creating new Constructs.
         :param alarm: CloudWatch alarm that the action will target.
-        """
+        '''
         ...
 
 
 class _IAlarmActionProxy:
-    """Interface for objects that can be the targets of CloudWatch alarm actions."""
+    '''Interface for objects that can be the targets of CloudWatch alarm actions.'''
 
-    __jsii_type__ = "@aws-cdk/aws-cloudwatch.IAlarmAction"
+    __jsii_type__: typing.ClassVar[str] = "@aws-cdk/aws-cloudwatch.IAlarmAction"
 
     @jsii.member(jsii_name="bind")
-    def bind(
-        self, scope: aws_cdk.core.Construct, alarm: "IAlarm"
-    ) -> "AlarmActionConfig":
-        """Return the properties required to send alarm actions to this CloudWatch alarm.
+    def bind(self, scope: aws_cdk.core.Construct, alarm: "IAlarm") -> AlarmActionConfig:
+        '''Return the properties required to send alarm actions to this CloudWatch alarm.
 
         :param scope: root Construct that allows creating new Constructs.
         :param alarm: CloudWatch alarm that the action will target.
-        """
-        return jsii.invoke(self, "bind", [scope, alarm])
+        '''
+        return typing.cast(AlarmActionConfig, jsii.invoke(self, "bind", [scope, alarm]))
+
+# Adding a "__jsii_proxy_class__(): typing.Type" function to the interface
+typing.cast(typing.Any, IAlarmAction).__jsii_proxy_class__ = lambda : _IAlarmActionProxy
 
 
 @jsii.interface(jsii_type="@aws-cdk/aws-cloudwatch.IAlarmRule")
-class IAlarmRule(jsii.compat.Protocol):
-    """Interface for Alarm Rule."""
-
-    @builtins.staticmethod
-    def __jsii_proxy_class__():
-        return _IAlarmRuleProxy
+class IAlarmRule(typing_extensions.Protocol):
+    '''Interface for Alarm Rule.'''
 
     @jsii.member(jsii_name="renderAlarmRule")
-    def render_alarm_rule(self) -> str:
-        """serialized representation of Alarm Rule to be used when building the Composite Alarm resource."""
+    def render_alarm_rule(self) -> builtins.str:
+        '''serialized representation of Alarm Rule to be used when building the Composite Alarm resource.'''
         ...
 
 
 class _IAlarmRuleProxy:
-    """Interface for Alarm Rule."""
+    '''Interface for Alarm Rule.'''
 
-    __jsii_type__ = "@aws-cdk/aws-cloudwatch.IAlarmRule"
+    __jsii_type__: typing.ClassVar[str] = "@aws-cdk/aws-cloudwatch.IAlarmRule"
 
     @jsii.member(jsii_name="renderAlarmRule")
-    def render_alarm_rule(self) -> str:
-        """serialized representation of Alarm Rule to be used when building the Composite Alarm resource."""
-        return jsii.invoke(self, "renderAlarmRule", [])
+    def render_alarm_rule(self) -> builtins.str:
+        '''serialized representation of Alarm Rule to be used when building the Composite Alarm resource.'''
+        return typing.cast(builtins.str, jsii.invoke(self, "renderAlarmRule", []))
+
+# Adding a "__jsii_proxy_class__(): typing.Type" function to the interface
+typing.cast(typing.Any, IAlarmRule).__jsii_proxy_class__ = lambda : _IAlarmRuleProxy
 
 
 @jsii.interface(jsii_type="@aws-cdk/aws-cloudwatch.IMetric")
-class IMetric(jsii.compat.Protocol):
-    """Interface for metrics."""
-
-    @builtins.staticmethod
-    def __jsii_proxy_class__():
-        return _IMetricProxy
+class IMetric(typing_extensions.Protocol):
+    '''Interface for metrics.'''
 
     @jsii.member(jsii_name="toAlarmConfig")
     def to_alarm_config(self) -> "MetricAlarmConfig":
-        """Turn this metric object into an alarm configuration.
+        '''(deprecated) Turn this metric object into an alarm configuration.
 
-        deprecated
-        :deprecated: Use ``toMetricsConfig()`` instead.
+        :deprecated: Use ``toMetricConfig()`` instead.
 
-        stability
         :stability: deprecated
-        """
+        '''
         ...
 
     @jsii.member(jsii_name="toGraphConfig")
     def to_graph_config(self) -> "MetricGraphConfig":
-        """Turn this metric object into a graph configuration.
+        '''(deprecated) Turn this metric object into a graph configuration.
 
-        deprecated
-        :deprecated: Use ``toMetricsConfig()`` instead.
+        :deprecated: Use ``toMetricConfig()`` instead.
 
-        stability
         :stability: deprecated
-        """
+        '''
         ...
 
     @jsii.member(jsii_name="toMetricConfig")
     def to_metric_config(self) -> "MetricConfig":
-        """Inspect the details of the metric object."""
+        '''Inspect the details of the metric object.'''
         ...
 
 
 class _IMetricProxy:
-    """Interface for metrics."""
+    '''Interface for metrics.'''
 
-    __jsii_type__ = "@aws-cdk/aws-cloudwatch.IMetric"
+    __jsii_type__: typing.ClassVar[str] = "@aws-cdk/aws-cloudwatch.IMetric"
 
     @jsii.member(jsii_name="toAlarmConfig")
     def to_alarm_config(self) -> "MetricAlarmConfig":
-        """Turn this metric object into an alarm configuration.
+        '''(deprecated) Turn this metric object into an alarm configuration.
 
-        deprecated
-        :deprecated: Use ``toMetricsConfig()`` instead.
+        :deprecated: Use ``toMetricConfig()`` instead.
 
-        stability
         :stability: deprecated
-        """
-        return jsii.invoke(self, "toAlarmConfig", [])
+        '''
+        return typing.cast("MetricAlarmConfig", jsii.invoke(self, "toAlarmConfig", []))
 
     @jsii.member(jsii_name="toGraphConfig")
     def to_graph_config(self) -> "MetricGraphConfig":
-        """Turn this metric object into a graph configuration.
+        '''(deprecated) Turn this metric object into a graph configuration.
 
-        deprecated
-        :deprecated: Use ``toMetricsConfig()`` instead.
+        :deprecated: Use ``toMetricConfig()`` instead.
 
-        stability
         :stability: deprecated
-        """
-        return jsii.invoke(self, "toGraphConfig", [])
+        '''
+        return typing.cast("MetricGraphConfig", jsii.invoke(self, "toGraphConfig", []))
 
     @jsii.member(jsii_name="toMetricConfig")
     def to_metric_config(self) -> "MetricConfig":
-        """Inspect the details of the metric object."""
-        return jsii.invoke(self, "toMetricConfig", [])
+        '''Inspect the details of the metric object.'''
+        return typing.cast("MetricConfig", jsii.invoke(self, "toMetricConfig", []))
+
+# Adding a "__jsii_proxy_class__(): typing.Type" function to the interface
+typing.cast(typing.Any, IMetric).__jsii_proxy_class__ = lambda : _IMetricProxy
 
 
 @jsii.interface(jsii_type="@aws-cdk/aws-cloudwatch.IWidget")
-class IWidget(jsii.compat.Protocol):
-    """A single dashboard widget."""
+class IWidget(typing_extensions.Protocol):
+    '''A single dashboard widget.'''
 
-    @builtins.staticmethod
-    def __jsii_proxy_class__():
-        return _IWidgetProxy
-
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="height")
     def height(self) -> jsii.Number:
-        """The amount of vertical grid units the widget will take up."""
+        '''The amount of vertical grid units the widget will take up.'''
         ...
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="width")
     def width(self) -> jsii.Number:
-        """The amount of horizontal grid units the widget will take up."""
+        '''The amount of horizontal grid units the widget will take up.'''
         ...
 
     @jsii.member(jsii_name="position")
     def position(self, x: jsii.Number, y: jsii.Number) -> None:
-        """Place the widget at a given position.
+        '''Place the widget at a given position.
 
         :param x: -
         :param y: -
-        """
+        '''
         ...
 
     @jsii.member(jsii_name="toJson")
     def to_json(self) -> typing.List[typing.Any]:
-        """Return the widget JSON for use in the dashboard."""
+        '''Return the widget JSON for use in the dashboard.'''
         ...
 
 
 class _IWidgetProxy:
-    """A single dashboard widget."""
+    '''A single dashboard widget.'''
 
-    __jsii_type__ = "@aws-cdk/aws-cloudwatch.IWidget"
+    __jsii_type__: typing.ClassVar[str] = "@aws-cdk/aws-cloudwatch.IWidget"
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="height")
     def height(self) -> jsii.Number:
-        """The amount of vertical grid units the widget will take up."""
-        return jsii.get(self, "height")
+        '''The amount of vertical grid units the widget will take up.'''
+        return typing.cast(jsii.Number, jsii.get(self, "height"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="width")
     def width(self) -> jsii.Number:
-        """The amount of horizontal grid units the widget will take up."""
-        return jsii.get(self, "width")
+        '''The amount of horizontal grid units the widget will take up.'''
+        return typing.cast(jsii.Number, jsii.get(self, "width"))
 
     @jsii.member(jsii_name="position")
     def position(self, x: jsii.Number, y: jsii.Number) -> None:
-        """Place the widget at a given position.
+        '''Place the widget at a given position.
 
         :param x: -
         :param y: -
-        """
-        return jsii.invoke(self, "position", [x, y])
+        '''
+        return typing.cast(None, jsii.invoke(self, "position", [x, y]))
 
     @jsii.member(jsii_name="toJson")
     def to_json(self) -> typing.List[typing.Any]:
-        """Return the widget JSON for use in the dashboard."""
-        return jsii.invoke(self, "toJson", [])
+        '''Return the widget JSON for use in the dashboard.'''
+        return typing.cast(typing.List[typing.Any], jsii.invoke(self, "toJson", []))
+
+# Adding a "__jsii_proxy_class__(): typing.Type" function to the interface
+typing.cast(typing.Any, IWidget).__jsii_proxy_class__ = lambda : _IWidgetProxy
 
 
 @jsii.enum(jsii_type="@aws-cdk/aws-cloudwatch.LegendPosition")
 class LegendPosition(enum.Enum):
-    """The position of the legend on a GraphWidget."""
+    '''The position of the legend on a GraphWidget.'''
 
     BOTTOM = "BOTTOM"
-    """Legend appears below the graph (default)."""
+    '''Legend appears below the graph (default).'''
     RIGHT = "RIGHT"
-    """Add shading above the annotation."""
+    '''Add shading above the annotation.'''
     HIDDEN = "HIDDEN"
-    """Add shading below the annotation."""
+    '''Add shading below the annotation.'''
+
+
+@jsii.enum(jsii_type="@aws-cdk/aws-cloudwatch.LogQueryVisualizationType")
+class LogQueryVisualizationType(enum.Enum):
+    '''Types of view.'''
+
+    TABLE = "TABLE"
+    '''Table view.'''
+    LINE = "LINE"
+    '''Line view.'''
+    STACKEDAREA = "STACKEDAREA"
+    '''Stacked area view.'''
+    BAR = "BAR"
+    '''Bar view.'''
+    PIE = "PIE"
+    '''Pie view.'''
 
 
 @jsii.data_type(
@@ -4083,6 +4252,7 @@ class LegendPosition(enum.Enum):
         "query_string": "queryString",
         "region": "region",
         "title": "title",
+        "view": "view",
         "width": "width",
     },
 )
@@ -4090,25 +4260,27 @@ class LogQueryWidgetProps:
     def __init__(
         self,
         *,
-        log_group_names: typing.List[str],
+        log_group_names: typing.Sequence[builtins.str],
         height: typing.Optional[jsii.Number] = None,
-        query_lines: typing.Optional[typing.List[str]] = None,
-        query_string: typing.Optional[str] = None,
-        region: typing.Optional[str] = None,
-        title: typing.Optional[str] = None,
+        query_lines: typing.Optional[typing.Sequence[builtins.str]] = None,
+        query_string: typing.Optional[builtins.str] = None,
+        region: typing.Optional[builtins.str] = None,
+        title: typing.Optional[builtins.str] = None,
+        view: typing.Optional[LogQueryVisualizationType] = None,
         width: typing.Optional[jsii.Number] = None,
     ) -> None:
-        """Properties for a Query widget.
+        '''Properties for a Query widget.
 
         :param log_group_names: Names of log groups to query.
         :param height: Height of the widget. Default: 6
-        :param query_lines: A sequence of lines to use to build the query. The query will be built by joining the lines together using ``\n|``. Default: - Exactly one of ``queryString``, ``queryLines`` is required.
-        :param query_string: Full query string for log insights. Be sure to prepend every new line with a newline and pipe character (``\n|``). Default: - Exactly one of ``queryString``, ``queryLines`` is required.
+        :param query_lines: A sequence of lines to use to build the query. The query will be built by joining the lines together using ``\\n|``. Default: - Exactly one of ``queryString``, ``queryLines`` is required.
+        :param query_string: Full query string for log insights. Be sure to prepend every new line with a newline and pipe character (``\\n|``). Default: - Exactly one of ``queryString``, ``queryLines`` is required.
         :param region: The region the metrics of this widget should be taken from. Default: Current region
         :param title: Title for the widget. Default: No title
+        :param view: The type of view to use. Default: LogQueryVisualizationType.TABLE
         :param width: Width of the widget, in a grid of 24 units wide. Default: 6
-        """
-        self._values = {
+        '''
+        self._values: typing.Dict[str, typing.Any] = {
             "log_group_names": log_group_names,
         }
         if height is not None:
@@ -4121,77 +4293,90 @@ class LogQueryWidgetProps:
             self._values["region"] = region
         if title is not None:
             self._values["title"] = title
+        if view is not None:
+            self._values["view"] = view
         if width is not None:
             self._values["width"] = width
 
     @builtins.property
-    def log_group_names(self) -> typing.List[str]:
-        """Names of log groups to query."""
-        return self._values.get("log_group_names")
+    def log_group_names(self) -> typing.List[builtins.str]:
+        '''Names of log groups to query.'''
+        result = self._values.get("log_group_names")
+        assert result is not None, "Required property 'log_group_names' is missing"
+        return typing.cast(typing.List[builtins.str], result)
 
     @builtins.property
     def height(self) -> typing.Optional[jsii.Number]:
-        """Height of the widget.
+        '''Height of the widget.
 
-        default
         :default: 6
-        """
-        return self._values.get("height")
+        '''
+        result = self._values.get("height")
+        return typing.cast(typing.Optional[jsii.Number], result)
 
     @builtins.property
-    def query_lines(self) -> typing.Optional[typing.List[str]]:
-        """A sequence of lines to use to build the query.
+    def query_lines(self) -> typing.Optional[typing.List[builtins.str]]:
+        '''A sequence of lines to use to build the query.
 
-        The query will be built by joining the lines together using ``\n|``.
+        The query will be built by joining the lines together using ``\\n|``.
 
-        default
         :default: - Exactly one of ``queryString``, ``queryLines`` is required.
-        """
-        return self._values.get("query_lines")
+        '''
+        result = self._values.get("query_lines")
+        return typing.cast(typing.Optional[typing.List[builtins.str]], result)
 
     @builtins.property
-    def query_string(self) -> typing.Optional[str]:
-        """Full query string for log insights.
+    def query_string(self) -> typing.Optional[builtins.str]:
+        '''Full query string for log insights.
 
         Be sure to prepend every new line with a newline and pipe character
-        (``\n|``).
+        (``\\n|``).
 
-        default
         :default: - Exactly one of ``queryString``, ``queryLines`` is required.
-        """
-        return self._values.get("query_string")
+        '''
+        result = self._values.get("query_string")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
-    def region(self) -> typing.Optional[str]:
-        """The region the metrics of this widget should be taken from.
+    def region(self) -> typing.Optional[builtins.str]:
+        '''The region the metrics of this widget should be taken from.
 
-        default
         :default: Current region
-        """
-        return self._values.get("region")
+        '''
+        result = self._values.get("region")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
-    def title(self) -> typing.Optional[str]:
-        """Title for the widget.
+    def title(self) -> typing.Optional[builtins.str]:
+        '''Title for the widget.
 
-        default
         :default: No title
-        """
-        return self._values.get("title")
+        '''
+        result = self._values.get("title")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def view(self) -> typing.Optional[LogQueryVisualizationType]:
+        '''The type of view to use.
+
+        :default: LogQueryVisualizationType.TABLE
+        '''
+        result = self._values.get("view")
+        return typing.cast(typing.Optional[LogQueryVisualizationType], result)
 
     @builtins.property
     def width(self) -> typing.Optional[jsii.Number]:
-        """Width of the widget, in a grid of 24 units wide.
+        '''Width of the widget, in a grid of 24 units wide.
 
-        default
         :default: 6
-        """
-        return self._values.get("width")
+        '''
+        result = self._values.get("width")
+        return typing.cast(typing.Optional[jsii.Number], result)
 
-    def __eq__(self, rhs) -> bool:
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
@@ -4202,9 +4387,10 @@ class LogQueryWidgetProps:
 
 @jsii.implements(IMetric)
 class MathExpression(
-    metaclass=jsii.JSIIMeta, jsii_type="@aws-cdk/aws-cloudwatch.MathExpression"
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@aws-cdk/aws-cloudwatch.MathExpression",
 ):
-    """A math expression built with metric(s) emitted by a service.
+    '''A math expression built with metric(s) emitted by a service.
 
     The math expression is a combination of an expression (x+y) and metrics to apply expression on.
     It also contains metadata which is used only in graphs, such as color and label.
@@ -4214,24 +4400,24 @@ class MathExpression(
     This class does not represent a resource, so hence is not a construct. Instead,
     MathExpression is an abstraction that makes it easy to specify metrics for use in both
     alarms and graphs.
-    """
+    '''
 
     def __init__(
         self,
         *,
-        expression: str,
-        using_metrics: typing.Mapping[str, "IMetric"],
-        color: typing.Optional[str] = None,
-        label: typing.Optional[str] = None,
+        expression: builtins.str,
+        using_metrics: typing.Mapping[builtins.str, IMetric],
+        color: typing.Optional[builtins.str] = None,
+        label: typing.Optional[builtins.str] = None,
         period: typing.Optional[aws_cdk.core.Duration] = None,
     ) -> None:
-        """
+        '''
         :param expression: The expression defining the metric.
         :param using_metrics: The metrics used in the expression, in a map. The key is the identifier that represents the given metric in the expression, and the value is the actual Metric object.
         :param color: Color for this metric when added to a Graph in a Dashboard. Default: - Automatic color
         :param label: Label for this metric when added to a Graph in a Dashboard. Default: - Expression value is used as label
         :param period: The period over which the expression's statistics are applied. This period overrides all periods in the metrics used in this math expression. Default: Duration.minutes(5)
-        """
+        '''
         props = MathExpressionProps(
             expression=expression,
             using_metrics=using_metrics,
@@ -4246,21 +4432,21 @@ class MathExpression(
     def create_alarm(
         self,
         scope: aws_cdk.core.Construct,
-        id: str,
+        id: builtins.str,
         *,
         evaluation_periods: jsii.Number,
         threshold: jsii.Number,
-        actions_enabled: typing.Optional[bool] = None,
-        alarm_description: typing.Optional[str] = None,
-        alarm_name: typing.Optional[str] = None,
-        comparison_operator: typing.Optional["ComparisonOperator"] = None,
+        actions_enabled: typing.Optional[builtins.bool] = None,
+        alarm_description: typing.Optional[builtins.str] = None,
+        alarm_name: typing.Optional[builtins.str] = None,
+        comparison_operator: typing.Optional[ComparisonOperator] = None,
         datapoints_to_alarm: typing.Optional[jsii.Number] = None,
-        evaluate_low_sample_count_percentile: typing.Optional[str] = None,
+        evaluate_low_sample_count_percentile: typing.Optional[builtins.str] = None,
         period: typing.Optional[aws_cdk.core.Duration] = None,
-        statistic: typing.Optional[str] = None,
+        statistic: typing.Optional[builtins.str] = None,
         treat_missing_data: typing.Optional["TreatMissingData"] = None,
     ) -> "Alarm":
-        """Make a new Alarm for this metric.
+        '''Make a new Alarm for this metric.
 
         Combines both properties that may adjust the metric (aggregation) as well
         as alarm properties.
@@ -4275,10 +4461,10 @@ class MathExpression(
         :param comparison_operator: Comparison to use to check if metric is breaching. Default: GreaterThanOrEqualToThreshold
         :param datapoints_to_alarm: The number of datapoints that must be breaching to trigger the alarm. This is used only if you are setting an "M out of N" alarm. In that case, this value is the M. For more information, see Evaluating an Alarm in the Amazon CloudWatch User Guide. Default: ``evaluationPeriods``
         :param evaluate_low_sample_count_percentile: Specifies whether to evaluate the data and potentially change the alarm state if there are too few data points to be statistically significant. Used only for alarms that are based on percentiles. Default: - Not configured.
-        :param period: The period over which the specified statistic is applied. Cannot be used with ``MathExpression`` objects. Default: - The period from the metric
-        :param statistic: What function to use for aggregating. Can be one of the following: - "Minimum" | "min" - "Maximum" | "max" - "Average" | "avg" - "Sum" | "sum" - "SampleCount | "n" - "pNN.NN" Cannot be used with ``MathExpression`` objects. Default: - The statistic from the metric
+        :param period: (deprecated) The period over which the specified statistic is applied. Cannot be used with ``MathExpression`` objects. Default: - The period from the metric
+        :param statistic: (deprecated) What function to use for aggregating. Can be one of the following: - "Minimum" | "min" - "Maximum" | "max" - "Average" | "avg" - "Sum" | "sum" - "SampleCount | "n" - "pNN.NN" Cannot be used with ``MathExpression`` objects. Default: - The statistic from the metric
         :param treat_missing_data: Sets how this alarm is to handle missing data points. Default: TreatMissingData.Missing
-        """
+        '''
         props = CreateAlarmOptions(
             evaluation_periods=evaluation_periods,
             threshold=threshold,
@@ -4293,77 +4479,87 @@ class MathExpression(
             treat_missing_data=treat_missing_data,
         )
 
-        return jsii.invoke(self, "createAlarm", [scope, id, props])
+        return typing.cast("Alarm", jsii.invoke(self, "createAlarm", [scope, id, props]))
 
     @jsii.member(jsii_name="toAlarmConfig")
     def to_alarm_config(self) -> "MetricAlarmConfig":
-        """Turn this metric object into an alarm configuration."""
-        return jsii.invoke(self, "toAlarmConfig", [])
+        '''(deprecated) Turn this metric object into an alarm configuration.
+
+        :deprecated: use toMetricConfig()
+
+        :stability: deprecated
+        '''
+        return typing.cast("MetricAlarmConfig", jsii.invoke(self, "toAlarmConfig", []))
 
     @jsii.member(jsii_name="toGraphConfig")
     def to_graph_config(self) -> "MetricGraphConfig":
-        """Turn this metric object into a graph configuration."""
-        return jsii.invoke(self, "toGraphConfig", [])
+        '''(deprecated) Turn this metric object into a graph configuration.
+
+        :deprecated: use toMetricConfig()
+
+        :stability: deprecated
+        '''
+        return typing.cast("MetricGraphConfig", jsii.invoke(self, "toGraphConfig", []))
 
     @jsii.member(jsii_name="toMetricConfig")
     def to_metric_config(self) -> "MetricConfig":
-        """Inspect the details of the metric object."""
-        return jsii.invoke(self, "toMetricConfig", [])
+        '''Inspect the details of the metric object.'''
+        return typing.cast("MetricConfig", jsii.invoke(self, "toMetricConfig", []))
 
     @jsii.member(jsii_name="toString")
-    def to_string(self) -> str:
-        """Returns a string representation of an object."""
-        return jsii.invoke(self, "toString", [])
+    def to_string(self) -> builtins.str:
+        '''Returns a string representation of an object.'''
+        return typing.cast(builtins.str, jsii.invoke(self, "toString", []))
 
     @jsii.member(jsii_name="with")
     def with_(
         self,
         *,
-        color: typing.Optional[str] = None,
-        label: typing.Optional[str] = None,
+        color: typing.Optional[builtins.str] = None,
+        label: typing.Optional[builtins.str] = None,
         period: typing.Optional[aws_cdk.core.Duration] = None,
     ) -> "MathExpression":
-        """Return a copy of Metric with properties changed.
+        '''Return a copy of Metric with properties changed.
 
         All properties except namespace and metricName can be changed.
 
         :param color: Color for this metric when added to a Graph in a Dashboard. Default: - Automatic color
         :param label: Label for this metric when added to a Graph in a Dashboard. Default: - Expression value is used as label
         :param period: The period over which the expression's statistics are applied. This period overrides all periods in the metrics used in this math expression. Default: Duration.minutes(5)
-        """
+        '''
         props = MathExpressionOptions(color=color, label=label, period=period)
 
-        return jsii.invoke(self, "with", [props])
+        return typing.cast("MathExpression", jsii.invoke(self, "with", [props]))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="expression")
-    def expression(self) -> str:
-        """The expression defining the metric."""
-        return jsii.get(self, "expression")
+    def expression(self) -> builtins.str:
+        '''The expression defining the metric.'''
+        return typing.cast(builtins.str, jsii.get(self, "expression"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="period")
     def period(self) -> aws_cdk.core.Duration:
-        """Aggregation period of this metric."""
-        return jsii.get(self, "period")
+        '''Aggregation period of this metric.'''
+        return typing.cast(aws_cdk.core.Duration, jsii.get(self, "period"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="usingMetrics")
-    def using_metrics(self) -> typing.Mapping[str, "IMetric"]:
-        """The metrics used in the expression as KeyValuePair <id, metric>."""
-        return jsii.get(self, "usingMetrics")
+    def using_metrics(self) -> typing.Mapping[builtins.str, IMetric]:
+        '''The metrics used in the expression as KeyValuePair <id, metric>.'''
+        return typing.cast(typing.Mapping[builtins.str, IMetric], jsii.get(self, "usingMetrics"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="color")
-    def color(self) -> typing.Optional[str]:
-        """The hex color code, prefixed with '#' (e.g. '#00ff00'), to use when this metric is rendered on a graph. The ``Color`` class has a set of standard colors that can be used here."""
-        return jsii.get(self, "color")
+    def color(self) -> typing.Optional[builtins.str]:
+        '''The hex color code, prefixed with '#' (e.g. '#00ff00'), to use when this metric is rendered on a graph. The ``Color`` class has a set of standard colors that can be used here.'''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "color"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="label")
-    def label(self) -> typing.Optional[str]:
-        """Label for this metric when added to a Graph."""
-        return jsii.get(self, "label")
+    def label(self) -> typing.Optional[builtins.str]:
+        '''Label for this metric when added to a Graph.'''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "label"))
 
 
 @jsii.data_type(
@@ -4375,17 +4571,17 @@ class MathExpressionOptions:
     def __init__(
         self,
         *,
-        color: typing.Optional[str] = None,
-        label: typing.Optional[str] = None,
+        color: typing.Optional[builtins.str] = None,
+        label: typing.Optional[builtins.str] = None,
         period: typing.Optional[aws_cdk.core.Duration] = None,
     ) -> None:
-        """Configurable options for MathExpressions.
+        '''Configurable options for MathExpressions.
 
         :param color: Color for this metric when added to a Graph in a Dashboard. Default: - Automatic color
         :param label: Label for this metric when added to a Graph in a Dashboard. Default: - Expression value is used as label
         :param period: The period over which the expression's statistics are applied. This period overrides all periods in the metrics used in this math expression. Default: Duration.minutes(5)
-        """
-        self._values = {}
+        '''
+        self._values: typing.Dict[str, typing.Any] = {}
         if color is not None:
             self._values["color"] = color
         if label is not None:
@@ -4394,39 +4590,39 @@ class MathExpressionOptions:
             self._values["period"] = period
 
     @builtins.property
-    def color(self) -> typing.Optional[str]:
-        """Color for this metric when added to a Graph in a Dashboard.
+    def color(self) -> typing.Optional[builtins.str]:
+        '''Color for this metric when added to a Graph in a Dashboard.
 
-        default
         :default: - Automatic color
-        """
-        return self._values.get("color")
+        '''
+        result = self._values.get("color")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
-    def label(self) -> typing.Optional[str]:
-        """Label for this metric when added to a Graph in a Dashboard.
+    def label(self) -> typing.Optional[builtins.str]:
+        '''Label for this metric when added to a Graph in a Dashboard.
 
-        default
         :default: - Expression value is used as label
-        """
-        return self._values.get("label")
+        '''
+        result = self._values.get("label")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def period(self) -> typing.Optional[aws_cdk.core.Duration]:
-        """The period over which the expression's statistics are applied.
+        '''The period over which the expression's statistics are applied.
 
         This period overrides all periods in the metrics used in this
         math expression.
 
-        default
         :default: Duration.minutes(5)
-        """
-        return self._values.get("period")
+        '''
+        result = self._values.get("period")
+        return typing.cast(typing.Optional[aws_cdk.core.Duration], result)
 
-    def __eq__(self, rhs) -> bool:
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
@@ -4450,21 +4646,21 @@ class MathExpressionProps(MathExpressionOptions):
     def __init__(
         self,
         *,
-        color: typing.Optional[str] = None,
-        label: typing.Optional[str] = None,
+        color: typing.Optional[builtins.str] = None,
+        label: typing.Optional[builtins.str] = None,
         period: typing.Optional[aws_cdk.core.Duration] = None,
-        expression: str,
-        using_metrics: typing.Mapping[str, "IMetric"],
+        expression: builtins.str,
+        using_metrics: typing.Mapping[builtins.str, IMetric],
     ) -> None:
-        """Properties for a MathExpression.
+        '''Properties for a MathExpression.
 
         :param color: Color for this metric when added to a Graph in a Dashboard. Default: - Automatic color
         :param label: Label for this metric when added to a Graph in a Dashboard. Default: - Expression value is used as label
         :param period: The period over which the expression's statistics are applied. This period overrides all periods in the metrics used in this math expression. Default: Duration.minutes(5)
         :param expression: The expression defining the metric.
         :param using_metrics: The metrics used in the expression, in a map. The key is the identifier that represents the given metric in the expression, and the value is the actual Metric object.
-        """
-        self._values = {
+        '''
+        self._values: typing.Dict[str, typing.Any] = {
             "expression": expression,
             "using_metrics": using_metrics,
         }
@@ -4476,53 +4672,57 @@ class MathExpressionProps(MathExpressionOptions):
             self._values["period"] = period
 
     @builtins.property
-    def color(self) -> typing.Optional[str]:
-        """Color for this metric when added to a Graph in a Dashboard.
+    def color(self) -> typing.Optional[builtins.str]:
+        '''Color for this metric when added to a Graph in a Dashboard.
 
-        default
         :default: - Automatic color
-        """
-        return self._values.get("color")
+        '''
+        result = self._values.get("color")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
-    def label(self) -> typing.Optional[str]:
-        """Label for this metric when added to a Graph in a Dashboard.
+    def label(self) -> typing.Optional[builtins.str]:
+        '''Label for this metric when added to a Graph in a Dashboard.
 
-        default
         :default: - Expression value is used as label
-        """
-        return self._values.get("label")
+        '''
+        result = self._values.get("label")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def period(self) -> typing.Optional[aws_cdk.core.Duration]:
-        """The period over which the expression's statistics are applied.
+        '''The period over which the expression's statistics are applied.
 
         This period overrides all periods in the metrics used in this
         math expression.
 
-        default
         :default: Duration.minutes(5)
-        """
-        return self._values.get("period")
+        '''
+        result = self._values.get("period")
+        return typing.cast(typing.Optional[aws_cdk.core.Duration], result)
 
     @builtins.property
-    def expression(self) -> str:
-        """The expression defining the metric."""
-        return self._values.get("expression")
+    def expression(self) -> builtins.str:
+        '''The expression defining the metric.'''
+        result = self._values.get("expression")
+        assert result is not None, "Required property 'expression' is missing"
+        return typing.cast(builtins.str, result)
 
     @builtins.property
-    def using_metrics(self) -> typing.Mapping[str, "IMetric"]:
-        """The metrics used in the expression, in a map.
+    def using_metrics(self) -> typing.Mapping[builtins.str, IMetric]:
+        '''The metrics used in the expression, in a map.
 
         The key is the identifier that represents the given metric in the
         expression, and the value is the actual Metric object.
-        """
-        return self._values.get("using_metrics")
+        '''
+        result = self._values.get("using_metrics")
+        assert result is not None, "Required property 'using_metrics' is missing"
+        return typing.cast(typing.Mapping[builtins.str, IMetric], result)
 
-    def __eq__(self, rhs) -> bool:
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
@@ -4533,7 +4733,7 @@ class MathExpressionProps(MathExpressionOptions):
 
 @jsii.implements(IMetric)
 class Metric(metaclass=jsii.JSIIMeta, jsii_type="@aws-cdk/aws-cloudwatch.Metric"):
-    """A metric emitted by a service.
+    '''A metric emitted by a service.
 
     The metric is a combination of a metric identifier (namespace, name and dimensions)
     and an aggregation function (statistic, period and unit).
@@ -4545,40 +4745,43 @@ class Metric(metaclass=jsii.JSIIMeta, jsii_type="@aws-cdk/aws-cloudwatch.Metric"
     This class does not represent a resource, so hence is not a construct. Instead,
     Metric is an abstraction that makes it easy to specify metrics for use in both
     alarms and graphs.
-    """
+    '''
 
     def __init__(
         self,
         *,
-        metric_name: str,
-        namespace: str,
-        account: typing.Optional[str] = None,
-        color: typing.Optional[str] = None,
-        dimensions: typing.Optional[typing.Mapping[str, typing.Any]] = None,
-        label: typing.Optional[str] = None,
+        metric_name: builtins.str,
+        namespace: builtins.str,
+        account: typing.Optional[builtins.str] = None,
+        color: typing.Optional[builtins.str] = None,
+        dimensions: typing.Optional[typing.Mapping[builtins.str, typing.Any]] = None,
+        dimensions_map: typing.Optional[typing.Mapping[builtins.str, builtins.str]] = None,
+        label: typing.Optional[builtins.str] = None,
         period: typing.Optional[aws_cdk.core.Duration] = None,
-        region: typing.Optional[str] = None,
-        statistic: typing.Optional[str] = None,
+        region: typing.Optional[builtins.str] = None,
+        statistic: typing.Optional[builtins.str] = None,
         unit: typing.Optional["Unit"] = None,
     ) -> None:
-        """
+        '''
         :param metric_name: Name of the metric.
         :param namespace: Namespace of the metric.
         :param account: Account which this metric comes from. Default: - Deployment account.
         :param color: The hex color code, prefixed with '#' (e.g. '#00ff00'), to use when this metric is rendered on a graph. The ``Color`` class has a set of standard colors that can be used here. Default: - Automatic color
-        :param dimensions: Dimensions of the metric. Default: - No dimensions.
+        :param dimensions: (deprecated) Dimensions of the metric. Default: - No dimensions.
+        :param dimensions_map: Dimensions of the metric. Default: - No dimensions.
         :param label: Label for this metric when added to a Graph in a Dashboard. Default: - No label
         :param period: The period over which the specified statistic is applied. Default: Duration.minutes(5)
         :param region: Region which this metric comes from. Default: - Deployment region.
         :param statistic: What function to use for aggregating. Can be one of the following: - "Minimum" | "min" - "Maximum" | "max" - "Average" | "avg" - "Sum" | "sum" - "SampleCount | "n" - "pNN.NN" Default: Average
         :param unit: Unit used to filter the metric stream. Only refer to datums emitted to the metric stream with the given unit and ignore all others. Only useful when datums are being emitted to the same metric stream under different units. The default is to use all matric datums in the stream, regardless of unit, which is recommended in nearly all cases. CloudWatch does not honor this property for graphs. Default: - All metric datums in the given metric stream
-        """
+        '''
         props = MetricProps(
             metric_name=metric_name,
             namespace=namespace,
             account=account,
             color=color,
             dimensions=dimensions,
+            dimensions_map=dimensions_map,
             label=label,
             period=period,
             region=region,
@@ -4588,20 +4791,21 @@ class Metric(metaclass=jsii.JSIIMeta, jsii_type="@aws-cdk/aws-cloudwatch.Metric"
 
         jsii.create(Metric, self, [props])
 
-    @jsii.member(jsii_name="grantPutMetricData")
+    @jsii.member(jsii_name="grantPutMetricData") # type: ignore[misc]
     @builtins.classmethod
     def grant_put_metric_data(
-        cls, grantee: aws_cdk.aws_iam.IGrantable
+        cls,
+        grantee: aws_cdk.aws_iam.IGrantable,
     ) -> aws_cdk.aws_iam.Grant:
-        """Grant permissions to the given identity to write metrics.
+        '''Grant permissions to the given identity to write metrics.
 
         :param grantee: The IAM identity to give permissions to.
-        """
-        return jsii.sinvoke(cls, "grantPutMetricData", [grantee])
+        '''
+        return typing.cast(aws_cdk.aws_iam.Grant, jsii.sinvoke(cls, "grantPutMetricData", [grantee]))
 
     @jsii.member(jsii_name="attachTo")
-    def attach_to(self, scope: aws_cdk.core.Construct) -> "Metric":
-        """Attach the metric object to the given construct scope.
+    def attach_to(self, scope: constructs.IConstruct) -> "Metric":
+        '''Attach the metric object to the given construct scope.
 
         Returns a Metric object that uses the account and region from the Stack
         the given construct is defined in. If the metric is subsequently used
@@ -4613,28 +4817,28 @@ class Metric(metaclass=jsii.JSIIMeta, jsii_type="@aws-cdk/aws-cloudwatch.Metric"
         nothing is done and the same Metric object is returned.
 
         :param scope: -
-        """
-        return jsii.invoke(self, "attachTo", [scope])
+        '''
+        return typing.cast("Metric", jsii.invoke(self, "attachTo", [scope]))
 
     @jsii.member(jsii_name="createAlarm")
     def create_alarm(
         self,
         scope: aws_cdk.core.Construct,
-        id: str,
+        id: builtins.str,
         *,
         evaluation_periods: jsii.Number,
         threshold: jsii.Number,
-        actions_enabled: typing.Optional[bool] = None,
-        alarm_description: typing.Optional[str] = None,
-        alarm_name: typing.Optional[str] = None,
-        comparison_operator: typing.Optional["ComparisonOperator"] = None,
+        actions_enabled: typing.Optional[builtins.bool] = None,
+        alarm_description: typing.Optional[builtins.str] = None,
+        alarm_name: typing.Optional[builtins.str] = None,
+        comparison_operator: typing.Optional[ComparisonOperator] = None,
         datapoints_to_alarm: typing.Optional[jsii.Number] = None,
-        evaluate_low_sample_count_percentile: typing.Optional[str] = None,
+        evaluate_low_sample_count_percentile: typing.Optional[builtins.str] = None,
         period: typing.Optional[aws_cdk.core.Duration] = None,
-        statistic: typing.Optional[str] = None,
+        statistic: typing.Optional[builtins.str] = None,
         treat_missing_data: typing.Optional["TreatMissingData"] = None,
     ) -> "Alarm":
-        """Make a new Alarm for this metric.
+        '''Make a new Alarm for this metric.
 
         Combines both properties that may adjust the metric (aggregation) as well
         as alarm properties.
@@ -4649,10 +4853,10 @@ class Metric(metaclass=jsii.JSIIMeta, jsii_type="@aws-cdk/aws-cloudwatch.Metric"
         :param comparison_operator: Comparison to use to check if metric is breaching. Default: GreaterThanOrEqualToThreshold
         :param datapoints_to_alarm: The number of datapoints that must be breaching to trigger the alarm. This is used only if you are setting an "M out of N" alarm. In that case, this value is the M. For more information, see Evaluating an Alarm in the Amazon CloudWatch User Guide. Default: ``evaluationPeriods``
         :param evaluate_low_sample_count_percentile: Specifies whether to evaluate the data and potentially change the alarm state if there are too few data points to be statistically significant. Used only for alarms that are based on percentiles. Default: - Not configured.
-        :param period: The period over which the specified statistic is applied. Cannot be used with ``MathExpression`` objects. Default: - The period from the metric
-        :param statistic: What function to use for aggregating. Can be one of the following: - "Minimum" | "min" - "Maximum" | "max" - "Average" | "avg" - "Sum" | "sum" - "SampleCount | "n" - "pNN.NN" Cannot be used with ``MathExpression`` objects. Default: - The statistic from the metric
+        :param period: (deprecated) The period over which the specified statistic is applied. Cannot be used with ``MathExpression`` objects. Default: - The period from the metric
+        :param statistic: (deprecated) What function to use for aggregating. Can be one of the following: - "Minimum" | "min" - "Maximum" | "max" - "Average" | "avg" - "Sum" | "sum" - "SampleCount | "n" - "pNN.NN" Cannot be used with ``MathExpression`` objects. Default: - The statistic from the metric
         :param treat_missing_data: Sets how this alarm is to handle missing data points. Default: TreatMissingData.Missing
-        """
+        '''
         props = CreateAlarmOptions(
             evaluation_periods=evaluation_periods,
             threshold=threshold,
@@ -4667,58 +4871,71 @@ class Metric(metaclass=jsii.JSIIMeta, jsii_type="@aws-cdk/aws-cloudwatch.Metric"
             treat_missing_data=treat_missing_data,
         )
 
-        return jsii.invoke(self, "createAlarm", [scope, id, props])
+        return typing.cast("Alarm", jsii.invoke(self, "createAlarm", [scope, id, props]))
 
     @jsii.member(jsii_name="toAlarmConfig")
     def to_alarm_config(self) -> "MetricAlarmConfig":
-        """Turn this metric object into an alarm configuration."""
-        return jsii.invoke(self, "toAlarmConfig", [])
+        '''(deprecated) Turn this metric object into an alarm configuration.
+
+        :deprecated: use toMetricConfig()
+
+        :stability: deprecated
+        '''
+        return typing.cast("MetricAlarmConfig", jsii.invoke(self, "toAlarmConfig", []))
 
     @jsii.member(jsii_name="toGraphConfig")
     def to_graph_config(self) -> "MetricGraphConfig":
-        """Turn this metric object into a graph configuration."""
-        return jsii.invoke(self, "toGraphConfig", [])
+        '''(deprecated) Turn this metric object into a graph configuration.
+
+        :deprecated: use toMetricConfig()
+
+        :stability: deprecated
+        '''
+        return typing.cast("MetricGraphConfig", jsii.invoke(self, "toGraphConfig", []))
 
     @jsii.member(jsii_name="toMetricConfig")
     def to_metric_config(self) -> "MetricConfig":
-        """Inspect the details of the metric object."""
-        return jsii.invoke(self, "toMetricConfig", [])
+        '''Inspect the details of the metric object.'''
+        return typing.cast("MetricConfig", jsii.invoke(self, "toMetricConfig", []))
 
     @jsii.member(jsii_name="toString")
-    def to_string(self) -> str:
-        """Returns a string representation of an object."""
-        return jsii.invoke(self, "toString", [])
+    def to_string(self) -> builtins.str:
+        '''Returns a string representation of an object.'''
+        return typing.cast(builtins.str, jsii.invoke(self, "toString", []))
 
     @jsii.member(jsii_name="with")
     def with_(
         self,
         *,
-        account: typing.Optional[str] = None,
-        color: typing.Optional[str] = None,
-        dimensions: typing.Optional[typing.Mapping[str, typing.Any]] = None,
-        label: typing.Optional[str] = None,
+        account: typing.Optional[builtins.str] = None,
+        color: typing.Optional[builtins.str] = None,
+        dimensions: typing.Optional[typing.Mapping[builtins.str, typing.Any]] = None,
+        dimensions_map: typing.Optional[typing.Mapping[builtins.str, builtins.str]] = None,
+        label: typing.Optional[builtins.str] = None,
         period: typing.Optional[aws_cdk.core.Duration] = None,
-        region: typing.Optional[str] = None,
-        statistic: typing.Optional[str] = None,
+        region: typing.Optional[builtins.str] = None,
+        statistic: typing.Optional[builtins.str] = None,
         unit: typing.Optional["Unit"] = None,
     ) -> "Metric":
-        """Return a copy of Metric ``with`` properties changed.
+        '''Return a copy of Metric ``with`` properties changed.
 
         All properties except namespace and metricName can be changed.
 
         :param account: Account which this metric comes from. Default: - Deployment account.
         :param color: The hex color code, prefixed with '#' (e.g. '#00ff00'), to use when this metric is rendered on a graph. The ``Color`` class has a set of standard colors that can be used here. Default: - Automatic color
-        :param dimensions: Dimensions of the metric. Default: - No dimensions.
+        :param dimensions: (deprecated) Dimensions of the metric. Default: - No dimensions.
+        :param dimensions_map: Dimensions of the metric. Default: - No dimensions.
         :param label: Label for this metric when added to a Graph in a Dashboard. Default: - No label
         :param period: The period over which the specified statistic is applied. Default: Duration.minutes(5)
         :param region: Region which this metric comes from. Default: - Deployment region.
         :param statistic: What function to use for aggregating. Can be one of the following: - "Minimum" | "min" - "Maximum" | "max" - "Average" | "avg" - "Sum" | "sum" - "SampleCount | "n" - "pNN.NN" Default: Average
         :param unit: Unit used to filter the metric stream. Only refer to datums emitted to the metric stream with the given unit and ignore all others. Only useful when datums are being emitted to the same metric stream under different units. The default is to use all matric datums in the stream, regardless of unit, which is recommended in nearly all cases. CloudWatch does not honor this property for graphs. Default: - All metric datums in the given metric stream
-        """
+        '''
         props = MetricOptions(
             account=account,
             color=color,
             dimensions=dimensions,
+            dimensions_map=dimensions_map,
             label=label,
             period=period,
             region=region,
@@ -4726,67 +4943,67 @@ class Metric(metaclass=jsii.JSIIMeta, jsii_type="@aws-cdk/aws-cloudwatch.Metric"
             unit=unit,
         )
 
-        return jsii.invoke(self, "with", [props])
+        return typing.cast("Metric", jsii.invoke(self, "with", [props]))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="metricName")
-    def metric_name(self) -> str:
-        """Name of this metric."""
-        return jsii.get(self, "metricName")
+    def metric_name(self) -> builtins.str:
+        '''Name of this metric.'''
+        return typing.cast(builtins.str, jsii.get(self, "metricName"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="namespace")
-    def namespace(self) -> str:
-        """Namespace of this metric."""
-        return jsii.get(self, "namespace")
+    def namespace(self) -> builtins.str:
+        '''Namespace of this metric.'''
+        return typing.cast(builtins.str, jsii.get(self, "namespace"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="period")
     def period(self) -> aws_cdk.core.Duration:
-        """Period of this metric."""
-        return jsii.get(self, "period")
+        '''Period of this metric.'''
+        return typing.cast(aws_cdk.core.Duration, jsii.get(self, "period"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="statistic")
-    def statistic(self) -> str:
-        """Statistic of this metric."""
-        return jsii.get(self, "statistic")
+    def statistic(self) -> builtins.str:
+        '''Statistic of this metric.'''
+        return typing.cast(builtins.str, jsii.get(self, "statistic"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="account")
-    def account(self) -> typing.Optional[str]:
-        """Account which this metric comes from."""
-        return jsii.get(self, "account")
+    def account(self) -> typing.Optional[builtins.str]:
+        '''Account which this metric comes from.'''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "account"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="color")
-    def color(self) -> typing.Optional[str]:
-        """The hex color code used when this metric is rendered on a graph."""
-        return jsii.get(self, "color")
+    def color(self) -> typing.Optional[builtins.str]:
+        '''The hex color code used when this metric is rendered on a graph.'''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "color"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="dimensions")
-    def dimensions(self) -> typing.Optional[typing.Mapping[str, typing.Any]]:
-        """Dimensions of this metric."""
-        return jsii.get(self, "dimensions")
+    def dimensions(self) -> typing.Optional[typing.Mapping[builtins.str, typing.Any]]:
+        '''Dimensions of this metric.'''
+        return typing.cast(typing.Optional[typing.Mapping[builtins.str, typing.Any]], jsii.get(self, "dimensions"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="label")
-    def label(self) -> typing.Optional[str]:
-        """Label for this metric when added to a Graph in a Dashboard."""
-        return jsii.get(self, "label")
+    def label(self) -> typing.Optional[builtins.str]:
+        '''Label for this metric when added to a Graph in a Dashboard.'''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "label"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="region")
-    def region(self) -> typing.Optional[str]:
-        """Region which this metric comes from."""
-        return jsii.get(self, "region")
+    def region(self) -> typing.Optional[builtins.str]:
+        '''Region which this metric comes from.'''
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "region"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="unit")
     def unit(self) -> typing.Optional["Unit"]:
-        """Unit of the metric."""
-        return jsii.get(self, "unit")
+        '''Unit of the metric.'''
+        return typing.cast(typing.Optional["Unit"], jsii.get(self, "unit"))
 
 
 @jsii.data_type(
@@ -4806,31 +5023,29 @@ class MetricAlarmConfig:
     def __init__(
         self,
         *,
-        metric_name: str,
-        namespace: str,
+        metric_name: builtins.str,
+        namespace: builtins.str,
         period: jsii.Number,
-        dimensions: typing.Optional[typing.List["Dimension"]] = None,
-        extended_statistic: typing.Optional[str] = None,
+        dimensions: typing.Optional[typing.Sequence[Dimension]] = None,
+        extended_statistic: typing.Optional[builtins.str] = None,
         statistic: typing.Optional["Statistic"] = None,
         unit: typing.Optional["Unit"] = None,
     ) -> None:
-        """Properties used to construct the Metric identifying part of an Alarm.
+        '''(deprecated) Properties used to construct the Metric identifying part of an Alarm.
 
-        :param metric_name: Name of the metric.
-        :param namespace: Namespace of the metric.
-        :param period: How many seconds to aggregate over.
-        :param dimensions: The dimensions to apply to the alarm.
-        :param extended_statistic: Percentile aggregation function to use.
-        :param statistic: Simple aggregation function to use.
-        :param unit: The unit of the alarm.
+        :param metric_name: (deprecated) Name of the metric.
+        :param namespace: (deprecated) Namespace of the metric.
+        :param period: (deprecated) How many seconds to aggregate over.
+        :param dimensions: (deprecated) The dimensions to apply to the alarm.
+        :param extended_statistic: (deprecated) Percentile aggregation function to use.
+        :param statistic: (deprecated) Simple aggregation function to use.
+        :param unit: (deprecated) The unit of the alarm.
 
-        deprecated
         :deprecated: Replaced by MetricConfig
 
-        stability
         :stability: deprecated
-        """
-        self._values = {
+        '''
+        self._values: typing.Dict[str, typing.Any] = {
             "metric_name": metric_name,
             "namespace": namespace,
             "period": period,
@@ -4845,72 +5060,75 @@ class MetricAlarmConfig:
             self._values["unit"] = unit
 
     @builtins.property
-    def metric_name(self) -> str:
-        """Name of the metric.
+    def metric_name(self) -> builtins.str:
+        '''(deprecated) Name of the metric.
 
-        stability
         :stability: deprecated
-        """
-        return self._values.get("metric_name")
+        '''
+        result = self._values.get("metric_name")
+        assert result is not None, "Required property 'metric_name' is missing"
+        return typing.cast(builtins.str, result)
 
     @builtins.property
-    def namespace(self) -> str:
-        """Namespace of the metric.
+    def namespace(self) -> builtins.str:
+        '''(deprecated) Namespace of the metric.
 
-        stability
         :stability: deprecated
-        """
-        return self._values.get("namespace")
+        '''
+        result = self._values.get("namespace")
+        assert result is not None, "Required property 'namespace' is missing"
+        return typing.cast(builtins.str, result)
 
     @builtins.property
     def period(self) -> jsii.Number:
-        """How many seconds to aggregate over.
+        '''(deprecated) How many seconds to aggregate over.
 
-        stability
         :stability: deprecated
-        """
-        return self._values.get("period")
+        '''
+        result = self._values.get("period")
+        assert result is not None, "Required property 'period' is missing"
+        return typing.cast(jsii.Number, result)
 
     @builtins.property
-    def dimensions(self) -> typing.Optional[typing.List["Dimension"]]:
-        """The dimensions to apply to the alarm.
+    def dimensions(self) -> typing.Optional[typing.List[Dimension]]:
+        '''(deprecated) The dimensions to apply to the alarm.
 
-        stability
         :stability: deprecated
-        """
-        return self._values.get("dimensions")
+        '''
+        result = self._values.get("dimensions")
+        return typing.cast(typing.Optional[typing.List[Dimension]], result)
 
     @builtins.property
-    def extended_statistic(self) -> typing.Optional[str]:
-        """Percentile aggregation function to use.
+    def extended_statistic(self) -> typing.Optional[builtins.str]:
+        '''(deprecated) Percentile aggregation function to use.
 
-        stability
         :stability: deprecated
-        """
-        return self._values.get("extended_statistic")
+        '''
+        result = self._values.get("extended_statistic")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def statistic(self) -> typing.Optional["Statistic"]:
-        """Simple aggregation function to use.
+        '''(deprecated) Simple aggregation function to use.
 
-        stability
         :stability: deprecated
-        """
-        return self._values.get("statistic")
+        '''
+        result = self._values.get("statistic")
+        return typing.cast(typing.Optional["Statistic"], result)
 
     @builtins.property
     def unit(self) -> typing.Optional["Unit"]:
-        """The unit of the alarm.
+        '''(deprecated) The unit of the alarm.
 
-        stability
         :stability: deprecated
-        """
-        return self._values.get("unit")
+        '''
+        result = self._values.get("unit")
+        return typing.cast(typing.Optional["Unit"], result)
 
-    def __eq__(self, rhs) -> bool:
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
@@ -4934,19 +5152,19 @@ class MetricConfig:
         *,
         math_expression: typing.Optional["MetricExpressionConfig"] = None,
         metric_stat: typing.Optional["MetricStatConfig"] = None,
-        rendering_properties: typing.Optional[typing.Mapping[str, typing.Any]] = None,
+        rendering_properties: typing.Optional[typing.Mapping[builtins.str, typing.Any]] = None,
     ) -> None:
-        """Properties of a rendered metric.
+        '''Properties of a rendered metric.
 
         :param math_expression: In case the metric is a math expression, the details of the math expression. Default: - None
         :param metric_stat: In case the metric represents a query, the details of the query. Default: - None
         :param rendering_properties: Additional properties which will be rendered if the metric is used in a dashboard. Examples are 'label' and 'color', but any key in here will be added to dashboard graphs. Default: - None
-        """
+        '''
         if isinstance(math_expression, dict):
             math_expression = MetricExpressionConfig(**math_expression)
         if isinstance(metric_stat, dict):
             metric_stat = MetricStatConfig(**metric_stat)
-        self._values = {}
+        self._values: typing.Dict[str, typing.Any] = {}
         if math_expression is not None:
             self._values["math_expression"] = math_expression
         if metric_stat is not None:
@@ -4956,38 +5174,40 @@ class MetricConfig:
 
     @builtins.property
     def math_expression(self) -> typing.Optional["MetricExpressionConfig"]:
-        """In case the metric is a math expression, the details of the math expression.
+        '''In case the metric is a math expression, the details of the math expression.
 
-        default
         :default: - None
-        """
-        return self._values.get("math_expression")
+        '''
+        result = self._values.get("math_expression")
+        return typing.cast(typing.Optional["MetricExpressionConfig"], result)
 
     @builtins.property
     def metric_stat(self) -> typing.Optional["MetricStatConfig"]:
-        """In case the metric represents a query, the details of the query.
+        '''In case the metric represents a query, the details of the query.
 
-        default
         :default: - None
-        """
-        return self._values.get("metric_stat")
+        '''
+        result = self._values.get("metric_stat")
+        return typing.cast(typing.Optional["MetricStatConfig"], result)
 
     @builtins.property
-    def rendering_properties(self) -> typing.Optional[typing.Mapping[str, typing.Any]]:
-        """Additional properties which will be rendered if the metric is used in a dashboard.
+    def rendering_properties(
+        self,
+    ) -> typing.Optional[typing.Mapping[builtins.str, typing.Any]]:
+        '''Additional properties which will be rendered if the metric is used in a dashboard.
 
         Examples are 'label' and 'color', but any key in here will be
         added to dashboard graphs.
 
-        default
         :default: - None
-        """
-        return self._values.get("rendering_properties")
+        '''
+        result = self._values.get("rendering_properties")
+        return typing.cast(typing.Optional[typing.Mapping[builtins.str, typing.Any]], result)
 
-    def __eq__(self, rhs) -> bool:
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
@@ -5009,41 +5229,47 @@ class MetricExpressionConfig:
     def __init__(
         self,
         *,
-        expression: str,
+        expression: builtins.str,
         period: jsii.Number,
-        using_metrics: typing.Mapping[str, "IMetric"],
+        using_metrics: typing.Mapping[builtins.str, IMetric],
     ) -> None:
-        """Properties for a concrete metric.
+        '''Properties for a concrete metric.
 
         :param expression: Math expression for the metric.
         :param period: How many seconds to aggregate over.
         :param using_metrics: Metrics used in the math expression.
-        """
-        self._values = {
+        '''
+        self._values: typing.Dict[str, typing.Any] = {
             "expression": expression,
             "period": period,
             "using_metrics": using_metrics,
         }
 
     @builtins.property
-    def expression(self) -> str:
-        """Math expression for the metric."""
-        return self._values.get("expression")
+    def expression(self) -> builtins.str:
+        '''Math expression for the metric.'''
+        result = self._values.get("expression")
+        assert result is not None, "Required property 'expression' is missing"
+        return typing.cast(builtins.str, result)
 
     @builtins.property
     def period(self) -> jsii.Number:
-        """How many seconds to aggregate over."""
-        return self._values.get("period")
+        '''How many seconds to aggregate over.'''
+        result = self._values.get("period")
+        assert result is not None, "Required property 'period' is missing"
+        return typing.cast(jsii.Number, result)
 
     @builtins.property
-    def using_metrics(self) -> typing.Mapping[str, "IMetric"]:
-        """Metrics used in the math expression."""
-        return self._values.get("using_metrics")
+    def using_metrics(self) -> typing.Mapping[builtins.str, IMetric]:
+        '''Metrics used in the math expression.'''
+        result = self._values.get("using_metrics")
+        assert result is not None, "Required property 'using_metrics' is missing"
+        return typing.cast(typing.Mapping[builtins.str, IMetric], result)
 
-    def __eq__(self, rhs) -> bool:
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
@@ -5071,37 +5297,35 @@ class MetricGraphConfig:
     def __init__(
         self,
         *,
-        metric_name: str,
-        namespace: str,
+        metric_name: builtins.str,
+        namespace: builtins.str,
         period: jsii.Number,
         rendering_properties: "MetricRenderingProperties",
-        color: typing.Optional[str] = None,
-        dimensions: typing.Optional[typing.List["Dimension"]] = None,
-        label: typing.Optional[str] = None,
-        statistic: typing.Optional[str] = None,
+        color: typing.Optional[builtins.str] = None,
+        dimensions: typing.Optional[typing.Sequence[Dimension]] = None,
+        label: typing.Optional[builtins.str] = None,
+        statistic: typing.Optional[builtins.str] = None,
         unit: typing.Optional["Unit"] = None,
     ) -> None:
-        """Properties used to construct the Metric identifying part of a Graph.
+        '''(deprecated) Properties used to construct the Metric identifying part of a Graph.
 
-        :param metric_name: Name of the metric.
-        :param namespace: Namespace of the metric.
-        :param period: How many seconds to aggregate over.
-        :param rendering_properties: Rendering properties override yAxis parameter of the widget object.
-        :param color: Color for the graph line.
-        :param dimensions: The dimensions to apply to the alarm.
-        :param label: Label for the metric.
-        :param statistic: Aggregation function to use (can be either simple or a percentile).
-        :param unit: The unit of the alarm.
+        :param metric_name: (deprecated) Name of the metric.
+        :param namespace: (deprecated) Namespace of the metric.
+        :param period: (deprecated) How many seconds to aggregate over.
+        :param rendering_properties: (deprecated) Rendering properties override yAxis parameter of the widget object.
+        :param color: (deprecated) Color for the graph line.
+        :param dimensions: (deprecated) The dimensions to apply to the alarm.
+        :param label: (deprecated) Label for the metric.
+        :param statistic: (deprecated) Aggregation function to use (can be either simple or a percentile).
+        :param unit: (deprecated) The unit of the alarm.
 
-        deprecated
         :deprecated: Replaced by MetricConfig
 
-        stability
         :stability: deprecated
-        """
+        '''
         if isinstance(rendering_properties, dict):
             rendering_properties = MetricRenderingProperties(**rendering_properties)
-        self._values = {
+        self._values: typing.Dict[str, typing.Any] = {
             "metric_name": metric_name,
             "namespace": namespace,
             "period": period,
@@ -5119,105 +5343,104 @@ class MetricGraphConfig:
             self._values["unit"] = unit
 
     @builtins.property
-    def metric_name(self) -> str:
-        """Name of the metric.
+    def metric_name(self) -> builtins.str:
+        '''(deprecated) Name of the metric.
 
-        stability
         :stability: deprecated
-        """
-        return self._values.get("metric_name")
+        '''
+        result = self._values.get("metric_name")
+        assert result is not None, "Required property 'metric_name' is missing"
+        return typing.cast(builtins.str, result)
 
     @builtins.property
-    def namespace(self) -> str:
-        """Namespace of the metric.
+    def namespace(self) -> builtins.str:
+        '''(deprecated) Namespace of the metric.
 
-        stability
         :stability: deprecated
-        """
-        return self._values.get("namespace")
+        '''
+        result = self._values.get("namespace")
+        assert result is not None, "Required property 'namespace' is missing"
+        return typing.cast(builtins.str, result)
 
     @builtins.property
     def period(self) -> jsii.Number:
-        """How many seconds to aggregate over.
+        '''(deprecated) How many seconds to aggregate over.
 
-        deprecated
         :deprecated: Use ``period`` in ``renderingProperties``
 
-        stability
         :stability: deprecated
-        """
-        return self._values.get("period")
+        '''
+        result = self._values.get("period")
+        assert result is not None, "Required property 'period' is missing"
+        return typing.cast(jsii.Number, result)
 
     @builtins.property
     def rendering_properties(self) -> "MetricRenderingProperties":
-        """Rendering properties override yAxis parameter of the widget object.
+        '''(deprecated) Rendering properties override yAxis parameter of the widget object.
 
-        stability
         :stability: deprecated
-        """
-        return self._values.get("rendering_properties")
+        '''
+        result = self._values.get("rendering_properties")
+        assert result is not None, "Required property 'rendering_properties' is missing"
+        return typing.cast("MetricRenderingProperties", result)
 
     @builtins.property
-    def color(self) -> typing.Optional[str]:
-        """Color for the graph line.
+    def color(self) -> typing.Optional[builtins.str]:
+        '''(deprecated) Color for the graph line.
 
-        deprecated
         :deprecated: Use ``color`` in ``renderingProperties``
 
-        stability
         :stability: deprecated
-        """
-        return self._values.get("color")
+        '''
+        result = self._values.get("color")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
-    def dimensions(self) -> typing.Optional[typing.List["Dimension"]]:
-        """The dimensions to apply to the alarm.
+    def dimensions(self) -> typing.Optional[typing.List[Dimension]]:
+        '''(deprecated) The dimensions to apply to the alarm.
 
-        stability
         :stability: deprecated
-        """
-        return self._values.get("dimensions")
+        '''
+        result = self._values.get("dimensions")
+        return typing.cast(typing.Optional[typing.List[Dimension]], result)
 
     @builtins.property
-    def label(self) -> typing.Optional[str]:
-        """Label for the metric.
+    def label(self) -> typing.Optional[builtins.str]:
+        '''(deprecated) Label for the metric.
 
-        deprecated
         :deprecated: Use ``label`` in ``renderingProperties``
 
-        stability
         :stability: deprecated
-        """
-        return self._values.get("label")
+        '''
+        result = self._values.get("label")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
-    def statistic(self) -> typing.Optional[str]:
-        """Aggregation function to use (can be either simple or a percentile).
+    def statistic(self) -> typing.Optional[builtins.str]:
+        '''(deprecated) Aggregation function to use (can be either simple or a percentile).
 
-        deprecated
         :deprecated: Use ``stat`` in ``renderingProperties``
 
-        stability
         :stability: deprecated
-        """
-        return self._values.get("statistic")
+        '''
+        result = self._values.get("statistic")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def unit(self) -> typing.Optional["Unit"]:
-        """The unit of the alarm.
+        '''(deprecated) The unit of the alarm.
 
-        deprecated
         :deprecated: not used in dashboard widgets
 
-        stability
         :stability: deprecated
-        """
-        return self._values.get("unit")
+        '''
+        result = self._values.get("unit")
+        return typing.cast(typing.Optional["Unit"], result)
 
-    def __eq__(self, rhs) -> bool:
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
@@ -5233,6 +5456,7 @@ class MetricGraphConfig:
         "account": "account",
         "color": "color",
         "dimensions": "dimensions",
+        "dimensions_map": "dimensionsMap",
         "label": "label",
         "period": "period",
         "region": "region",
@@ -5244,33 +5468,37 @@ class MetricOptions(CommonMetricOptions):
     def __init__(
         self,
         *,
-        account: typing.Optional[str] = None,
-        color: typing.Optional[str] = None,
-        dimensions: typing.Optional[typing.Mapping[str, typing.Any]] = None,
-        label: typing.Optional[str] = None,
+        account: typing.Optional[builtins.str] = None,
+        color: typing.Optional[builtins.str] = None,
+        dimensions: typing.Optional[typing.Mapping[builtins.str, typing.Any]] = None,
+        dimensions_map: typing.Optional[typing.Mapping[builtins.str, builtins.str]] = None,
+        label: typing.Optional[builtins.str] = None,
         period: typing.Optional[aws_cdk.core.Duration] = None,
-        region: typing.Optional[str] = None,
-        statistic: typing.Optional[str] = None,
+        region: typing.Optional[builtins.str] = None,
+        statistic: typing.Optional[builtins.str] = None,
         unit: typing.Optional["Unit"] = None,
     ) -> None:
-        """Properties of a metric that can be changed.
+        '''Properties of a metric that can be changed.
 
         :param account: Account which this metric comes from. Default: - Deployment account.
         :param color: The hex color code, prefixed with '#' (e.g. '#00ff00'), to use when this metric is rendered on a graph. The ``Color`` class has a set of standard colors that can be used here. Default: - Automatic color
-        :param dimensions: Dimensions of the metric. Default: - No dimensions.
+        :param dimensions: (deprecated) Dimensions of the metric. Default: - No dimensions.
+        :param dimensions_map: Dimensions of the metric. Default: - No dimensions.
         :param label: Label for this metric when added to a Graph in a Dashboard. Default: - No label
         :param period: The period over which the specified statistic is applied. Default: Duration.minutes(5)
         :param region: Region which this metric comes from. Default: - Deployment region.
         :param statistic: What function to use for aggregating. Can be one of the following: - "Minimum" | "min" - "Maximum" | "max" - "Average" | "avg" - "Sum" | "sum" - "SampleCount | "n" - "pNN.NN" Default: Average
         :param unit: Unit used to filter the metric stream. Only refer to datums emitted to the metric stream with the given unit and ignore all others. Only useful when datums are being emitted to the same metric stream under different units. The default is to use all matric datums in the stream, regardless of unit, which is recommended in nearly all cases. CloudWatch does not honor this property for graphs. Default: - All metric datums in the given metric stream
-        """
-        self._values = {}
+        '''
+        self._values: typing.Dict[str, typing.Any] = {}
         if account is not None:
             self._values["account"] = account
         if color is not None:
             self._values["color"] = color
         if dimensions is not None:
             self._values["dimensions"] = dimensions
+        if dimensions_map is not None:
+            self._values["dimensions_map"] = dimensions_map
         if label is not None:
             self._values["label"] = label
         if period is not None:
@@ -5283,62 +5511,77 @@ class MetricOptions(CommonMetricOptions):
             self._values["unit"] = unit
 
     @builtins.property
-    def account(self) -> typing.Optional[str]:
-        """Account which this metric comes from.
+    def account(self) -> typing.Optional[builtins.str]:
+        '''Account which this metric comes from.
 
-        default
         :default: - Deployment account.
-        """
-        return self._values.get("account")
+        '''
+        result = self._values.get("account")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
-    def color(self) -> typing.Optional[str]:
-        """The hex color code, prefixed with '#' (e.g. '#00ff00'), to use when this metric is rendered on a graph. The ``Color`` class has a set of standard colors that can be used here.
+    def color(self) -> typing.Optional[builtins.str]:
+        '''The hex color code, prefixed with '#' (e.g. '#00ff00'), to use when this metric is rendered on a graph. The ``Color`` class has a set of standard colors that can be used here.
 
-        default
         :default: - Automatic color
-        """
-        return self._values.get("color")
+        '''
+        result = self._values.get("color")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
-    def dimensions(self) -> typing.Optional[typing.Mapping[str, typing.Any]]:
-        """Dimensions of the metric.
+    def dimensions(self) -> typing.Optional[typing.Mapping[builtins.str, typing.Any]]:
+        '''(deprecated) Dimensions of the metric.
 
-        default
         :default: - No dimensions.
-        """
-        return self._values.get("dimensions")
+
+        :deprecated: Use 'dimensionsMap' instead.
+
+        :stability: deprecated
+        '''
+        result = self._values.get("dimensions")
+        return typing.cast(typing.Optional[typing.Mapping[builtins.str, typing.Any]], result)
 
     @builtins.property
-    def label(self) -> typing.Optional[str]:
-        """Label for this metric when added to a Graph in a Dashboard.
+    def dimensions_map(
+        self,
+    ) -> typing.Optional[typing.Mapping[builtins.str, builtins.str]]:
+        '''Dimensions of the metric.
 
-        default
+        :default: - No dimensions.
+        '''
+        result = self._values.get("dimensions_map")
+        return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
+
+    @builtins.property
+    def label(self) -> typing.Optional[builtins.str]:
+        '''Label for this metric when added to a Graph in a Dashboard.
+
         :default: - No label
-        """
-        return self._values.get("label")
+        '''
+        result = self._values.get("label")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def period(self) -> typing.Optional[aws_cdk.core.Duration]:
-        """The period over which the specified statistic is applied.
+        '''The period over which the specified statistic is applied.
 
-        default
         :default: Duration.minutes(5)
-        """
-        return self._values.get("period")
+        '''
+        result = self._values.get("period")
+        return typing.cast(typing.Optional[aws_cdk.core.Duration], result)
 
     @builtins.property
-    def region(self) -> typing.Optional[str]:
-        """Region which this metric comes from.
+    def region(self) -> typing.Optional[builtins.str]:
+        '''Region which this metric comes from.
 
-        default
         :default: - Deployment region.
-        """
-        return self._values.get("region")
+        '''
+        result = self._values.get("region")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
-    def statistic(self) -> typing.Optional[str]:
-        """What function to use for aggregating.
+    def statistic(self) -> typing.Optional[builtins.str]:
+        '''What function to use for aggregating.
 
         Can be one of the following:
 
@@ -5349,14 +5592,14 @@ class MetricOptions(CommonMetricOptions):
         - "SampleCount | "n"
         - "pNN.NN"
 
-        default
         :default: Average
-        """
-        return self._values.get("statistic")
+        '''
+        result = self._values.get("statistic")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def unit(self) -> typing.Optional["Unit"]:
-        """Unit used to filter the metric stream.
+        '''Unit used to filter the metric stream.
 
         Only refer to datums emitted to the metric stream with the given unit and
         ignore all others. Only useful when datums are being emitted to the same
@@ -5367,15 +5610,15 @@ class MetricOptions(CommonMetricOptions):
 
         CloudWatch does not honor this property for graphs.
 
-        default
         :default: - All metric datums in the given metric stream
-        """
-        return self._values.get("unit")
+        '''
+        result = self._values.get("unit")
+        return typing.cast(typing.Optional["Unit"], result)
 
-    def __eq__(self, rhs) -> bool:
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
@@ -5391,6 +5634,7 @@ class MetricOptions(CommonMetricOptions):
         "account": "account",
         "color": "color",
         "dimensions": "dimensions",
+        "dimensions_map": "dimensionsMap",
         "label": "label",
         "period": "period",
         "region": "region",
@@ -5404,22 +5648,24 @@ class MetricProps(CommonMetricOptions):
     def __init__(
         self,
         *,
-        account: typing.Optional[str] = None,
-        color: typing.Optional[str] = None,
-        dimensions: typing.Optional[typing.Mapping[str, typing.Any]] = None,
-        label: typing.Optional[str] = None,
+        account: typing.Optional[builtins.str] = None,
+        color: typing.Optional[builtins.str] = None,
+        dimensions: typing.Optional[typing.Mapping[builtins.str, typing.Any]] = None,
+        dimensions_map: typing.Optional[typing.Mapping[builtins.str, builtins.str]] = None,
+        label: typing.Optional[builtins.str] = None,
         period: typing.Optional[aws_cdk.core.Duration] = None,
-        region: typing.Optional[str] = None,
-        statistic: typing.Optional[str] = None,
+        region: typing.Optional[builtins.str] = None,
+        statistic: typing.Optional[builtins.str] = None,
         unit: typing.Optional["Unit"] = None,
-        metric_name: str,
-        namespace: str,
+        metric_name: builtins.str,
+        namespace: builtins.str,
     ) -> None:
-        """Properties for a metric.
+        '''Properties for a metric.
 
         :param account: Account which this metric comes from. Default: - Deployment account.
         :param color: The hex color code, prefixed with '#' (e.g. '#00ff00'), to use when this metric is rendered on a graph. The ``Color`` class has a set of standard colors that can be used here. Default: - Automatic color
-        :param dimensions: Dimensions of the metric. Default: - No dimensions.
+        :param dimensions: (deprecated) Dimensions of the metric. Default: - No dimensions.
+        :param dimensions_map: Dimensions of the metric. Default: - No dimensions.
         :param label: Label for this metric when added to a Graph in a Dashboard. Default: - No label
         :param period: The period over which the specified statistic is applied. Default: Duration.minutes(5)
         :param region: Region which this metric comes from. Default: - Deployment region.
@@ -5427,8 +5673,8 @@ class MetricProps(CommonMetricOptions):
         :param unit: Unit used to filter the metric stream. Only refer to datums emitted to the metric stream with the given unit and ignore all others. Only useful when datums are being emitted to the same metric stream under different units. The default is to use all matric datums in the stream, regardless of unit, which is recommended in nearly all cases. CloudWatch does not honor this property for graphs. Default: - All metric datums in the given metric stream
         :param metric_name: Name of the metric.
         :param namespace: Namespace of the metric.
-        """
-        self._values = {
+        '''
+        self._values: typing.Dict[str, typing.Any] = {
             "metric_name": metric_name,
             "namespace": namespace,
         }
@@ -5438,6 +5684,8 @@ class MetricProps(CommonMetricOptions):
             self._values["color"] = color
         if dimensions is not None:
             self._values["dimensions"] = dimensions
+        if dimensions_map is not None:
+            self._values["dimensions_map"] = dimensions_map
         if label is not None:
             self._values["label"] = label
         if period is not None:
@@ -5450,62 +5698,77 @@ class MetricProps(CommonMetricOptions):
             self._values["unit"] = unit
 
     @builtins.property
-    def account(self) -> typing.Optional[str]:
-        """Account which this metric comes from.
+    def account(self) -> typing.Optional[builtins.str]:
+        '''Account which this metric comes from.
 
-        default
         :default: - Deployment account.
-        """
-        return self._values.get("account")
+        '''
+        result = self._values.get("account")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
-    def color(self) -> typing.Optional[str]:
-        """The hex color code, prefixed with '#' (e.g. '#00ff00'), to use when this metric is rendered on a graph. The ``Color`` class has a set of standard colors that can be used here.
+    def color(self) -> typing.Optional[builtins.str]:
+        '''The hex color code, prefixed with '#' (e.g. '#00ff00'), to use when this metric is rendered on a graph. The ``Color`` class has a set of standard colors that can be used here.
 
-        default
         :default: - Automatic color
-        """
-        return self._values.get("color")
+        '''
+        result = self._values.get("color")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
-    def dimensions(self) -> typing.Optional[typing.Mapping[str, typing.Any]]:
-        """Dimensions of the metric.
+    def dimensions(self) -> typing.Optional[typing.Mapping[builtins.str, typing.Any]]:
+        '''(deprecated) Dimensions of the metric.
 
-        default
         :default: - No dimensions.
-        """
-        return self._values.get("dimensions")
+
+        :deprecated: Use 'dimensionsMap' instead.
+
+        :stability: deprecated
+        '''
+        result = self._values.get("dimensions")
+        return typing.cast(typing.Optional[typing.Mapping[builtins.str, typing.Any]], result)
 
     @builtins.property
-    def label(self) -> typing.Optional[str]:
-        """Label for this metric when added to a Graph in a Dashboard.
+    def dimensions_map(
+        self,
+    ) -> typing.Optional[typing.Mapping[builtins.str, builtins.str]]:
+        '''Dimensions of the metric.
 
-        default
+        :default: - No dimensions.
+        '''
+        result = self._values.get("dimensions_map")
+        return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
+
+    @builtins.property
+    def label(self) -> typing.Optional[builtins.str]:
+        '''Label for this metric when added to a Graph in a Dashboard.
+
         :default: - No label
-        """
-        return self._values.get("label")
+        '''
+        result = self._values.get("label")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def period(self) -> typing.Optional[aws_cdk.core.Duration]:
-        """The period over which the specified statistic is applied.
+        '''The period over which the specified statistic is applied.
 
-        default
         :default: Duration.minutes(5)
-        """
-        return self._values.get("period")
+        '''
+        result = self._values.get("period")
+        return typing.cast(typing.Optional[aws_cdk.core.Duration], result)
 
     @builtins.property
-    def region(self) -> typing.Optional[str]:
-        """Region which this metric comes from.
+    def region(self) -> typing.Optional[builtins.str]:
+        '''Region which this metric comes from.
 
-        default
         :default: - Deployment region.
-        """
-        return self._values.get("region")
+        '''
+        result = self._values.get("region")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
-    def statistic(self) -> typing.Optional[str]:
-        """What function to use for aggregating.
+    def statistic(self) -> typing.Optional[builtins.str]:
+        '''What function to use for aggregating.
 
         Can be one of the following:
 
@@ -5516,14 +5779,14 @@ class MetricProps(CommonMetricOptions):
         - "SampleCount | "n"
         - "pNN.NN"
 
-        default
         :default: Average
-        """
-        return self._values.get("statistic")
+        '''
+        result = self._values.get("statistic")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def unit(self) -> typing.Optional["Unit"]:
-        """Unit used to filter the metric stream.
+        '''Unit used to filter the metric stream.
 
         Only refer to datums emitted to the metric stream with the given unit and
         ignore all others. Only useful when datums are being emitted to the same
@@ -5534,25 +5797,29 @@ class MetricProps(CommonMetricOptions):
 
         CloudWatch does not honor this property for graphs.
 
-        default
         :default: - All metric datums in the given metric stream
-        """
-        return self._values.get("unit")
+        '''
+        result = self._values.get("unit")
+        return typing.cast(typing.Optional["Unit"], result)
 
     @builtins.property
-    def metric_name(self) -> str:
-        """Name of the metric."""
-        return self._values.get("metric_name")
+    def metric_name(self) -> builtins.str:
+        '''Name of the metric.'''
+        result = self._values.get("metric_name")
+        assert result is not None, "Required property 'metric_name' is missing"
+        return typing.cast(builtins.str, result)
 
     @builtins.property
-    def namespace(self) -> str:
-        """Namespace of the metric."""
-        return self._values.get("namespace")
+    def namespace(self) -> builtins.str:
+        '''Namespace of the metric.'''
+        result = self._values.get("namespace")
+        assert result is not None, "Required property 'namespace' is missing"
+        return typing.cast(builtins.str, result)
 
-    def __eq__(self, rhs) -> bool:
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
@@ -5576,24 +5843,22 @@ class MetricRenderingProperties:
         self,
         *,
         period: jsii.Number,
-        color: typing.Optional[str] = None,
-        label: typing.Optional[str] = None,
-        stat: typing.Optional[str] = None,
+        color: typing.Optional[builtins.str] = None,
+        label: typing.Optional[builtins.str] = None,
+        stat: typing.Optional[builtins.str] = None,
     ) -> None:
-        """Custom rendering properties that override the default rendering properties specified in the yAxis parameter of the widget object.
+        '''(deprecated) Custom rendering properties that override the default rendering properties specified in the yAxis parameter of the widget object.
 
-        :param period: How many seconds to aggregate over.
-        :param color: The hex color code, prefixed with '#' (e.g. '#00ff00'), to use when this metric is rendered on a graph. The ``Color`` class has a set of standard colors that can be used here.
-        :param label: Label for the metric.
-        :param stat: Aggregation function to use (can be either simple or a percentile).
+        :param period: (deprecated) How many seconds to aggregate over.
+        :param color: (deprecated) The hex color code, prefixed with '#' (e.g. '#00ff00'), to use when this metric is rendered on a graph. The ``Color`` class has a set of standard colors that can be used here.
+        :param label: (deprecated) Label for the metric.
+        :param stat: (deprecated) Aggregation function to use (can be either simple or a percentile).
 
-        deprecated
         :deprecated: Replaced by MetricConfig.
 
-        stability
         :stability: deprecated
-        """
-        self._values = {
+        '''
+        self._values: typing.Dict[str, typing.Any] = {
             "period": period,
         }
         if color is not None:
@@ -5605,44 +5870,45 @@ class MetricRenderingProperties:
 
     @builtins.property
     def period(self) -> jsii.Number:
-        """How many seconds to aggregate over.
+        '''(deprecated) How many seconds to aggregate over.
 
-        stability
         :stability: deprecated
-        """
-        return self._values.get("period")
+        '''
+        result = self._values.get("period")
+        assert result is not None, "Required property 'period' is missing"
+        return typing.cast(jsii.Number, result)
 
     @builtins.property
-    def color(self) -> typing.Optional[str]:
-        """The hex color code, prefixed with '#' (e.g. '#00ff00'), to use when this metric is rendered on a graph. The ``Color`` class has a set of standard colors that can be used here.
+    def color(self) -> typing.Optional[builtins.str]:
+        '''(deprecated) The hex color code, prefixed with '#' (e.g. '#00ff00'), to use when this metric is rendered on a graph. The ``Color`` class has a set of standard colors that can be used here.
 
-        stability
         :stability: deprecated
-        """
-        return self._values.get("color")
+        '''
+        result = self._values.get("color")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
-    def label(self) -> typing.Optional[str]:
-        """Label for the metric.
+    def label(self) -> typing.Optional[builtins.str]:
+        '''(deprecated) Label for the metric.
 
-        stability
         :stability: deprecated
-        """
-        return self._values.get("label")
+        '''
+        result = self._values.get("label")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
-    def stat(self) -> typing.Optional[str]:
-        """Aggregation function to use (can be either simple or a percentile).
+    def stat(self) -> typing.Optional[builtins.str]:
+        '''(deprecated) Aggregation function to use (can be either simple or a percentile).
 
-        stability
         :stability: deprecated
-        """
-        return self._values.get("stat")
+        '''
+        result = self._values.get("stat")
+        return typing.cast(typing.Optional[builtins.str], result)
 
-    def __eq__(self, rhs) -> bool:
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
@@ -5669,16 +5935,16 @@ class MetricStatConfig:
     def __init__(
         self,
         *,
-        metric_name: str,
-        namespace: str,
+        metric_name: builtins.str,
+        namespace: builtins.str,
         period: aws_cdk.core.Duration,
-        statistic: str,
-        account: typing.Optional[str] = None,
-        dimensions: typing.Optional[typing.List["Dimension"]] = None,
-        region: typing.Optional[str] = None,
+        statistic: builtins.str,
+        account: typing.Optional[builtins.str] = None,
+        dimensions: typing.Optional[typing.Sequence[Dimension]] = None,
+        region: typing.Optional[builtins.str] = None,
         unit_filter: typing.Optional["Unit"] = None,
     ) -> None:
-        """Properties for a concrete metric.
+        '''Properties for a concrete metric.
 
         NOTE: ``unit`` is no longer on this object since it is only used for ``Alarms``, and doesn't mean what one
         would expect it to mean there anyway. It is most likely to be misused.
@@ -5691,8 +5957,8 @@ class MetricStatConfig:
         :param dimensions: The dimensions to apply to the alarm. Default: []
         :param region: Region which this metric comes from. Default: Deployment region.
         :param unit_filter: Unit used to filter the metric stream. Only refer to datums emitted to the metric stream with the given unit and ignore all others. Only useful when datums are being emitted to the same metric stream under different units. This field has been renamed from plain ``unit`` to clearly communicate its purpose. Default: - Refer to all metric datums
-        """
-        self._values = {
+        '''
+        self._values: typing.Dict[str, typing.Any] = {
             "metric_name": metric_name,
             "namespace": namespace,
             "period": period,
@@ -5708,55 +5974,63 @@ class MetricStatConfig:
             self._values["unit_filter"] = unit_filter
 
     @builtins.property
-    def metric_name(self) -> str:
-        """Name of the metric."""
-        return self._values.get("metric_name")
+    def metric_name(self) -> builtins.str:
+        '''Name of the metric.'''
+        result = self._values.get("metric_name")
+        assert result is not None, "Required property 'metric_name' is missing"
+        return typing.cast(builtins.str, result)
 
     @builtins.property
-    def namespace(self) -> str:
-        """Namespace of the metric."""
-        return self._values.get("namespace")
+    def namespace(self) -> builtins.str:
+        '''Namespace of the metric.'''
+        result = self._values.get("namespace")
+        assert result is not None, "Required property 'namespace' is missing"
+        return typing.cast(builtins.str, result)
 
     @builtins.property
     def period(self) -> aws_cdk.core.Duration:
-        """How many seconds to aggregate over."""
-        return self._values.get("period")
+        '''How many seconds to aggregate over.'''
+        result = self._values.get("period")
+        assert result is not None, "Required property 'period' is missing"
+        return typing.cast(aws_cdk.core.Duration, result)
 
     @builtins.property
-    def statistic(self) -> str:
-        """Aggregation function to use (can be either simple or a percentile)."""
-        return self._values.get("statistic")
+    def statistic(self) -> builtins.str:
+        '''Aggregation function to use (can be either simple or a percentile).'''
+        result = self._values.get("statistic")
+        assert result is not None, "Required property 'statistic' is missing"
+        return typing.cast(builtins.str, result)
 
     @builtins.property
-    def account(self) -> typing.Optional[str]:
-        """Account which this metric comes from.
+    def account(self) -> typing.Optional[builtins.str]:
+        '''Account which this metric comes from.
 
-        default
         :default: Deployment account.
-        """
-        return self._values.get("account")
+        '''
+        result = self._values.get("account")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
-    def dimensions(self) -> typing.Optional[typing.List["Dimension"]]:
-        """The dimensions to apply to the alarm.
+    def dimensions(self) -> typing.Optional[typing.List[Dimension]]:
+        '''The dimensions to apply to the alarm.
 
-        default
         :default: []
-        """
-        return self._values.get("dimensions")
+        '''
+        result = self._values.get("dimensions")
+        return typing.cast(typing.Optional[typing.List[Dimension]], result)
 
     @builtins.property
-    def region(self) -> typing.Optional[str]:
-        """Region which this metric comes from.
+    def region(self) -> typing.Optional[builtins.str]:
+        '''Region which this metric comes from.
 
-        default
         :default: Deployment region.
-        """
-        return self._values.get("region")
+        '''
+        result = self._values.get("region")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def unit_filter(self) -> typing.Optional["Unit"]:
-        """Unit used to filter the metric stream.
+        '''Unit used to filter the metric stream.
 
         Only refer to datums emitted to the metric stream with the given unit and
         ignore all others. Only useful when datums are being emitted to the same
@@ -5765,15 +6039,15 @@ class MetricStatConfig:
         This field has been renamed from plain ``unit`` to clearly communicate
         its purpose.
 
-        default
         :default: - Refer to all metric datums
-        """
-        return self._values.get("unit_filter")
+        '''
+        result = self._values.get("unit_filter")
+        return typing.cast(typing.Optional["Unit"], result)
 
-    def __eq__(self, rhs) -> bool:
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
@@ -5797,18 +6071,18 @@ class MetricWidgetProps:
         self,
         *,
         height: typing.Optional[jsii.Number] = None,
-        region: typing.Optional[str] = None,
-        title: typing.Optional[str] = None,
+        region: typing.Optional[builtins.str] = None,
+        title: typing.Optional[builtins.str] = None,
         width: typing.Optional[jsii.Number] = None,
     ) -> None:
-        """Basic properties for widgets that display metrics.
+        '''Basic properties for widgets that display metrics.
 
         :param height: Height of the widget. Default: - 6 for Alarm and Graph widgets. 3 for single value widgets where most recent value of a metric is displayed.
         :param region: The region the metrics of this graph should be taken from. Default: - Current region
         :param title: Title for the graph. Default: - None
         :param width: Width of the widget, in a grid of 24 units wide. Default: 6
-        """
-        self._values = {}
+        '''
+        self._values: typing.Dict[str, typing.Any] = {}
         if height is not None:
             self._values["height"] = height
         if region is not None:
@@ -5820,47 +6094,47 @@ class MetricWidgetProps:
 
     @builtins.property
     def height(self) -> typing.Optional[jsii.Number]:
-        """Height of the widget.
+        '''Height of the widget.
 
-        default
         :default:
 
         - 6 for Alarm and Graph widgets.
-          3 for single value widgets where most recent value of a metric is displayed.
-        """
-        return self._values.get("height")
+        3 for single value widgets where most recent value of a metric is displayed.
+        '''
+        result = self._values.get("height")
+        return typing.cast(typing.Optional[jsii.Number], result)
 
     @builtins.property
-    def region(self) -> typing.Optional[str]:
-        """The region the metrics of this graph should be taken from.
+    def region(self) -> typing.Optional[builtins.str]:
+        '''The region the metrics of this graph should be taken from.
 
-        default
         :default: - Current region
-        """
-        return self._values.get("region")
+        '''
+        result = self._values.get("region")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
-    def title(self) -> typing.Optional[str]:
-        """Title for the graph.
+    def title(self) -> typing.Optional[builtins.str]:
+        '''Title for the graph.
 
-        default
         :default: - None
-        """
-        return self._values.get("title")
+        '''
+        result = self._values.get("title")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def width(self) -> typing.Optional[jsii.Number]:
-        """Width of the widget, in a grid of 24 units wide.
+        '''Width of the widget, in a grid of 24 units wide.
 
-        default
         :default: 6
-        """
-        return self._values.get("width")
+        '''
+        result = self._values.get("width")
+        return typing.cast(typing.Optional[jsii.Number], result)
 
-    def __eq__(self, rhs) -> bool:
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
@@ -5871,64 +6145,64 @@ class MetricWidgetProps:
 
 @jsii.enum(jsii_type="@aws-cdk/aws-cloudwatch.PeriodOverride")
 class PeriodOverride(enum.Enum):
-    """Specify the period for graphs when the CloudWatch dashboard loads."""
+    '''Specify the period for graphs when the CloudWatch dashboard loads.'''
 
     AUTO = "AUTO"
-    """Period of all graphs on the dashboard automatically adapt to the time range of the dashboard."""
+    '''Period of all graphs on the dashboard automatically adapt to the time range of the dashboard.'''
     INHERIT = "INHERIT"
-    """Period set for each graph will be used."""
+    '''Period set for each graph will be used.'''
 
 
 @jsii.implements(IWidget)
 class Row(metaclass=jsii.JSIIMeta, jsii_type="@aws-cdk/aws-cloudwatch.Row"):
-    """A widget that contains other widgets in a horizontal row.
+    '''A widget that contains other widgets in a horizontal row.
 
     Widgets will be laid out next to each other
-    """
+    '''
 
-    def __init__(self, *widgets: "IWidget") -> None:
-        """
+    def __init__(self, *widgets: IWidget) -> None:
+        '''
         :param widgets: -
-        """
+        '''
         jsii.create(Row, self, [*widgets])
 
     @jsii.member(jsii_name="position")
     def position(self, x: jsii.Number, y: jsii.Number) -> None:
-        """Place the widget at a given position.
+        '''Place the widget at a given position.
 
         :param x: -
         :param y: -
-        """
-        return jsii.invoke(self, "position", [x, y])
+        '''
+        return typing.cast(None, jsii.invoke(self, "position", [x, y]))
 
     @jsii.member(jsii_name="toJson")
     def to_json(self) -> typing.List[typing.Any]:
-        """Return the widget JSON for use in the dashboard."""
-        return jsii.invoke(self, "toJson", [])
+        '''Return the widget JSON for use in the dashboard.'''
+        return typing.cast(typing.List[typing.Any], jsii.invoke(self, "toJson", []))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="height")
     def height(self) -> jsii.Number:
-        """The amount of vertical grid units the widget will take up."""
-        return jsii.get(self, "height")
+        '''The amount of vertical grid units the widget will take up.'''
+        return typing.cast(jsii.Number, jsii.get(self, "height"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="width")
     def width(self) -> jsii.Number:
-        """The amount of horizontal grid units the widget will take up."""
-        return jsii.get(self, "width")
+        '''The amount of horizontal grid units the widget will take up.'''
+        return typing.cast(jsii.Number, jsii.get(self, "width"))
 
 
 @jsii.enum(jsii_type="@aws-cdk/aws-cloudwatch.Shading")
 class Shading(enum.Enum):
-    """Fill shading options that will be used with an annotation."""
+    '''Fill shading options that will be used with an annotation.'''
 
     NONE = "NONE"
-    """Don't add shading."""
+    '''Don't add shading.'''
     ABOVE = "ABOVE"
-    """Add shading above the annotation."""
+    '''Add shading above the annotation.'''
     BELOW = "BELOW"
-    """Add shading below the annotation."""
+    '''Add shading below the annotation.'''
 
 
 @jsii.data_type(
@@ -5940,6 +6214,7 @@ class Shading(enum.Enum):
         "title": "title",
         "width": "width",
         "metrics": "metrics",
+        "full_precision": "fullPrecision",
         "set_period_to_time_range": "setPeriodToTimeRange",
     },
 )
@@ -5948,22 +6223,24 @@ class SingleValueWidgetProps(MetricWidgetProps):
         self,
         *,
         height: typing.Optional[jsii.Number] = None,
-        region: typing.Optional[str] = None,
-        title: typing.Optional[str] = None,
+        region: typing.Optional[builtins.str] = None,
+        title: typing.Optional[builtins.str] = None,
         width: typing.Optional[jsii.Number] = None,
-        metrics: typing.List["IMetric"],
-        set_period_to_time_range: typing.Optional[bool] = None,
+        metrics: typing.Sequence[IMetric],
+        full_precision: typing.Optional[builtins.bool] = None,
+        set_period_to_time_range: typing.Optional[builtins.bool] = None,
     ) -> None:
-        """Properties for a SingleValueWidget.
+        '''Properties for a SingleValueWidget.
 
         :param height: Height of the widget. Default: - 6 for Alarm and Graph widgets. 3 for single value widgets where most recent value of a metric is displayed.
         :param region: The region the metrics of this graph should be taken from. Default: - Current region
         :param title: Title for the graph. Default: - None
         :param width: Width of the widget, in a grid of 24 units wide. Default: 6
         :param metrics: Metrics to display.
+        :param full_precision: Whether to show as many digits as can fit, before rounding. Default: false
         :param set_period_to_time_range: Whether to show the value from the entire time range. Default: false
-        """
-        self._values = {
+        '''
+        self._values: typing.Dict[str, typing.Any] = {
             "metrics": metrics,
         }
         if height is not None:
@@ -5974,66 +6251,79 @@ class SingleValueWidgetProps(MetricWidgetProps):
             self._values["title"] = title
         if width is not None:
             self._values["width"] = width
+        if full_precision is not None:
+            self._values["full_precision"] = full_precision
         if set_period_to_time_range is not None:
             self._values["set_period_to_time_range"] = set_period_to_time_range
 
     @builtins.property
     def height(self) -> typing.Optional[jsii.Number]:
-        """Height of the widget.
+        '''Height of the widget.
 
-        default
         :default:
 
         - 6 for Alarm and Graph widgets.
-          3 for single value widgets where most recent value of a metric is displayed.
-        """
-        return self._values.get("height")
+        3 for single value widgets where most recent value of a metric is displayed.
+        '''
+        result = self._values.get("height")
+        return typing.cast(typing.Optional[jsii.Number], result)
 
     @builtins.property
-    def region(self) -> typing.Optional[str]:
-        """The region the metrics of this graph should be taken from.
+    def region(self) -> typing.Optional[builtins.str]:
+        '''The region the metrics of this graph should be taken from.
 
-        default
         :default: - Current region
-        """
-        return self._values.get("region")
+        '''
+        result = self._values.get("region")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
-    def title(self) -> typing.Optional[str]:
-        """Title for the graph.
+    def title(self) -> typing.Optional[builtins.str]:
+        '''Title for the graph.
 
-        default
         :default: - None
-        """
-        return self._values.get("title")
+        '''
+        result = self._values.get("title")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def width(self) -> typing.Optional[jsii.Number]:
-        """Width of the widget, in a grid of 24 units wide.
+        '''Width of the widget, in a grid of 24 units wide.
 
-        default
         :default: 6
-        """
-        return self._values.get("width")
+        '''
+        result = self._values.get("width")
+        return typing.cast(typing.Optional[jsii.Number], result)
 
     @builtins.property
-    def metrics(self) -> typing.List["IMetric"]:
-        """Metrics to display."""
-        return self._values.get("metrics")
+    def metrics(self) -> typing.List[IMetric]:
+        '''Metrics to display.'''
+        result = self._values.get("metrics")
+        assert result is not None, "Required property 'metrics' is missing"
+        return typing.cast(typing.List[IMetric], result)
 
     @builtins.property
-    def set_period_to_time_range(self) -> typing.Optional[bool]:
-        """Whether to show the value from the entire time range.
+    def full_precision(self) -> typing.Optional[builtins.bool]:
+        '''Whether to show as many digits as can fit, before rounding.
 
-        default
         :default: false
-        """
-        return self._values.get("set_period_to_time_range")
+        '''
+        result = self._values.get("full_precision")
+        return typing.cast(typing.Optional[builtins.bool], result)
 
-    def __eq__(self, rhs) -> bool:
+    @builtins.property
+    def set_period_to_time_range(self) -> typing.Optional[builtins.bool]:
+        '''Whether to show the value from the entire time range.
+
+        :default: false
+        '''
+        result = self._values.get("set_period_to_time_range")
+        return typing.cast(typing.Optional[builtins.bool], result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
@@ -6044,7 +6334,7 @@ class SingleValueWidgetProps(MetricWidgetProps):
 
 @jsii.implements(IWidget)
 class Spacer(metaclass=jsii.JSIIMeta, jsii_type="@aws-cdk/aws-cloudwatch.Spacer"):
-    """A widget that doesn't display anything but takes up space."""
+    '''A widget that doesn't display anything but takes up space.'''
 
     def __init__(
         self,
@@ -6052,39 +6342,39 @@ class Spacer(metaclass=jsii.JSIIMeta, jsii_type="@aws-cdk/aws-cloudwatch.Spacer"
         height: typing.Optional[jsii.Number] = None,
         width: typing.Optional[jsii.Number] = None,
     ) -> None:
-        """
+        '''
         :param height: Height of the spacer. Default: : 1
         :param width: Width of the spacer. Default: 1
-        """
+        '''
         props = SpacerProps(height=height, width=width)
 
         jsii.create(Spacer, self, [props])
 
     @jsii.member(jsii_name="position")
     def position(self, _x: jsii.Number, _y: jsii.Number) -> None:
-        """Place the widget at a given position.
+        '''Place the widget at a given position.
 
         :param _x: -
         :param _y: -
-        """
-        return jsii.invoke(self, "position", [_x, _y])
+        '''
+        return typing.cast(None, jsii.invoke(self, "position", [_x, _y]))
 
     @jsii.member(jsii_name="toJson")
     def to_json(self) -> typing.List[typing.Any]:
-        """Return the widget JSON for use in the dashboard."""
-        return jsii.invoke(self, "toJson", [])
+        '''Return the widget JSON for use in the dashboard.'''
+        return typing.cast(typing.List[typing.Any], jsii.invoke(self, "toJson", []))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="height")
     def height(self) -> jsii.Number:
-        """The amount of vertical grid units the widget will take up."""
-        return jsii.get(self, "height")
+        '''The amount of vertical grid units the widget will take up.'''
+        return typing.cast(jsii.Number, jsii.get(self, "height"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="width")
     def width(self) -> jsii.Number:
-        """The amount of horizontal grid units the widget will take up."""
-        return jsii.get(self, "width")
+        '''The amount of horizontal grid units the widget will take up.'''
+        return typing.cast(jsii.Number, jsii.get(self, "width"))
 
 
 @jsii.data_type(
@@ -6099,12 +6389,12 @@ class SpacerProps:
         height: typing.Optional[jsii.Number] = None,
         width: typing.Optional[jsii.Number] = None,
     ) -> None:
-        """Props of the spacer.
+        '''Props of the spacer.
 
         :param height: Height of the spacer. Default: : 1
         :param width: Width of the spacer. Default: 1
-        """
-        self._values = {}
+        '''
+        self._values: typing.Dict[str, typing.Any] = {}
         if height is not None:
             self._values["height"] = height
         if width is not None:
@@ -6112,26 +6402,26 @@ class SpacerProps:
 
     @builtins.property
     def height(self) -> typing.Optional[jsii.Number]:
-        """Height of the spacer.
+        '''Height of the spacer.
 
-        default
         :default: : 1
-        """
-        return self._values.get("height")
+        '''
+        result = self._values.get("height")
+        return typing.cast(typing.Optional[jsii.Number], result)
 
     @builtins.property
     def width(self) -> typing.Optional[jsii.Number]:
-        """Width of the spacer.
+        '''Width of the spacer.
 
-        default
         :default: 1
-        """
-        return self._values.get("width")
+        '''
+        result = self._values.get("width")
+        return typing.cast(typing.Optional[jsii.Number], result)
 
-    def __eq__(self, rhs) -> bool:
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
@@ -6142,27 +6432,27 @@ class SpacerProps:
 
 @jsii.enum(jsii_type="@aws-cdk/aws-cloudwatch.Statistic")
 class Statistic(enum.Enum):
-    """Statistic to use over the aggregation period."""
+    '''Statistic to use over the aggregation period.'''
 
     SAMPLE_COUNT = "SAMPLE_COUNT"
-    """The count (number) of data points used for the statistical calculation."""
+    '''The count (number) of data points used for the statistical calculation.'''
     AVERAGE = "AVERAGE"
-    """The value of Sum / SampleCount during the specified period."""
+    '''The value of Sum / SampleCount during the specified period.'''
     SUM = "SUM"
-    """All values submitted for the matching metric added together.
+    '''All values submitted for the matching metric added together.
 
     This statistic can be useful for determining the total volume of a metric.
-    """
+    '''
     MINIMUM = "MINIMUM"
-    """The lowest value observed during the specified period.
+    '''The lowest value observed during the specified period.
 
     You can use this value to determine low volumes of activity for your application.
-    """
+    '''
     MAXIMUM = "MAXIMUM"
-    """The highest value observed during the specified period.
+    '''The highest value observed during the specified period.
 
     You can use this value to determine high volumes of activity for your application.
-    """
+    '''
 
 
 @jsii.data_type(
@@ -6174,17 +6464,17 @@ class TextWidgetProps:
     def __init__(
         self,
         *,
-        markdown: str,
+        markdown: builtins.str,
         height: typing.Optional[jsii.Number] = None,
         width: typing.Optional[jsii.Number] = None,
     ) -> None:
-        """Properties for a Text widget.
+        '''Properties for a Text widget.
 
         :param markdown: The text to display, in MarkDown format.
         :param height: Height of the widget. Default: 2
         :param width: Width of the widget, in a grid of 24 units wide. Default: 6
-        """
-        self._values = {
+        '''
+        self._values: typing.Dict[str, typing.Any] = {
             "markdown": markdown,
         }
         if height is not None:
@@ -6193,32 +6483,34 @@ class TextWidgetProps:
             self._values["width"] = width
 
     @builtins.property
-    def markdown(self) -> str:
-        """The text to display, in MarkDown format."""
-        return self._values.get("markdown")
+    def markdown(self) -> builtins.str:
+        '''The text to display, in MarkDown format.'''
+        result = self._values.get("markdown")
+        assert result is not None, "Required property 'markdown' is missing"
+        return typing.cast(builtins.str, result)
 
     @builtins.property
     def height(self) -> typing.Optional[jsii.Number]:
-        """Height of the widget.
+        '''Height of the widget.
 
-        default
         :default: 2
-        """
-        return self._values.get("height")
+        '''
+        result = self._values.get("height")
+        return typing.cast(typing.Optional[jsii.Number], result)
 
     @builtins.property
     def width(self) -> typing.Optional[jsii.Number]:
-        """Width of the widget, in a grid of 24 units wide.
+        '''Width of the widget, in a grid of 24 units wide.
 
-        default
         :default: 6
-        """
-        return self._values.get("width")
+        '''
+        result = self._values.get("width")
+        return typing.cast(typing.Optional[jsii.Number], result)
 
-    def __eq__(self, rhs) -> bool:
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
@@ -6229,76 +6521,76 @@ class TextWidgetProps:
 
 @jsii.enum(jsii_type="@aws-cdk/aws-cloudwatch.TreatMissingData")
 class TreatMissingData(enum.Enum):
-    """Specify how missing data points are treated during alarm evaluation."""
+    '''Specify how missing data points are treated during alarm evaluation.'''
 
     BREACHING = "BREACHING"
-    """Missing data points are treated as breaching the threshold."""
+    '''Missing data points are treated as breaching the threshold.'''
     NOT_BREACHING = "NOT_BREACHING"
-    """Missing data points are treated as being within the threshold."""
+    '''Missing data points are treated as being within the threshold.'''
     IGNORE = "IGNORE"
-    """The current alarm state is maintained."""
+    '''The current alarm state is maintained.'''
     MISSING = "MISSING"
-    """The alarm does not consider missing data points when evaluating whether to change state."""
+    '''The alarm does not consider missing data points when evaluating whether to change state.'''
 
 
 @jsii.enum(jsii_type="@aws-cdk/aws-cloudwatch.Unit")
 class Unit(enum.Enum):
-    """Unit for metric."""
+    '''Unit for metric.'''
 
     SECONDS = "SECONDS"
-    """Seconds."""
+    '''Seconds.'''
     MICROSECONDS = "MICROSECONDS"
-    """Microseconds."""
+    '''Microseconds.'''
     MILLISECONDS = "MILLISECONDS"
-    """Milliseconds."""
+    '''Milliseconds.'''
     BYTES = "BYTES"
-    """Bytes."""
+    '''Bytes.'''
     KILOBYTES = "KILOBYTES"
-    """Kilobytes."""
+    '''Kilobytes.'''
     MEGABYTES = "MEGABYTES"
-    """Megabytes."""
+    '''Megabytes.'''
     GIGABYTES = "GIGABYTES"
-    """Gigabytes."""
+    '''Gigabytes.'''
     TERABYTES = "TERABYTES"
-    """Terabytes."""
+    '''Terabytes.'''
     BITS = "BITS"
-    """Bits."""
+    '''Bits.'''
     KILOBITS = "KILOBITS"
-    """Kilobits."""
+    '''Kilobits.'''
     MEGABITS = "MEGABITS"
-    """Megabits."""
+    '''Megabits.'''
     GIGABITS = "GIGABITS"
-    """Gigabits."""
+    '''Gigabits.'''
     TERABITS = "TERABITS"
-    """Terabits."""
+    '''Terabits.'''
     PERCENT = "PERCENT"
-    """Percent."""
+    '''Percent.'''
     COUNT = "COUNT"
-    """Count."""
+    '''Count.'''
     BYTES_PER_SECOND = "BYTES_PER_SECOND"
-    """Bytes/second (B/s)."""
+    '''Bytes/second (B/s).'''
     KILOBYTES_PER_SECOND = "KILOBYTES_PER_SECOND"
-    """Kilobytes/second (kB/s)."""
+    '''Kilobytes/second (kB/s).'''
     MEGABYTES_PER_SECOND = "MEGABYTES_PER_SECOND"
-    """Megabytes/second (MB/s)."""
+    '''Megabytes/second (MB/s).'''
     GIGABYTES_PER_SECOND = "GIGABYTES_PER_SECOND"
-    """Gigabytes/second (GB/s)."""
+    '''Gigabytes/second (GB/s).'''
     TERABYTES_PER_SECOND = "TERABYTES_PER_SECOND"
-    """Terabytes/second (TB/s)."""
+    '''Terabytes/second (TB/s).'''
     BITS_PER_SECOND = "BITS_PER_SECOND"
-    """Bits/second (b/s)."""
+    '''Bits/second (b/s).'''
     KILOBITS_PER_SECOND = "KILOBITS_PER_SECOND"
-    """Kilobits/second (kb/s)."""
+    '''Kilobits/second (kb/s).'''
     MEGABITS_PER_SECOND = "MEGABITS_PER_SECOND"
-    """Megabits/second (Mb/s)."""
+    '''Megabits/second (Mb/s).'''
     GIGABITS_PER_SECOND = "GIGABITS_PER_SECOND"
-    """Gigabits/second (Gb/s)."""
+    '''Gigabits/second (Gb/s).'''
     TERABITS_PER_SECOND = "TERABITS_PER_SECOND"
-    """Terabits/second (Tb/s)."""
+    '''Terabits/second (Tb/s).'''
     COUNT_PER_SECOND = "COUNT_PER_SECOND"
-    """Count/second."""
+    '''Count/second.'''
     NONE = "NONE"
-    """No unit."""
+    '''No unit.'''
 
 
 @jsii.data_type(
@@ -6315,19 +6607,19 @@ class YAxisProps:
     def __init__(
         self,
         *,
-        label: typing.Optional[str] = None,
+        label: typing.Optional[builtins.str] = None,
         max: typing.Optional[jsii.Number] = None,
         min: typing.Optional[jsii.Number] = None,
-        show_units: typing.Optional[bool] = None,
+        show_units: typing.Optional[builtins.bool] = None,
     ) -> None:
-        """Properties for a Y-Axis.
+        '''Properties for a Y-Axis.
 
         :param label: The label. Default: - No label
         :param max: The max value. Default: - No maximum value
         :param min: The min value. Default: 0
         :param show_units: Whether to show units. Default: true
-        """
-        self._values = {}
+        '''
+        self._values: typing.Dict[str, typing.Any] = {}
         if label is not None:
             self._values["label"] = label
         if max is not None:
@@ -6338,45 +6630,45 @@ class YAxisProps:
             self._values["show_units"] = show_units
 
     @builtins.property
-    def label(self) -> typing.Optional[str]:
-        """The label.
+    def label(self) -> typing.Optional[builtins.str]:
+        '''The label.
 
-        default
         :default: - No label
-        """
-        return self._values.get("label")
+        '''
+        result = self._values.get("label")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def max(self) -> typing.Optional[jsii.Number]:
-        """The max value.
+        '''The max value.
 
-        default
         :default: - No maximum value
-        """
-        return self._values.get("max")
+        '''
+        result = self._values.get("max")
+        return typing.cast(typing.Optional[jsii.Number], result)
 
     @builtins.property
     def min(self) -> typing.Optional[jsii.Number]:
-        """The min value.
+        '''The min value.
 
-        default
         :default: 0
-        """
-        return self._values.get("min")
+        '''
+        result = self._values.get("min")
+        return typing.cast(typing.Optional[jsii.Number], result)
 
     @builtins.property
-    def show_units(self) -> typing.Optional[bool]:
-        """Whether to show units.
+    def show_units(self) -> typing.Optional[builtins.bool]:
+        '''Whether to show units.
 
-        default
         :default: true
-        """
-        return self._values.get("show_units")
+        '''
+        result = self._values.get("show_units")
+        return typing.cast(typing.Optional[builtins.bool], result)
 
-    def __eq__(self, rhs) -> bool:
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
@@ -6409,18 +6701,18 @@ class AlarmProps(CreateAlarmOptions):
         *,
         evaluation_periods: jsii.Number,
         threshold: jsii.Number,
-        actions_enabled: typing.Optional[bool] = None,
-        alarm_description: typing.Optional[str] = None,
-        alarm_name: typing.Optional[str] = None,
-        comparison_operator: typing.Optional["ComparisonOperator"] = None,
+        actions_enabled: typing.Optional[builtins.bool] = None,
+        alarm_description: typing.Optional[builtins.str] = None,
+        alarm_name: typing.Optional[builtins.str] = None,
+        comparison_operator: typing.Optional[ComparisonOperator] = None,
         datapoints_to_alarm: typing.Optional[jsii.Number] = None,
-        evaluate_low_sample_count_percentile: typing.Optional[str] = None,
+        evaluate_low_sample_count_percentile: typing.Optional[builtins.str] = None,
         period: typing.Optional[aws_cdk.core.Duration] = None,
-        statistic: typing.Optional[str] = None,
-        treat_missing_data: typing.Optional["TreatMissingData"] = None,
-        metric: "IMetric",
+        statistic: typing.Optional[builtins.str] = None,
+        treat_missing_data: typing.Optional[TreatMissingData] = None,
+        metric: IMetric,
     ) -> None:
-        """Properties for Alarms.
+        '''Properties for Alarms.
 
         :param evaluation_periods: The number of periods over which data is compared to the specified threshold.
         :param threshold: The value against which the specified statistic is compared.
@@ -6430,12 +6722,12 @@ class AlarmProps(CreateAlarmOptions):
         :param comparison_operator: Comparison to use to check if metric is breaching. Default: GreaterThanOrEqualToThreshold
         :param datapoints_to_alarm: The number of datapoints that must be breaching to trigger the alarm. This is used only if you are setting an "M out of N" alarm. In that case, this value is the M. For more information, see Evaluating an Alarm in the Amazon CloudWatch User Guide. Default: ``evaluationPeriods``
         :param evaluate_low_sample_count_percentile: Specifies whether to evaluate the data and potentially change the alarm state if there are too few data points to be statistically significant. Used only for alarms that are based on percentiles. Default: - Not configured.
-        :param period: The period over which the specified statistic is applied. Cannot be used with ``MathExpression`` objects. Default: - The period from the metric
-        :param statistic: What function to use for aggregating. Can be one of the following: - "Minimum" | "min" - "Maximum" | "max" - "Average" | "avg" - "Sum" | "sum" - "SampleCount | "n" - "pNN.NN" Cannot be used with ``MathExpression`` objects. Default: - The statistic from the metric
+        :param period: (deprecated) The period over which the specified statistic is applied. Cannot be used with ``MathExpression`` objects. Default: - The period from the metric
+        :param statistic: (deprecated) What function to use for aggregating. Can be one of the following: - "Minimum" | "min" - "Maximum" | "max" - "Average" | "avg" - "Sum" | "sum" - "SampleCount | "n" - "pNN.NN" Cannot be used with ``MathExpression`` objects. Default: - The statistic from the metric
         :param treat_missing_data: Sets how this alarm is to handle missing data points. Default: TreatMissingData.Missing
         :param metric: The metric to add the alarm on. Metric objects can be obtained from most resources, or you can construct custom Metric objects by instantiating one.
-        """
-        self._values = {
+        '''
+        self._values: typing.Dict[str, typing.Any] = {
             "evaluation_periods": evaluation_periods,
             "threshold": threshold,
             "metric": metric,
@@ -6451,9 +6743,7 @@ class AlarmProps(CreateAlarmOptions):
         if datapoints_to_alarm is not None:
             self._values["datapoints_to_alarm"] = datapoints_to_alarm
         if evaluate_low_sample_count_percentile is not None:
-            self._values[
-                "evaluate_low_sample_count_percentile"
-            ] = evaluate_low_sample_count_percentile
+            self._values["evaluate_low_sample_count_percentile"] = evaluate_low_sample_count_percentile
         if period is not None:
             self._values["period"] = period
         if statistic is not None:
@@ -6463,97 +6753,98 @@ class AlarmProps(CreateAlarmOptions):
 
     @builtins.property
     def evaluation_periods(self) -> jsii.Number:
-        """The number of periods over which data is compared to the specified threshold."""
-        return self._values.get("evaluation_periods")
+        '''The number of periods over which data is compared to the specified threshold.'''
+        result = self._values.get("evaluation_periods")
+        assert result is not None, "Required property 'evaluation_periods' is missing"
+        return typing.cast(jsii.Number, result)
 
     @builtins.property
     def threshold(self) -> jsii.Number:
-        """The value against which the specified statistic is compared."""
-        return self._values.get("threshold")
+        '''The value against which the specified statistic is compared.'''
+        result = self._values.get("threshold")
+        assert result is not None, "Required property 'threshold' is missing"
+        return typing.cast(jsii.Number, result)
 
     @builtins.property
-    def actions_enabled(self) -> typing.Optional[bool]:
-        """Whether the actions for this alarm are enabled.
+    def actions_enabled(self) -> typing.Optional[builtins.bool]:
+        '''Whether the actions for this alarm are enabled.
 
-        default
         :default: true
-        """
-        return self._values.get("actions_enabled")
+        '''
+        result = self._values.get("actions_enabled")
+        return typing.cast(typing.Optional[builtins.bool], result)
 
     @builtins.property
-    def alarm_description(self) -> typing.Optional[str]:
-        """Description for the alarm.
+    def alarm_description(self) -> typing.Optional[builtins.str]:
+        '''Description for the alarm.
 
-        default
         :default: No description
-        """
-        return self._values.get("alarm_description")
+        '''
+        result = self._values.get("alarm_description")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
-    def alarm_name(self) -> typing.Optional[str]:
-        """Name of the alarm.
+    def alarm_name(self) -> typing.Optional[builtins.str]:
+        '''Name of the alarm.
 
-        default
         :default: Automatically generated name
-        """
-        return self._values.get("alarm_name")
+        '''
+        result = self._values.get("alarm_name")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
-    def comparison_operator(self) -> typing.Optional["ComparisonOperator"]:
-        """Comparison to use to check if metric is breaching.
+    def comparison_operator(self) -> typing.Optional[ComparisonOperator]:
+        '''Comparison to use to check if metric is breaching.
 
-        default
         :default: GreaterThanOrEqualToThreshold
-        """
-        return self._values.get("comparison_operator")
+        '''
+        result = self._values.get("comparison_operator")
+        return typing.cast(typing.Optional[ComparisonOperator], result)
 
     @builtins.property
     def datapoints_to_alarm(self) -> typing.Optional[jsii.Number]:
-        """The number of datapoints that must be breaching to trigger the alarm.
+        '''The number of datapoints that must be breaching to trigger the alarm.
 
         This is used only if you are setting an "M
         out of N" alarm. In that case, this value is the M. For more information, see Evaluating an Alarm in the Amazon
         CloudWatch User Guide.
 
-        default
         :default: ``evaluationPeriods``
 
-        see
         :see: https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/AlarmThatSendsEmail.html#alarm-evaluation
-        """
-        return self._values.get("datapoints_to_alarm")
+        '''
+        result = self._values.get("datapoints_to_alarm")
+        return typing.cast(typing.Optional[jsii.Number], result)
 
     @builtins.property
-    def evaluate_low_sample_count_percentile(self) -> typing.Optional[str]:
-        """Specifies whether to evaluate the data and potentially change the alarm state if there are too few data points to be statistically significant.
+    def evaluate_low_sample_count_percentile(self) -> typing.Optional[builtins.str]:
+        '''Specifies whether to evaluate the data and potentially change the alarm state if there are too few data points to be statistically significant.
 
         Used only for alarms that are based on percentiles.
 
-        default
         :default: - Not configured.
-        """
-        return self._values.get("evaluate_low_sample_count_percentile")
+        '''
+        result = self._values.get("evaluate_low_sample_count_percentile")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def period(self) -> typing.Optional[aws_cdk.core.Duration]:
-        """The period over which the specified statistic is applied.
+        '''(deprecated) The period over which the specified statistic is applied.
 
         Cannot be used with ``MathExpression`` objects.
 
-        default
         :default: - The period from the metric
 
-        deprecated
         :deprecated: Use ``metric.with({ period: ... })`` to encode the period into the Metric object
 
-        stability
         :stability: deprecated
-        """
-        return self._values.get("period")
+        '''
+        result = self._values.get("period")
+        return typing.cast(typing.Optional[aws_cdk.core.Duration], result)
 
     @builtins.property
-    def statistic(self) -> typing.Optional[str]:
-        """What function to use for aggregating.
+    def statistic(self) -> typing.Optional[builtins.str]:
+        '''(deprecated) What function to use for aggregating.
 
         Can be one of the following:
 
@@ -6566,39 +6857,39 @@ class AlarmProps(CreateAlarmOptions):
 
         Cannot be used with ``MathExpression`` objects.
 
-        default
         :default: - The statistic from the metric
 
-        deprecated
         :deprecated: Use ``metric.with({ statistic: ... })`` to encode the period into the Metric object
 
-        stability
         :stability: deprecated
-        """
-        return self._values.get("statistic")
+        '''
+        result = self._values.get("statistic")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
-    def treat_missing_data(self) -> typing.Optional["TreatMissingData"]:
-        """Sets how this alarm is to handle missing data points.
+    def treat_missing_data(self) -> typing.Optional[TreatMissingData]:
+        '''Sets how this alarm is to handle missing data points.
 
-        default
         :default: TreatMissingData.Missing
-        """
-        return self._values.get("treat_missing_data")
+        '''
+        result = self._values.get("treat_missing_data")
+        return typing.cast(typing.Optional[TreatMissingData], result)
 
     @builtins.property
-    def metric(self) -> "IMetric":
-        """The metric to add the alarm on.
+    def metric(self) -> IMetric:
+        '''The metric to add the alarm on.
 
         Metric objects can be obtained from most resources, or you can construct
         custom Metric objects by instantiating one.
-        """
-        return self._values.get("metric")
+        '''
+        result = self._values.get("metric")
+        assert result is not None, "Required property 'metric' is missing"
+        return typing.cast(IMetric, result)
 
-    def __eq__(self, rhs) -> bool:
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
@@ -6624,13 +6915,13 @@ class AlarmWidgetProps(MetricWidgetProps):
         self,
         *,
         height: typing.Optional[jsii.Number] = None,
-        region: typing.Optional[str] = None,
-        title: typing.Optional[str] = None,
+        region: typing.Optional[builtins.str] = None,
+        title: typing.Optional[builtins.str] = None,
         width: typing.Optional[jsii.Number] = None,
         alarm: "IAlarm",
-        left_y_axis: typing.Optional["YAxisProps"] = None,
+        left_y_axis: typing.Optional[YAxisProps] = None,
     ) -> None:
-        """Properties for an AlarmWidget.
+        '''Properties for an AlarmWidget.
 
         :param height: Height of the widget. Default: - 6 for Alarm and Graph widgets. 3 for single value widgets where most recent value of a metric is displayed.
         :param region: The region the metrics of this graph should be taken from. Default: - Current region
@@ -6638,10 +6929,10 @@ class AlarmWidgetProps(MetricWidgetProps):
         :param width: Width of the widget, in a grid of 24 units wide. Default: 6
         :param alarm: The alarm to show.
         :param left_y_axis: Left Y axis. Default: - No minimum or maximum values for the left Y-axis
-        """
+        '''
         if isinstance(left_y_axis, dict):
             left_y_axis = YAxisProps(**left_y_axis)
-        self._values = {
+        self._values: typing.Dict[str, typing.Any] = {
             "alarm": alarm,
         }
         if height is not None:
@@ -6657,61 +6948,63 @@ class AlarmWidgetProps(MetricWidgetProps):
 
     @builtins.property
     def height(self) -> typing.Optional[jsii.Number]:
-        """Height of the widget.
+        '''Height of the widget.
 
-        default
         :default:
 
         - 6 for Alarm and Graph widgets.
-          3 for single value widgets where most recent value of a metric is displayed.
-        """
-        return self._values.get("height")
+        3 for single value widgets where most recent value of a metric is displayed.
+        '''
+        result = self._values.get("height")
+        return typing.cast(typing.Optional[jsii.Number], result)
 
     @builtins.property
-    def region(self) -> typing.Optional[str]:
-        """The region the metrics of this graph should be taken from.
+    def region(self) -> typing.Optional[builtins.str]:
+        '''The region the metrics of this graph should be taken from.
 
-        default
         :default: - Current region
-        """
-        return self._values.get("region")
+        '''
+        result = self._values.get("region")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
-    def title(self) -> typing.Optional[str]:
-        """Title for the graph.
+    def title(self) -> typing.Optional[builtins.str]:
+        '''Title for the graph.
 
-        default
         :default: - None
-        """
-        return self._values.get("title")
+        '''
+        result = self._values.get("title")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def width(self) -> typing.Optional[jsii.Number]:
-        """Width of the widget, in a grid of 24 units wide.
+        '''Width of the widget, in a grid of 24 units wide.
 
-        default
         :default: 6
-        """
-        return self._values.get("width")
+        '''
+        result = self._values.get("width")
+        return typing.cast(typing.Optional[jsii.Number], result)
 
     @builtins.property
     def alarm(self) -> "IAlarm":
-        """The alarm to show."""
-        return self._values.get("alarm")
+        '''The alarm to show.'''
+        result = self._values.get("alarm")
+        assert result is not None, "Required property 'alarm' is missing"
+        return typing.cast("IAlarm", result)
 
     @builtins.property
-    def left_y_axis(self) -> typing.Optional["YAxisProps"]:
-        """Left Y axis.
+    def left_y_axis(self) -> typing.Optional[YAxisProps]:
+        '''Left Y axis.
 
-        default
         :default: - No minimum or maximum values for the left Y-axis
-        """
-        return self._values.get("left_y_axis")
+        '''
+        result = self._values.get("left_y_axis")
+        return typing.cast(typing.Optional[YAxisProps], result)
 
-    def __eq__(self, rhs) -> bool:
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
@@ -6722,104 +7015,101 @@ class AlarmWidgetProps(MetricWidgetProps):
 
 @jsii.implements(IWidget)
 class Column(metaclass=jsii.JSIIMeta, jsii_type="@aws-cdk/aws-cloudwatch.Column"):
-    """A widget that contains other widgets in a vertical column.
+    '''A widget that contains other widgets in a vertical column.
 
     Widgets will be laid out next to each other
-    """
+    '''
 
-    def __init__(self, *widgets: "IWidget") -> None:
-        """
+    def __init__(self, *widgets: IWidget) -> None:
+        '''
         :param widgets: -
-        """
+        '''
         jsii.create(Column, self, [*widgets])
 
     @jsii.member(jsii_name="position")
     def position(self, x: jsii.Number, y: jsii.Number) -> None:
-        """Place the widget at a given position.
+        '''Place the widget at a given position.
 
         :param x: -
         :param y: -
-        """
-        return jsii.invoke(self, "position", [x, y])
+        '''
+        return typing.cast(None, jsii.invoke(self, "position", [x, y]))
 
     @jsii.member(jsii_name="toJson")
     def to_json(self) -> typing.List[typing.Any]:
-        """Return the widget JSON for use in the dashboard."""
-        return jsii.invoke(self, "toJson", [])
+        '''Return the widget JSON for use in the dashboard.'''
+        return typing.cast(typing.List[typing.Any], jsii.invoke(self, "toJson", []))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="height")
     def height(self) -> jsii.Number:
-        """The amount of vertical grid units the widget will take up."""
-        return jsii.get(self, "height")
+        '''The amount of vertical grid units the widget will take up.'''
+        return typing.cast(jsii.Number, jsii.get(self, "height"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="width")
     def width(self) -> jsii.Number:
-        """The amount of horizontal grid units the widget will take up."""
-        return jsii.get(self, "width")
+        '''The amount of horizontal grid units the widget will take up.'''
+        return typing.cast(jsii.Number, jsii.get(self, "width"))
 
 
 @jsii.implements(IWidget)
 class ConcreteWidget(
-    metaclass=jsii.JSIIAbstractClass, jsii_type="@aws-cdk/aws-cloudwatch.ConcreteWidget"
+    metaclass=jsii.JSIIAbstractClass,
+    jsii_type="@aws-cdk/aws-cloudwatch.ConcreteWidget",
 ):
-    """A real CloudWatch widget that has its own fixed size and remembers its position.
+    '''A real CloudWatch widget that has its own fixed size and remembers its position.
 
     This is in contrast to other widgets which exist for layout purposes.
-    """
-
-    @builtins.staticmethod
-    def __jsii_proxy_class__():
-        return _ConcreteWidgetProxy
+    '''
 
     def __init__(self, width: jsii.Number, height: jsii.Number) -> None:
-        """
+        '''
         :param width: -
         :param height: -
-        """
+        '''
         jsii.create(ConcreteWidget, self, [width, height])
 
     @jsii.member(jsii_name="position")
     def position(self, x: jsii.Number, y: jsii.Number) -> None:
-        """Place the widget at a given position.
+        '''Place the widget at a given position.
 
         :param x: -
         :param y: -
-        """
-        return jsii.invoke(self, "position", [x, y])
+        '''
+        return typing.cast(None, jsii.invoke(self, "position", [x, y]))
 
-    @jsii.member(jsii_name="toJson")
+    @jsii.member(jsii_name="toJson") # type: ignore[misc]
     @abc.abstractmethod
     def to_json(self) -> typing.List[typing.Any]:
-        """Return the widget JSON for use in the dashboard."""
+        '''Return the widget JSON for use in the dashboard.'''
         ...
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="height")
     def height(self) -> jsii.Number:
-        """The amount of vertical grid units the widget will take up."""
-        return jsii.get(self, "height")
+        '''The amount of vertical grid units the widget will take up.'''
+        return typing.cast(jsii.Number, jsii.get(self, "height"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="width")
     def width(self) -> jsii.Number:
-        """The amount of horizontal grid units the widget will take up."""
-        return jsii.get(self, "width")
+        '''The amount of horizontal grid units the widget will take up.'''
+        return typing.cast(jsii.Number, jsii.get(self, "width"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="x")
     def _x(self) -> typing.Optional[jsii.Number]:
-        return jsii.get(self, "x")
+        return typing.cast(typing.Optional[jsii.Number], jsii.get(self, "x"))
 
     @_x.setter
     def _x(self, value: typing.Optional[jsii.Number]) -> None:
         jsii.set(self, "x", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="y")
     def _y(self) -> typing.Optional[jsii.Number]:
-        return jsii.get(self, "y")
+        return typing.cast(typing.Optional[jsii.Number], jsii.get(self, "y"))
 
     @_y.setter
     def _y(self, value: typing.Optional[jsii.Number]) -> None:
@@ -6829,8 +7119,11 @@ class ConcreteWidget(
 class _ConcreteWidgetProxy(ConcreteWidget):
     @jsii.member(jsii_name="toJson")
     def to_json(self) -> typing.List[typing.Any]:
-        """Return the widget JSON for use in the dashboard."""
-        return jsii.invoke(self, "toJson", [])
+        '''Return the widget JSON for use in the dashboard.'''
+        return typing.cast(typing.List[typing.Any], jsii.invoke(self, "toJson", []))
+
+# Adding a "__jsii_proxy_class__(): typing.Type" function to the abstract class
+typing.cast(typing.Any, ConcreteWidget).__jsii_proxy_class__ = lambda : _ConcreteWidgetProxy
 
 
 class GraphWidget(
@@ -6838,50 +7131,62 @@ class GraphWidget(
     metaclass=jsii.JSIIMeta,
     jsii_type="@aws-cdk/aws-cloudwatch.GraphWidget",
 ):
-    """A dashboard widget that displays metrics."""
+    '''A dashboard widget that displays metrics.'''
 
     def __init__(
         self,
         *,
-        left: typing.Optional[typing.List["IMetric"]] = None,
-        left_annotations: typing.Optional[typing.List["HorizontalAnnotation"]] = None,
-        left_y_axis: typing.Optional["YAxisProps"] = None,
-        legend_position: typing.Optional["LegendPosition"] = None,
-        live_data: typing.Optional[bool] = None,
-        right: typing.Optional[typing.List["IMetric"]] = None,
-        right_annotations: typing.Optional[typing.List["HorizontalAnnotation"]] = None,
-        right_y_axis: typing.Optional["YAxisProps"] = None,
-        stacked: typing.Optional[bool] = None,
+        left: typing.Optional[typing.Sequence[IMetric]] = None,
+        left_annotations: typing.Optional[typing.Sequence[HorizontalAnnotation]] = None,
+        left_y_axis: typing.Optional[YAxisProps] = None,
+        legend_position: typing.Optional[LegendPosition] = None,
+        live_data: typing.Optional[builtins.bool] = None,
+        period: typing.Optional[aws_cdk.core.Duration] = None,
+        right: typing.Optional[typing.Sequence[IMetric]] = None,
+        right_annotations: typing.Optional[typing.Sequence[HorizontalAnnotation]] = None,
+        right_y_axis: typing.Optional[YAxisProps] = None,
+        set_period_to_time_range: typing.Optional[builtins.bool] = None,
+        stacked: typing.Optional[builtins.bool] = None,
+        statistic: typing.Optional[builtins.str] = None,
+        view: typing.Optional[GraphWidgetView] = None,
         height: typing.Optional[jsii.Number] = None,
-        region: typing.Optional[str] = None,
-        title: typing.Optional[str] = None,
+        region: typing.Optional[builtins.str] = None,
+        title: typing.Optional[builtins.str] = None,
         width: typing.Optional[jsii.Number] = None,
     ) -> None:
-        """
+        '''
         :param left: Metrics to display on left Y axis. Default: - No metrics
         :param left_annotations: Annotations for the left Y axis. Default: - No annotations
         :param left_y_axis: Left Y axis. Default: - None
         :param legend_position: Position of the legend. Default: - bottom
         :param live_data: Whether the graph should show live data. Default: false
+        :param period: The default period for all metrics in this widget. The period is the length of time represented by one data point on the graph. This default can be overridden within each metric definition. Default: cdk.Duration.seconds(300)
         :param right: Metrics to display on right Y axis. Default: - No metrics
         :param right_annotations: Annotations for the right Y axis. Default: - No annotations
         :param right_y_axis: Right Y axis. Default: - None
+        :param set_period_to_time_range: Whether to show the value from the entire time range. Only applicable for Bar and Pie charts. If false, values will be from the most recent period of your chosen time range; if true, shows the value from the entire time range. Default: false
         :param stacked: Whether the graph should be shown as stacked lines. Default: false
+        :param statistic: The default statistic to be displayed for each metric. This default can be overridden within the definition of each individual metric Default: - The statistic for each metric is used
+        :param view: Display this metric. Default: TimeSeries
         :param height: Height of the widget. Default: - 6 for Alarm and Graph widgets. 3 for single value widgets where most recent value of a metric is displayed.
         :param region: The region the metrics of this graph should be taken from. Default: - Current region
         :param title: Title for the graph. Default: - None
         :param width: Width of the widget, in a grid of 24 units wide. Default: 6
-        """
+        '''
         props = GraphWidgetProps(
             left=left,
             left_annotations=left_annotations,
             left_y_axis=left_y_axis,
             legend_position=legend_position,
             live_data=live_data,
+            period=period,
             right=right,
             right_annotations=right_annotations,
             right_y_axis=right_y_axis,
+            set_period_to_time_range=set_period_to_time_range,
             stacked=stacked,
+            statistic=statistic,
+            view=view,
             height=height,
             region=region,
             title=title,
@@ -6890,10 +7195,26 @@ class GraphWidget(
 
         jsii.create(GraphWidget, self, [props])
 
+    @jsii.member(jsii_name="addLeftMetric")
+    def add_left_metric(self, metric: IMetric) -> None:
+        '''Add another metric to the left Y axis of the GraphWidget.
+
+        :param metric: the metric to add.
+        '''
+        return typing.cast(None, jsii.invoke(self, "addLeftMetric", [metric]))
+
+    @jsii.member(jsii_name="addRightMetric")
+    def add_right_metric(self, metric: IMetric) -> None:
+        '''Add another metric to the right Y axis of the GraphWidget.
+
+        :param metric: the metric to add.
+        '''
+        return typing.cast(None, jsii.invoke(self, "addRightMetric", [metric]))
+
     @jsii.member(jsii_name="toJson")
     def to_json(self) -> typing.List[typing.Any]:
-        """Return the widget JSON for use in the dashboard."""
-        return jsii.invoke(self, "toJson", [])
+        '''Return the widget JSON for use in the dashboard.'''
+        return typing.cast(typing.List[typing.Any], jsii.invoke(self, "toJson", []))
 
 
 @jsii.data_type(
@@ -6909,10 +7230,14 @@ class GraphWidget(
         "left_y_axis": "leftYAxis",
         "legend_position": "legendPosition",
         "live_data": "liveData",
+        "period": "period",
         "right": "right",
         "right_annotations": "rightAnnotations",
         "right_y_axis": "rightYAxis",
+        "set_period_to_time_range": "setPeriodToTimeRange",
         "stacked": "stacked",
+        "statistic": "statistic",
+        "view": "view",
     },
 )
 class GraphWidgetProps(MetricWidgetProps):
@@ -6920,20 +7245,24 @@ class GraphWidgetProps(MetricWidgetProps):
         self,
         *,
         height: typing.Optional[jsii.Number] = None,
-        region: typing.Optional[str] = None,
-        title: typing.Optional[str] = None,
+        region: typing.Optional[builtins.str] = None,
+        title: typing.Optional[builtins.str] = None,
         width: typing.Optional[jsii.Number] = None,
-        left: typing.Optional[typing.List["IMetric"]] = None,
-        left_annotations: typing.Optional[typing.List["HorizontalAnnotation"]] = None,
-        left_y_axis: typing.Optional["YAxisProps"] = None,
-        legend_position: typing.Optional["LegendPosition"] = None,
-        live_data: typing.Optional[bool] = None,
-        right: typing.Optional[typing.List["IMetric"]] = None,
-        right_annotations: typing.Optional[typing.List["HorizontalAnnotation"]] = None,
-        right_y_axis: typing.Optional["YAxisProps"] = None,
-        stacked: typing.Optional[bool] = None,
+        left: typing.Optional[typing.Sequence[IMetric]] = None,
+        left_annotations: typing.Optional[typing.Sequence[HorizontalAnnotation]] = None,
+        left_y_axis: typing.Optional[YAxisProps] = None,
+        legend_position: typing.Optional[LegendPosition] = None,
+        live_data: typing.Optional[builtins.bool] = None,
+        period: typing.Optional[aws_cdk.core.Duration] = None,
+        right: typing.Optional[typing.Sequence[IMetric]] = None,
+        right_annotations: typing.Optional[typing.Sequence[HorizontalAnnotation]] = None,
+        right_y_axis: typing.Optional[YAxisProps] = None,
+        set_period_to_time_range: typing.Optional[builtins.bool] = None,
+        stacked: typing.Optional[builtins.bool] = None,
+        statistic: typing.Optional[builtins.str] = None,
+        view: typing.Optional[GraphWidgetView] = None,
     ) -> None:
-        """Properties for a GraphWidget.
+        '''Properties for a GraphWidget.
 
         :param height: Height of the widget. Default: - 6 for Alarm and Graph widgets. 3 for single value widgets where most recent value of a metric is displayed.
         :param region: The region the metrics of this graph should be taken from. Default: - Current region
@@ -6944,16 +7273,20 @@ class GraphWidgetProps(MetricWidgetProps):
         :param left_y_axis: Left Y axis. Default: - None
         :param legend_position: Position of the legend. Default: - bottom
         :param live_data: Whether the graph should show live data. Default: false
+        :param period: The default period for all metrics in this widget. The period is the length of time represented by one data point on the graph. This default can be overridden within each metric definition. Default: cdk.Duration.seconds(300)
         :param right: Metrics to display on right Y axis. Default: - No metrics
         :param right_annotations: Annotations for the right Y axis. Default: - No annotations
         :param right_y_axis: Right Y axis. Default: - None
+        :param set_period_to_time_range: Whether to show the value from the entire time range. Only applicable for Bar and Pie charts. If false, values will be from the most recent period of your chosen time range; if true, shows the value from the entire time range. Default: false
         :param stacked: Whether the graph should be shown as stacked lines. Default: false
-        """
+        :param statistic: The default statistic to be displayed for each metric. This default can be overridden within the definition of each individual metric Default: - The statistic for each metric is used
+        :param view: Display this metric. Default: TimeSeries
+        '''
         if isinstance(left_y_axis, dict):
             left_y_axis = YAxisProps(**left_y_axis)
         if isinstance(right_y_axis, dict):
             right_y_axis = YAxisProps(**right_y_axis)
-        self._values = {}
+        self._values: typing.Dict[str, typing.Any] = {}
         if height is not None:
             self._values["height"] = height
         if region is not None:
@@ -6972,139 +7305,191 @@ class GraphWidgetProps(MetricWidgetProps):
             self._values["legend_position"] = legend_position
         if live_data is not None:
             self._values["live_data"] = live_data
+        if period is not None:
+            self._values["period"] = period
         if right is not None:
             self._values["right"] = right
         if right_annotations is not None:
             self._values["right_annotations"] = right_annotations
         if right_y_axis is not None:
             self._values["right_y_axis"] = right_y_axis
+        if set_period_to_time_range is not None:
+            self._values["set_period_to_time_range"] = set_period_to_time_range
         if stacked is not None:
             self._values["stacked"] = stacked
+        if statistic is not None:
+            self._values["statistic"] = statistic
+        if view is not None:
+            self._values["view"] = view
 
     @builtins.property
     def height(self) -> typing.Optional[jsii.Number]:
-        """Height of the widget.
+        '''Height of the widget.
 
-        default
         :default:
 
         - 6 for Alarm and Graph widgets.
-          3 for single value widgets where most recent value of a metric is displayed.
-        """
-        return self._values.get("height")
+        3 for single value widgets where most recent value of a metric is displayed.
+        '''
+        result = self._values.get("height")
+        return typing.cast(typing.Optional[jsii.Number], result)
 
     @builtins.property
-    def region(self) -> typing.Optional[str]:
-        """The region the metrics of this graph should be taken from.
+    def region(self) -> typing.Optional[builtins.str]:
+        '''The region the metrics of this graph should be taken from.
 
-        default
         :default: - Current region
-        """
-        return self._values.get("region")
+        '''
+        result = self._values.get("region")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
-    def title(self) -> typing.Optional[str]:
-        """Title for the graph.
+    def title(self) -> typing.Optional[builtins.str]:
+        '''Title for the graph.
 
-        default
         :default: - None
-        """
-        return self._values.get("title")
+        '''
+        result = self._values.get("title")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def width(self) -> typing.Optional[jsii.Number]:
-        """Width of the widget, in a grid of 24 units wide.
+        '''Width of the widget, in a grid of 24 units wide.
 
-        default
         :default: 6
-        """
-        return self._values.get("width")
+        '''
+        result = self._values.get("width")
+        return typing.cast(typing.Optional[jsii.Number], result)
 
     @builtins.property
-    def left(self) -> typing.Optional[typing.List["IMetric"]]:
-        """Metrics to display on left Y axis.
+    def left(self) -> typing.Optional[typing.List[IMetric]]:
+        '''Metrics to display on left Y axis.
 
-        default
         :default: - No metrics
-        """
-        return self._values.get("left")
+        '''
+        result = self._values.get("left")
+        return typing.cast(typing.Optional[typing.List[IMetric]], result)
 
     @builtins.property
-    def left_annotations(self) -> typing.Optional[typing.List["HorizontalAnnotation"]]:
-        """Annotations for the left Y axis.
+    def left_annotations(self) -> typing.Optional[typing.List[HorizontalAnnotation]]:
+        '''Annotations for the left Y axis.
 
-        default
         :default: - No annotations
-        """
-        return self._values.get("left_annotations")
+        '''
+        result = self._values.get("left_annotations")
+        return typing.cast(typing.Optional[typing.List[HorizontalAnnotation]], result)
 
     @builtins.property
-    def left_y_axis(self) -> typing.Optional["YAxisProps"]:
-        """Left Y axis.
+    def left_y_axis(self) -> typing.Optional[YAxisProps]:
+        '''Left Y axis.
 
-        default
         :default: - None
-        """
-        return self._values.get("left_y_axis")
+        '''
+        result = self._values.get("left_y_axis")
+        return typing.cast(typing.Optional[YAxisProps], result)
 
     @builtins.property
-    def legend_position(self) -> typing.Optional["LegendPosition"]:
-        """Position of the legend.
+    def legend_position(self) -> typing.Optional[LegendPosition]:
+        '''Position of the legend.
 
-        default
         :default: - bottom
-        """
-        return self._values.get("legend_position")
+        '''
+        result = self._values.get("legend_position")
+        return typing.cast(typing.Optional[LegendPosition], result)
 
     @builtins.property
-    def live_data(self) -> typing.Optional[bool]:
-        """Whether the graph should show live data.
+    def live_data(self) -> typing.Optional[builtins.bool]:
+        '''Whether the graph should show live data.
 
-        default
         :default: false
-        """
-        return self._values.get("live_data")
+        '''
+        result = self._values.get("live_data")
+        return typing.cast(typing.Optional[builtins.bool], result)
 
     @builtins.property
-    def right(self) -> typing.Optional[typing.List["IMetric"]]:
-        """Metrics to display on right Y axis.
+    def period(self) -> typing.Optional[aws_cdk.core.Duration]:
+        '''The default period for all metrics in this widget.
 
-        default
+        The period is the length of time represented by one data point on the graph.
+        This default can be overridden within each metric definition.
+
+        :default: cdk.Duration.seconds(300)
+        '''
+        result = self._values.get("period")
+        return typing.cast(typing.Optional[aws_cdk.core.Duration], result)
+
+    @builtins.property
+    def right(self) -> typing.Optional[typing.List[IMetric]]:
+        '''Metrics to display on right Y axis.
+
         :default: - No metrics
-        """
-        return self._values.get("right")
+        '''
+        result = self._values.get("right")
+        return typing.cast(typing.Optional[typing.List[IMetric]], result)
 
     @builtins.property
-    def right_annotations(self) -> typing.Optional[typing.List["HorizontalAnnotation"]]:
-        """Annotations for the right Y axis.
+    def right_annotations(self) -> typing.Optional[typing.List[HorizontalAnnotation]]:
+        '''Annotations for the right Y axis.
 
-        default
         :default: - No annotations
-        """
-        return self._values.get("right_annotations")
+        '''
+        result = self._values.get("right_annotations")
+        return typing.cast(typing.Optional[typing.List[HorizontalAnnotation]], result)
 
     @builtins.property
-    def right_y_axis(self) -> typing.Optional["YAxisProps"]:
-        """Right Y axis.
+    def right_y_axis(self) -> typing.Optional[YAxisProps]:
+        '''Right Y axis.
 
-        default
         :default: - None
-        """
-        return self._values.get("right_y_axis")
+        '''
+        result = self._values.get("right_y_axis")
+        return typing.cast(typing.Optional[YAxisProps], result)
 
     @builtins.property
-    def stacked(self) -> typing.Optional[bool]:
-        """Whether the graph should be shown as stacked lines.
+    def set_period_to_time_range(self) -> typing.Optional[builtins.bool]:
+        '''Whether to show the value from the entire time range. Only applicable for Bar and Pie charts.
 
-        default
+        If false, values will be from the most recent period of your chosen time range;
+        if true, shows the value from the entire time range.
+
         :default: false
-        """
-        return self._values.get("stacked")
+        '''
+        result = self._values.get("set_period_to_time_range")
+        return typing.cast(typing.Optional[builtins.bool], result)
 
-    def __eq__(self, rhs) -> bool:
+    @builtins.property
+    def stacked(self) -> typing.Optional[builtins.bool]:
+        '''Whether the graph should be shown as stacked lines.
+
+        :default: false
+        '''
+        result = self._values.get("stacked")
+        return typing.cast(typing.Optional[builtins.bool], result)
+
+    @builtins.property
+    def statistic(self) -> typing.Optional[builtins.str]:
+        '''The default statistic to be displayed for each metric.
+
+        This default can be overridden within the definition of each individual metric
+
+        :default: - The statistic for each metric is used
+        '''
+        result = self._values.get("statistic")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def view(self) -> typing.Optional[GraphWidgetView]:
+        '''Display this metric.
+
+        :default: TimeSeries
+        '''
+        result = self._values.get("view")
+        return typing.cast(typing.Optional[GraphWidgetView], result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
@@ -7114,58 +7499,56 @@ class GraphWidgetProps(MetricWidgetProps):
 
 
 @jsii.interface(jsii_type="@aws-cdk/aws-cloudwatch.IAlarm")
-class IAlarm(IAlarmRule, aws_cdk.core.IResource, jsii.compat.Protocol):
-    """Represents a CloudWatch Alarm."""
+class IAlarm(IAlarmRule, aws_cdk.core.IResource, typing_extensions.Protocol):
+    '''Represents a CloudWatch Alarm.'''
 
-    @builtins.staticmethod
-    def __jsii_proxy_class__():
-        return _IAlarmProxy
-
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="alarmArn")
-    def alarm_arn(self) -> str:
-        """Alarm ARN (i.e. arn:aws:cloudwatch:::alarm:Foo).
+    def alarm_arn(self) -> builtins.str:
+        '''Alarm ARN (i.e. arn:aws:cloudwatch:::alarm:Foo).
 
-        attribute:
-        :attribute:: true
-        """
+        :attribute: true
+        '''
         ...
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="alarmName")
-    def alarm_name(self) -> str:
-        """Name of the alarm.
+    def alarm_name(self) -> builtins.str:
+        '''Name of the alarm.
 
-        attribute:
-        :attribute:: true
-        """
+        :attribute: true
+        '''
         ...
 
 
-class _IAlarmProxy(jsii.proxy_for(IAlarmRule), jsii.proxy_for(aws_cdk.core.IResource)):
-    """Represents a CloudWatch Alarm."""
+class _IAlarmProxy(
+    jsii.proxy_for(IAlarmRule), # type: ignore[misc]
+    jsii.proxy_for(aws_cdk.core.IResource), # type: ignore[misc]
+):
+    '''Represents a CloudWatch Alarm.'''
 
-    __jsii_type__ = "@aws-cdk/aws-cloudwatch.IAlarm"
+    __jsii_type__: typing.ClassVar[str] = "@aws-cdk/aws-cloudwatch.IAlarm"
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="alarmArn")
-    def alarm_arn(self) -> str:
-        """Alarm ARN (i.e. arn:aws:cloudwatch:::alarm:Foo).
+    def alarm_arn(self) -> builtins.str:
+        '''Alarm ARN (i.e. arn:aws:cloudwatch:::alarm:Foo).
 
-        attribute:
-        :attribute:: true
-        """
-        return jsii.get(self, "alarmArn")
+        :attribute: true
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "alarmArn"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="alarmName")
-    def alarm_name(self) -> str:
-        """Name of the alarm.
+    def alarm_name(self) -> builtins.str:
+        '''Name of the alarm.
 
-        attribute:
-        :attribute:: true
-        """
-        return jsii.get(self, "alarmName")
+        :attribute: true
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "alarmName"))
+
+# Adding a "__jsii_proxy_class__(): typing.Type" function to the interface
+typing.cast(typing.Any, IAlarm).__jsii_proxy_class__ = lambda : _IAlarmProxy
 
 
 class LogQueryWidget(
@@ -7173,28 +7556,30 @@ class LogQueryWidget(
     metaclass=jsii.JSIIMeta,
     jsii_type="@aws-cdk/aws-cloudwatch.LogQueryWidget",
 ):
-    """Display query results from Logs Insights."""
+    '''Display query results from Logs Insights.'''
 
     def __init__(
         self,
         *,
-        log_group_names: typing.List[str],
+        log_group_names: typing.Sequence[builtins.str],
         height: typing.Optional[jsii.Number] = None,
-        query_lines: typing.Optional[typing.List[str]] = None,
-        query_string: typing.Optional[str] = None,
-        region: typing.Optional[str] = None,
-        title: typing.Optional[str] = None,
+        query_lines: typing.Optional[typing.Sequence[builtins.str]] = None,
+        query_string: typing.Optional[builtins.str] = None,
+        region: typing.Optional[builtins.str] = None,
+        title: typing.Optional[builtins.str] = None,
+        view: typing.Optional[LogQueryVisualizationType] = None,
         width: typing.Optional[jsii.Number] = None,
     ) -> None:
-        """
+        '''
         :param log_group_names: Names of log groups to query.
         :param height: Height of the widget. Default: 6
-        :param query_lines: A sequence of lines to use to build the query. The query will be built by joining the lines together using ``\n|``. Default: - Exactly one of ``queryString``, ``queryLines`` is required.
-        :param query_string: Full query string for log insights. Be sure to prepend every new line with a newline and pipe character (``\n|``). Default: - Exactly one of ``queryString``, ``queryLines`` is required.
+        :param query_lines: A sequence of lines to use to build the query. The query will be built by joining the lines together using ``\\n|``. Default: - Exactly one of ``queryString``, ``queryLines`` is required.
+        :param query_string: Full query string for log insights. Be sure to prepend every new line with a newline and pipe character (``\\n|``). Default: - Exactly one of ``queryString``, ``queryLines`` is required.
         :param region: The region the metrics of this widget should be taken from. Default: Current region
         :param title: Title for the widget. Default: No title
+        :param view: The type of view to use. Default: LogQueryVisualizationType.TABLE
         :param width: Width of the widget, in a grid of 24 units wide. Default: 6
-        """
+        '''
         props = LogQueryWidgetProps(
             log_group_names=log_group_names,
             height=height,
@@ -7202,6 +7587,7 @@ class LogQueryWidget(
             query_string=query_string,
             region=region,
             title=title,
+            view=view,
             width=width,
         )
 
@@ -7209,8 +7595,8 @@ class LogQueryWidget(
 
     @jsii.member(jsii_name="toJson")
     def to_json(self) -> typing.List[typing.Any]:
-        """Return the widget JSON for use in the dashboard."""
-        return jsii.invoke(self, "toJson", [])
+        '''Return the widget JSON for use in the dashboard.'''
+        return typing.cast(typing.List[typing.Any], jsii.invoke(self, "toJson", []))
 
 
 class SingleValueWidget(
@@ -7218,28 +7604,31 @@ class SingleValueWidget(
     metaclass=jsii.JSIIMeta,
     jsii_type="@aws-cdk/aws-cloudwatch.SingleValueWidget",
 ):
-    """A dashboard widget that displays the most recent value for every metric."""
+    '''A dashboard widget that displays the most recent value for every metric.'''
 
     def __init__(
         self,
         *,
-        metrics: typing.List["IMetric"],
-        set_period_to_time_range: typing.Optional[bool] = None,
+        metrics: typing.Sequence[IMetric],
+        full_precision: typing.Optional[builtins.bool] = None,
+        set_period_to_time_range: typing.Optional[builtins.bool] = None,
         height: typing.Optional[jsii.Number] = None,
-        region: typing.Optional[str] = None,
-        title: typing.Optional[str] = None,
+        region: typing.Optional[builtins.str] = None,
+        title: typing.Optional[builtins.str] = None,
         width: typing.Optional[jsii.Number] = None,
     ) -> None:
-        """
+        '''
         :param metrics: Metrics to display.
+        :param full_precision: Whether to show as many digits as can fit, before rounding. Default: false
         :param set_period_to_time_range: Whether to show the value from the entire time range. Default: false
         :param height: Height of the widget. Default: - 6 for Alarm and Graph widgets. 3 for single value widgets where most recent value of a metric is displayed.
         :param region: The region the metrics of this graph should be taken from. Default: - Current region
         :param title: Title for the graph. Default: - None
         :param width: Width of the widget, in a grid of 24 units wide. Default: 6
-        """
+        '''
         props = SingleValueWidgetProps(
             metrics=metrics,
+            full_precision=full_precision,
             set_period_to_time_range=set_period_to_time_range,
             height=height,
             region=region,
@@ -7251,8 +7640,8 @@ class SingleValueWidget(
 
     @jsii.member(jsii_name="toJson")
     def to_json(self) -> typing.List[typing.Any]:
-        """Return the widget JSON for use in the dashboard."""
-        return jsii.invoke(self, "toJson", [])
+        '''Return the widget JSON for use in the dashboard.'''
+        return typing.cast(typing.List[typing.Any], jsii.invoke(self, "toJson", []))
 
 
 class TextWidget(
@@ -7260,37 +7649,37 @@ class TextWidget(
     metaclass=jsii.JSIIMeta,
     jsii_type="@aws-cdk/aws-cloudwatch.TextWidget",
 ):
-    """A dashboard widget that displays MarkDown."""
+    '''A dashboard widget that displays MarkDown.'''
 
     def __init__(
         self,
         *,
-        markdown: str,
+        markdown: builtins.str,
         height: typing.Optional[jsii.Number] = None,
         width: typing.Optional[jsii.Number] = None,
     ) -> None:
-        """
+        '''
         :param markdown: The text to display, in MarkDown format.
         :param height: Height of the widget. Default: 2
         :param width: Width of the widget, in a grid of 24 units wide. Default: 6
-        """
+        '''
         props = TextWidgetProps(markdown=markdown, height=height, width=width)
 
         jsii.create(TextWidget, self, [props])
 
     @jsii.member(jsii_name="position")
     def position(self, x: jsii.Number, y: jsii.Number) -> None:
-        """Place the widget at a given position.
+        '''Place the widget at a given position.
 
         :param x: -
         :param y: -
-        """
-        return jsii.invoke(self, "position", [x, y])
+        '''
+        return typing.cast(None, jsii.invoke(self, "position", [x, y]))
 
     @jsii.member(jsii_name="toJson")
     def to_json(self) -> typing.List[typing.Any]:
-        """Return the widget JSON for use in the dashboard."""
-        return jsii.invoke(self, "toJson", [])
+        '''Return the widget JSON for use in the dashboard.'''
+        return typing.cast(typing.List[typing.Any], jsii.invoke(self, "toJson", []))
 
 
 @jsii.implements(IAlarm)
@@ -7299,127 +7688,188 @@ class AlarmBase(
     metaclass=jsii.JSIIAbstractClass,
     jsii_type="@aws-cdk/aws-cloudwatch.AlarmBase",
 ):
-    """The base class for Alarm and CompositeAlarm resources."""
-
-    @builtins.staticmethod
-    def __jsii_proxy_class__():
-        return _AlarmBaseProxy
+    '''The base class for Alarm and CompositeAlarm resources.'''
 
     def __init__(
         self,
-        scope: aws_cdk.core.Construct,
-        id: str,
+        scope: constructs.Construct,
+        id: builtins.str,
         *,
-        physical_name: typing.Optional[str] = None,
+        account: typing.Optional[builtins.str] = None,
+        environment_from_arn: typing.Optional[builtins.str] = None,
+        physical_name: typing.Optional[builtins.str] = None,
+        region: typing.Optional[builtins.str] = None,
     ) -> None:
-        """
+        '''
         :param scope: -
         :param id: -
+        :param account: The AWS account ID this resource belongs to. Default: - the resource is in the same account as the stack it belongs to
+        :param environment_from_arn: ARN to deduce region and account from. The ARN is parsed and the account and region are taken from the ARN. This should be used for imported resources. Cannot be supplied together with either ``account`` or ``region``. Default: - take environment from ``account``, ``region`` parameters, or use Stack environment.
         :param physical_name: The value passed in by users to the physical name prop of the resource. - ``undefined`` implies that a physical name will be allocated by CloudFormation during deployment. - a concrete value implies a specific physical name - ``PhysicalName.GENERATE_IF_NEEDED`` is a marker that indicates that a physical will only be generated by the CDK if it is needed for cross-environment references. Otherwise, it will be allocated by CloudFormation. Default: - The physical name will be allocated by CloudFormation at deployment time
-        """
-        props = aws_cdk.core.ResourceProps(physical_name=physical_name)
+        :param region: The AWS region this resource belongs to. Default: - the resource is in the same region as the stack it belongs to
+        '''
+        props = aws_cdk.core.ResourceProps(
+            account=account,
+            environment_from_arn=environment_from_arn,
+            physical_name=physical_name,
+            region=region,
+        )
 
         jsii.create(AlarmBase, self, [scope, id, props])
 
     @jsii.member(jsii_name="addAlarmAction")
-    def add_alarm_action(self, *actions: "IAlarmAction") -> None:
-        """Trigger this action if the alarm fires.
+    def add_alarm_action(self, *actions: IAlarmAction) -> None:
+        '''Trigger this action if the alarm fires.
 
         Typically the ARN of an SNS topic or ARN of an AutoScaling policy.
 
         :param actions: -
-        """
-        return jsii.invoke(self, "addAlarmAction", [*actions])
+        '''
+        return typing.cast(None, jsii.invoke(self, "addAlarmAction", [*actions]))
 
     @jsii.member(jsii_name="addInsufficientDataAction")
-    def add_insufficient_data_action(self, *actions: "IAlarmAction") -> None:
-        """Trigger this action if there is insufficient data to evaluate the alarm.
+    def add_insufficient_data_action(self, *actions: IAlarmAction) -> None:
+        '''Trigger this action if there is insufficient data to evaluate the alarm.
 
         Typically the ARN of an SNS topic or ARN of an AutoScaling policy.
 
         :param actions: -
-        """
-        return jsii.invoke(self, "addInsufficientDataAction", [*actions])
+        '''
+        return typing.cast(None, jsii.invoke(self, "addInsufficientDataAction", [*actions]))
 
     @jsii.member(jsii_name="addOkAction")
-    def add_ok_action(self, *actions: "IAlarmAction") -> None:
-        """Trigger this action if the alarm returns from breaching state into ok state.
+    def add_ok_action(self, *actions: IAlarmAction) -> None:
+        '''Trigger this action if the alarm returns from breaching state into ok state.
 
         Typically the ARN of an SNS topic or ARN of an AutoScaling policy.
 
         :param actions: -
-        """
-        return jsii.invoke(self, "addOkAction", [*actions])
+        '''
+        return typing.cast(None, jsii.invoke(self, "addOkAction", [*actions]))
 
     @jsii.member(jsii_name="renderAlarmRule")
-    def render_alarm_rule(self) -> str:
-        """AlarmRule indicating ALARM state for Alarm."""
-        return jsii.invoke(self, "renderAlarmRule", [])
+    def render_alarm_rule(self) -> builtins.str:
+        '''AlarmRule indicating ALARM state for Alarm.'''
+        return typing.cast(builtins.str, jsii.invoke(self, "renderAlarmRule", []))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="alarmArn")
     @abc.abstractmethod
-    def alarm_arn(self) -> str:
-        """Alarm ARN (i.e. arn:aws:cloudwatch:::alarm:Foo).
+    def alarm_arn(self) -> builtins.str:
+        '''Alarm ARN (i.e. arn:aws:cloudwatch:::alarm:Foo).
 
-        attribute:
-        :attribute:: true
-        """
+        :attribute: true
+        '''
         ...
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="alarmName")
     @abc.abstractmethod
-    def alarm_name(self) -> str:
-        """Name of the alarm."""
+    def alarm_name(self) -> builtins.str:
+        '''Name of the alarm.'''
         ...
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="alarmActionArns")
-    def _alarm_action_arns(self) -> typing.Optional[typing.List[str]]:
-        return jsii.get(self, "alarmActionArns")
+    def _alarm_action_arns(self) -> typing.Optional[typing.List[builtins.str]]:
+        return typing.cast(typing.Optional[typing.List[builtins.str]], jsii.get(self, "alarmActionArns"))
 
     @_alarm_action_arns.setter
-    def _alarm_action_arns(self, value: typing.Optional[typing.List[str]]) -> None:
+    def _alarm_action_arns(
+        self,
+        value: typing.Optional[typing.List[builtins.str]],
+    ) -> None:
         jsii.set(self, "alarmActionArns", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="insufficientDataActionArns")
-    def _insufficient_data_action_arns(self) -> typing.Optional[typing.List[str]]:
-        return jsii.get(self, "insufficientDataActionArns")
+    def _insufficient_data_action_arns(
+        self,
+    ) -> typing.Optional[typing.List[builtins.str]]:
+        return typing.cast(typing.Optional[typing.List[builtins.str]], jsii.get(self, "insufficientDataActionArns"))
 
     @_insufficient_data_action_arns.setter
     def _insufficient_data_action_arns(
-        self, value: typing.Optional[typing.List[str]]
+        self,
+        value: typing.Optional[typing.List[builtins.str]],
     ) -> None:
         jsii.set(self, "insufficientDataActionArns", value)
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="okActionArns")
-    def _ok_action_arns(self) -> typing.Optional[typing.List[str]]:
-        return jsii.get(self, "okActionArns")
+    def _ok_action_arns(self) -> typing.Optional[typing.List[builtins.str]]:
+        return typing.cast(typing.Optional[typing.List[builtins.str]], jsii.get(self, "okActionArns"))
 
     @_ok_action_arns.setter
-    def _ok_action_arns(self, value: typing.Optional[typing.List[str]]) -> None:
+    def _ok_action_arns(
+        self,
+        value: typing.Optional[typing.List[builtins.str]],
+    ) -> None:
         jsii.set(self, "okActionArns", value)
 
 
-class _AlarmBaseProxy(AlarmBase, jsii.proxy_for(aws_cdk.core.Resource)):
-    @builtins.property
+class _AlarmBaseProxy(
+    AlarmBase, jsii.proxy_for(aws_cdk.core.Resource) # type: ignore[misc]
+):
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="alarmArn")
-    def alarm_arn(self) -> str:
-        """Alarm ARN (i.e. arn:aws:cloudwatch:::alarm:Foo).
+    def alarm_arn(self) -> builtins.str:
+        '''Alarm ARN (i.e. arn:aws:cloudwatch:::alarm:Foo).
 
-        attribute:
-        :attribute:: true
-        """
-        return jsii.get(self, "alarmArn")
+        :attribute: true
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "alarmArn"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="alarmName")
-    def alarm_name(self) -> str:
-        """Name of the alarm."""
-        return jsii.get(self, "alarmName")
+    def alarm_name(self) -> builtins.str:
+        '''Name of the alarm.'''
+        return typing.cast(builtins.str, jsii.get(self, "alarmName"))
+
+# Adding a "__jsii_proxy_class__(): typing.Type" function to the abstract class
+typing.cast(typing.Any, AlarmBase).__jsii_proxy_class__ = lambda : _AlarmBaseProxy
+
+
+class AlarmStatusWidget(
+    ConcreteWidget,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@aws-cdk/aws-cloudwatch.AlarmStatusWidget",
+):
+    '''A dashboard widget that displays alarms in a grid view.'''
+
+    def __init__(
+        self,
+        *,
+        alarms: typing.Sequence[IAlarm],
+        height: typing.Optional[jsii.Number] = None,
+        title: typing.Optional[builtins.str] = None,
+        width: typing.Optional[jsii.Number] = None,
+    ) -> None:
+        '''
+        :param alarms: CloudWatch Alarms to show in widget.
+        :param height: Height of the widget. Default: 3
+        :param title: The title of the widget. Default: 'Alarm Status'
+        :param width: Width of the widget, in a grid of 24 units wide. Default: 6
+        '''
+        props = AlarmStatusWidgetProps(
+            alarms=alarms, height=height, title=title, width=width
+        )
+
+        jsii.create(AlarmStatusWidget, self, [props])
+
+    @jsii.member(jsii_name="position")
+    def position(self, x: jsii.Number, y: jsii.Number) -> None:
+        '''Place the widget at a given position.
+
+        :param x: -
+        :param y: -
+        '''
+        return typing.cast(None, jsii.invoke(self, "position", [x, y]))
+
+    @jsii.member(jsii_name="toJson")
+    def to_json(self) -> typing.List[typing.Any]:
+        '''Return the widget JSON for use in the dashboard.'''
+        return typing.cast(typing.List[typing.Any], jsii.invoke(self, "toJson", []))
 
 
 class AlarmWidget(
@@ -7427,26 +7877,26 @@ class AlarmWidget(
     metaclass=jsii.JSIIMeta,
     jsii_type="@aws-cdk/aws-cloudwatch.AlarmWidget",
 ):
-    """Display the metric associated with an alarm, including the alarm line."""
+    '''Display the metric associated with an alarm, including the alarm line.'''
 
     def __init__(
         self,
         *,
-        alarm: "IAlarm",
-        left_y_axis: typing.Optional["YAxisProps"] = None,
+        alarm: IAlarm,
+        left_y_axis: typing.Optional[YAxisProps] = None,
         height: typing.Optional[jsii.Number] = None,
-        region: typing.Optional[str] = None,
-        title: typing.Optional[str] = None,
+        region: typing.Optional[builtins.str] = None,
+        title: typing.Optional[builtins.str] = None,
         width: typing.Optional[jsii.Number] = None,
     ) -> None:
-        """
+        '''
         :param alarm: The alarm to show.
         :param left_y_axis: Left Y axis. Default: - No minimum or maximum values for the left Y-axis
         :param height: Height of the widget. Default: - 6 for Alarm and Graph widgets. 3 for single value widgets where most recent value of a metric is displayed.
         :param region: The region the metrics of this graph should be taken from. Default: - Current region
         :param title: Title for the graph. Default: - None
         :param width: Width of the widget, in a grid of 24 units wide. Default: 6
-        """
+        '''
         props = AlarmWidgetProps(
             alarm=alarm,
             left_y_axis=left_y_axis,
@@ -7460,8 +7910,8 @@ class AlarmWidget(
 
     @jsii.member(jsii_name="toJson")
     def to_json(self) -> typing.List[typing.Any]:
-        """Return the widget JSON for use in the dashboard."""
-        return jsii.invoke(self, "toJson", [])
+        '''Return the widget JSON for use in the dashboard.'''
+        return typing.cast(typing.List[typing.Any], jsii.invoke(self, "toJson", []))
 
 
 class CompositeAlarm(
@@ -7469,26 +7919,26 @@ class CompositeAlarm(
     metaclass=jsii.JSIIMeta,
     jsii_type="@aws-cdk/aws-cloudwatch.CompositeAlarm",
 ):
-    """A Composite Alarm based on Alarm Rule."""
+    '''A Composite Alarm based on Alarm Rule.'''
 
     def __init__(
         self,
-        scope: aws_cdk.core.Construct,
-        id: str,
+        scope: constructs.Construct,
+        id: builtins.str,
         *,
-        alarm_rule: "IAlarmRule",
-        actions_enabled: typing.Optional[bool] = None,
-        alarm_description: typing.Optional[str] = None,
-        composite_alarm_name: typing.Optional[str] = None,
+        alarm_rule: IAlarmRule,
+        actions_enabled: typing.Optional[builtins.bool] = None,
+        alarm_description: typing.Optional[builtins.str] = None,
+        composite_alarm_name: typing.Optional[builtins.str] = None,
     ) -> None:
-        """
+        '''
         :param scope: -
         :param id: -
         :param alarm_rule: Expression that specifies which other alarms are to be evaluated to determine this composite alarm's state.
         :param actions_enabled: Whether the actions for this alarm are enabled. Default: true
         :param alarm_description: Description for the alarm. Default: No description
         :param composite_alarm_name: Name of the alarm. Default: Automatically generated name
-        """
+        '''
         props = CompositeAlarmProps(
             alarm_rule=alarm_rule,
             actions_enabled=actions_enabled,
@@ -7498,81 +7948,83 @@ class CompositeAlarm(
 
         jsii.create(CompositeAlarm, self, [scope, id, props])
 
-    @jsii.member(jsii_name="fromCompositeAlarmArn")
+    @jsii.member(jsii_name="fromCompositeAlarmArn") # type: ignore[misc]
     @builtins.classmethod
     def from_composite_alarm_arn(
-        cls, scope: aws_cdk.core.Construct, id: str, composite_alarm_arn: str
-    ) -> "IAlarm":
-        """Import an existing CloudWatch composite alarm provided an ARN.
+        cls,
+        scope: constructs.Construct,
+        id: builtins.str,
+        composite_alarm_arn: builtins.str,
+    ) -> IAlarm:
+        '''Import an existing CloudWatch composite alarm provided an ARN.
 
         :param scope: The parent creating construct (usually ``this``).
         :param id: The construct's name.
         :param composite_alarm_arn: Composite Alarm ARN (i.e. arn:aws:cloudwatch:::alarm/CompositeAlarmName).
-        """
-        return jsii.sinvoke(
-            cls, "fromCompositeAlarmArn", [scope, id, composite_alarm_arn]
-        )
+        '''
+        return typing.cast(IAlarm, jsii.sinvoke(cls, "fromCompositeAlarmArn", [scope, id, composite_alarm_arn]))
 
-    @jsii.member(jsii_name="fromCompositeAlarmName")
+    @jsii.member(jsii_name="fromCompositeAlarmName") # type: ignore[misc]
     @builtins.classmethod
     def from_composite_alarm_name(
-        cls, scope: aws_cdk.core.Construct, id: str, composite_alarm_name: str
-    ) -> "IAlarm":
-        """Import an existing CloudWatch composite alarm provided an Name.
+        cls,
+        scope: constructs.Construct,
+        id: builtins.str,
+        composite_alarm_name: builtins.str,
+    ) -> IAlarm:
+        '''Import an existing CloudWatch composite alarm provided an Name.
 
         :param scope: The parent creating construct (usually ``this``).
         :param id: The construct's name.
         :param composite_alarm_name: Composite Alarm Name.
-        """
-        return jsii.sinvoke(
-            cls, "fromCompositeAlarmName", [scope, id, composite_alarm_name]
-        )
+        '''
+        return typing.cast(IAlarm, jsii.sinvoke(cls, "fromCompositeAlarmName", [scope, id, composite_alarm_name]))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="alarmArn")
-    def alarm_arn(self) -> str:
-        """ARN of this alarm.
+    def alarm_arn(self) -> builtins.str:
+        '''ARN of this alarm.
 
-        attribute:
-        :attribute:: true
-        """
-        return jsii.get(self, "alarmArn")
+        :attribute: true
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "alarmArn"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="alarmName")
-    def alarm_name(self) -> str:
-        """Name of this alarm.
+    def alarm_name(self) -> builtins.str:
+        '''Name of this alarm.
 
-        attribute:
-        :attribute:: true
-        """
-        return jsii.get(self, "alarmName")
+        :attribute: true
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "alarmName"))
 
 
 class Alarm(
-    AlarmBase, metaclass=jsii.JSIIMeta, jsii_type="@aws-cdk/aws-cloudwatch.Alarm"
+    AlarmBase,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@aws-cdk/aws-cloudwatch.Alarm",
 ):
-    """An alarm on a CloudWatch metric."""
+    '''An alarm on a CloudWatch metric.'''
 
     def __init__(
         self,
-        scope: aws_cdk.core.Construct,
-        id: str,
+        scope: constructs.Construct,
+        id: builtins.str,
         *,
-        metric: "IMetric",
+        metric: IMetric,
         evaluation_periods: jsii.Number,
         threshold: jsii.Number,
-        actions_enabled: typing.Optional[bool] = None,
-        alarm_description: typing.Optional[str] = None,
-        alarm_name: typing.Optional[str] = None,
-        comparison_operator: typing.Optional["ComparisonOperator"] = None,
+        actions_enabled: typing.Optional[builtins.bool] = None,
+        alarm_description: typing.Optional[builtins.str] = None,
+        alarm_name: typing.Optional[builtins.str] = None,
+        comparison_operator: typing.Optional[ComparisonOperator] = None,
         datapoints_to_alarm: typing.Optional[jsii.Number] = None,
-        evaluate_low_sample_count_percentile: typing.Optional[str] = None,
+        evaluate_low_sample_count_percentile: typing.Optional[builtins.str] = None,
         period: typing.Optional[aws_cdk.core.Duration] = None,
-        statistic: typing.Optional[str] = None,
-        treat_missing_data: typing.Optional["TreatMissingData"] = None,
+        statistic: typing.Optional[builtins.str] = None,
+        treat_missing_data: typing.Optional[TreatMissingData] = None,
     ) -> None:
-        """
+        '''
         :param scope: -
         :param id: -
         :param metric: The metric to add the alarm on. Metric objects can be obtained from most resources, or you can construct custom Metric objects by instantiating one.
@@ -7584,10 +8036,10 @@ class Alarm(
         :param comparison_operator: Comparison to use to check if metric is breaching. Default: GreaterThanOrEqualToThreshold
         :param datapoints_to_alarm: The number of datapoints that must be breaching to trigger the alarm. This is used only if you are setting an "M out of N" alarm. In that case, this value is the M. For more information, see Evaluating an Alarm in the Amazon CloudWatch User Guide. Default: ``evaluationPeriods``
         :param evaluate_low_sample_count_percentile: Specifies whether to evaluate the data and potentially change the alarm state if there are too few data points to be statistically significant. Used only for alarms that are based on percentiles. Default: - Not configured.
-        :param period: The period over which the specified statistic is applied. Cannot be used with ``MathExpression`` objects. Default: - The period from the metric
-        :param statistic: What function to use for aggregating. Can be one of the following: - "Minimum" | "min" - "Maximum" | "max" - "Average" | "avg" - "Sum" | "sum" - "SampleCount | "n" - "pNN.NN" Cannot be used with ``MathExpression`` objects. Default: - The statistic from the metric
+        :param period: (deprecated) The period over which the specified statistic is applied. Cannot be used with ``MathExpression`` objects. Default: - The period from the metric
+        :param statistic: (deprecated) What function to use for aggregating. Can be one of the following: - "Minimum" | "min" - "Maximum" | "max" - "Average" | "avg" - "Sum" | "sum" - "SampleCount | "n" - "pNN.NN" Cannot be used with ``MathExpression`` objects. Default: - The statistic from the metric
         :param treat_missing_data: Sets how this alarm is to handle missing data points. Default: TreatMissingData.Missing
-        """
+        '''
         props = AlarmProps(
             metric=metric,
             evaluation_periods=evaluation_periods,
@@ -7605,22 +8057,35 @@ class Alarm(
 
         jsii.create(Alarm, self, [scope, id, props])
 
-    @jsii.member(jsii_name="fromAlarmArn")
+    @jsii.member(jsii_name="fromAlarmArn") # type: ignore[misc]
     @builtins.classmethod
     def from_alarm_arn(
-        cls, scope: aws_cdk.core.Construct, id: str, alarm_arn: str
-    ) -> "IAlarm":
-        """Import an existing CloudWatch alarm provided an ARN.
+        cls,
+        scope: constructs.Construct,
+        id: builtins.str,
+        alarm_arn: builtins.str,
+    ) -> IAlarm:
+        '''Import an existing CloudWatch alarm provided an ARN.
 
         :param scope: The parent creating construct (usually ``this``).
         :param id: The construct's name.
         :param alarm_arn: Alarm ARN (i.e. arn:aws:cloudwatch:::alarm:Foo).
-        """
-        return jsii.sinvoke(cls, "fromAlarmArn", [scope, id, alarm_arn])
+        '''
+        return typing.cast(IAlarm, jsii.sinvoke(cls, "fromAlarmArn", [scope, id, alarm_arn]))
+
+    @jsii.member(jsii_name="addAlarmAction")
+    def add_alarm_action(self, *actions: IAlarmAction) -> None:
+        '''Trigger this action if the alarm fires.
+
+        Typically the ARN of an SNS topic or ARN of an AutoScaling policy.
+
+        :param actions: -
+        '''
+        return typing.cast(None, jsii.invoke(self, "addAlarmAction", [*actions]))
 
     @jsii.member(jsii_name="toAnnotation")
-    def to_annotation(self) -> "HorizontalAnnotation":
-        """Turn this alarm into a horizontal annotation.
+    def to_annotation(self) -> HorizontalAnnotation:
+        '''Turn this alarm into a horizontal annotation.
 
         This is useful if you want to represent an Alarm in a non-AlarmWidget.
         An ``AlarmWidget`` can directly show an alarm, but it can only show a
@@ -7633,34 +8098,32 @@ class Alarm(
           you have both a "small margin/long period" alarm as well as a
           "large margin/short period" alarm.
         - You want to show an Alarm line in a graph with multiple metrics in it.
-        """
-        return jsii.invoke(self, "toAnnotation", [])
+        '''
+        return typing.cast(HorizontalAnnotation, jsii.invoke(self, "toAnnotation", []))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="alarmArn")
-    def alarm_arn(self) -> str:
-        """ARN of this alarm.
+    def alarm_arn(self) -> builtins.str:
+        '''ARN of this alarm.
 
-        attribute:
-        :attribute:: true
-        """
-        return jsii.get(self, "alarmArn")
+        :attribute: true
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "alarmArn"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="alarmName")
-    def alarm_name(self) -> str:
-        """Name of this alarm.
+    def alarm_name(self) -> builtins.str:
+        '''Name of this alarm.
 
-        attribute:
-        :attribute:: true
-        """
-        return jsii.get(self, "alarmName")
+        :attribute: true
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "alarmName"))
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="metric")
-    def metric(self) -> "IMetric":
-        """The metric object this alarm was based on."""
-        return jsii.get(self, "metric")
+    def metric(self) -> IMetric:
+        '''The metric object this alarm was based on.'''
+        return typing.cast(IMetric, jsii.get(self, "metric"))
 
 
 __all__ = [
@@ -7670,6 +8133,8 @@ __all__ = [
     "AlarmProps",
     "AlarmRule",
     "AlarmState",
+    "AlarmStatusWidget",
+    "AlarmStatusWidgetProps",
     "AlarmWidget",
     "AlarmWidgetProps",
     "CfnAlarm",
@@ -7682,6 +8147,8 @@ __all__ = [
     "CfnDashboardProps",
     "CfnInsightRule",
     "CfnInsightRuleProps",
+    "CfnMetricStream",
+    "CfnMetricStreamProps",
     "Color",
     "Column",
     "CommonMetricOptions",
@@ -7695,6 +8162,7 @@ __all__ = [
     "Dimension",
     "GraphWidget",
     "GraphWidgetProps",
+    "GraphWidgetView",
     "HorizontalAnnotation",
     "IAlarm",
     "IAlarmAction",
@@ -7702,6 +8170,7 @@ __all__ = [
     "IMetric",
     "IWidget",
     "LegendPosition",
+    "LogQueryVisualizationType",
     "LogQueryWidget",
     "LogQueryWidgetProps",
     "MathExpression",

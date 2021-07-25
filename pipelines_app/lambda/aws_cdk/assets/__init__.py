@@ -1,5 +1,5 @@
-"""
-## AWS CDK Assets
+'''
+# AWS CDK Assets
 
 <!--BEGIN STABILITY BANNER-->---
 
@@ -12,7 +12,7 @@
 <!--END STABILITY BANNER-->
 
 All types moved to @aws-cdk/core.
-"""
+'''
 import abc
 import builtins
 import datetime
@@ -20,8 +20,8 @@ import enum
 import typing
 
 import jsii
-import jsii.compat
 import publication
+import typing_extensions
 
 from ._jsii import *
 
@@ -31,60 +31,81 @@ import aws_cdk.core
 @jsii.data_type(
     jsii_type="@aws-cdk/assets.CopyOptions",
     jsii_struct_bases=[],
-    name_mapping={"exclude": "exclude", "follow": "follow"},
+    name_mapping={
+        "exclude": "exclude",
+        "follow": "follow",
+        "ignore_mode": "ignoreMode",
+    },
 )
 class CopyOptions:
     def __init__(
         self,
         *,
-        exclude: typing.Optional[typing.List[str]] = None,
+        exclude: typing.Optional[typing.Sequence[builtins.str]] = None,
         follow: typing.Optional["FollowMode"] = None,
+        ignore_mode: typing.Optional[aws_cdk.core.IgnoreMode] = None,
     ) -> None:
-        """Obtains applied when copying directories into the staging location.
+        '''(deprecated) Obtains applied when copying directories into the staging location.
 
-        :param exclude: Glob patterns to exclude from the copy. Default: nothing is excluded
-        :param follow: A strategy for how to handle symlinks. Default: Never
+        :param exclude: (deprecated) Glob patterns to exclude from the copy. Default: nothing is excluded
+        :param follow: (deprecated) A strategy for how to handle symlinks. Default: Never
+        :param ignore_mode: (deprecated) The ignore behavior to use for exclude patterns. Default: - GLOB for file assets, DOCKER or GLOB for docker assets depending on whether the '
 
-        deprecated
         :deprecated: see ``core.CopyOptions``
 
-        stability
         :stability: deprecated
-        """
-        self._values = {}
+        '''
+        self._values: typing.Dict[str, typing.Any] = {}
         if exclude is not None:
             self._values["exclude"] = exclude
         if follow is not None:
             self._values["follow"] = follow
+        if ignore_mode is not None:
+            self._values["ignore_mode"] = ignore_mode
 
     @builtins.property
-    def exclude(self) -> typing.Optional[typing.List[str]]:
-        """Glob patterns to exclude from the copy.
+    def exclude(self) -> typing.Optional[typing.List[builtins.str]]:
+        '''(deprecated) Glob patterns to exclude from the copy.
 
-        default
         :default: nothing is excluded
 
-        stability
         :stability: deprecated
-        """
-        return self._values.get("exclude")
+        '''
+        result = self._values.get("exclude")
+        return typing.cast(typing.Optional[typing.List[builtins.str]], result)
 
     @builtins.property
     def follow(self) -> typing.Optional["FollowMode"]:
-        """A strategy for how to handle symlinks.
+        '''(deprecated) A strategy for how to handle symlinks.
 
-        default
         :default: Never
 
-        stability
-        :stability: deprecated
-        """
-        return self._values.get("follow")
+        :deprecated: use ``followSymlinks`` instead
 
-    def __eq__(self, rhs) -> bool:
+        :stability: deprecated
+        '''
+        result = self._values.get("follow")
+        return typing.cast(typing.Optional["FollowMode"], result)
+
+    @builtins.property
+    def ignore_mode(self) -> typing.Optional[aws_cdk.core.IgnoreMode]:
+        '''(deprecated) The ignore behavior to use for exclude patterns.
+
+        :default:
+
+        - GLOB for file assets, DOCKER or GLOB for docker assets depending on whether the
+        '
+
+        :stability: deprecated
+        :aws-cdk: /aws-ecr-assets:dockerIgnoreSupport' flag is set.
+        '''
+        result = self._values.get("ignore_mode")
+        return typing.cast(typing.Optional[aws_cdk.core.IgnoreMode], result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
@@ -96,76 +117,97 @@ class CopyOptions:
 @jsii.data_type(
     jsii_type="@aws-cdk/assets.FingerprintOptions",
     jsii_struct_bases=[CopyOptions],
-    name_mapping={"exclude": "exclude", "follow": "follow", "extra_hash": "extraHash"},
+    name_mapping={
+        "exclude": "exclude",
+        "follow": "follow",
+        "ignore_mode": "ignoreMode",
+        "extra_hash": "extraHash",
+    },
 )
 class FingerprintOptions(CopyOptions):
     def __init__(
         self,
         *,
-        exclude: typing.Optional[typing.List[str]] = None,
+        exclude: typing.Optional[typing.Sequence[builtins.str]] = None,
         follow: typing.Optional["FollowMode"] = None,
-        extra_hash: typing.Optional[str] = None,
+        ignore_mode: typing.Optional[aws_cdk.core.IgnoreMode] = None,
+        extra_hash: typing.Optional[builtins.str] = None,
     ) -> None:
-        """Options related to calculating source hash.
+        '''(deprecated) Options related to calculating source hash.
 
-        :param exclude: Glob patterns to exclude from the copy. Default: nothing is excluded
-        :param follow: A strategy for how to handle symlinks. Default: Never
-        :param extra_hash: Extra information to encode into the fingerprint (e.g. build instructions and other inputs). Default: - hash is only based on source content
+        :param exclude: (deprecated) Glob patterns to exclude from the copy. Default: nothing is excluded
+        :param follow: (deprecated) A strategy for how to handle symlinks. Default: Never
+        :param ignore_mode: (deprecated) The ignore behavior to use for exclude patterns. Default: - GLOB for file assets, DOCKER or GLOB for docker assets depending on whether the '
+        :param extra_hash: (deprecated) Extra information to encode into the fingerprint (e.g. build instructions and other inputs). Default: - hash is only based on source content
 
-        deprecated
         :deprecated: see ``core.FingerprintOptions``
 
-        stability
         :stability: deprecated
-        """
-        self._values = {}
+        '''
+        self._values: typing.Dict[str, typing.Any] = {}
         if exclude is not None:
             self._values["exclude"] = exclude
         if follow is not None:
             self._values["follow"] = follow
+        if ignore_mode is not None:
+            self._values["ignore_mode"] = ignore_mode
         if extra_hash is not None:
             self._values["extra_hash"] = extra_hash
 
     @builtins.property
-    def exclude(self) -> typing.Optional[typing.List[str]]:
-        """Glob patterns to exclude from the copy.
+    def exclude(self) -> typing.Optional[typing.List[builtins.str]]:
+        '''(deprecated) Glob patterns to exclude from the copy.
 
-        default
         :default: nothing is excluded
 
-        stability
         :stability: deprecated
-        """
-        return self._values.get("exclude")
+        '''
+        result = self._values.get("exclude")
+        return typing.cast(typing.Optional[typing.List[builtins.str]], result)
 
     @builtins.property
     def follow(self) -> typing.Optional["FollowMode"]:
-        """A strategy for how to handle symlinks.
+        '''(deprecated) A strategy for how to handle symlinks.
 
-        default
         :default: Never
 
-        stability
+        :deprecated: use ``followSymlinks`` instead
+
         :stability: deprecated
-        """
-        return self._values.get("follow")
+        '''
+        result = self._values.get("follow")
+        return typing.cast(typing.Optional["FollowMode"], result)
 
     @builtins.property
-    def extra_hash(self) -> typing.Optional[str]:
-        """Extra information to encode into the fingerprint (e.g. build instructions and other inputs).
+    def ignore_mode(self) -> typing.Optional[aws_cdk.core.IgnoreMode]:
+        '''(deprecated) The ignore behavior to use for exclude patterns.
 
-        default
+        :default:
+
+        - GLOB for file assets, DOCKER or GLOB for docker assets depending on whether the
+        '
+
+        :stability: deprecated
+        :aws-cdk: /aws-ecr-assets:dockerIgnoreSupport' flag is set.
+        '''
+        result = self._values.get("ignore_mode")
+        return typing.cast(typing.Optional[aws_cdk.core.IgnoreMode], result)
+
+    @builtins.property
+    def extra_hash(self) -> typing.Optional[builtins.str]:
+        '''(deprecated) Extra information to encode into the fingerprint (e.g. build instructions and other inputs).
+
         :default: - hash is only based on source content
 
-        stability
         :stability: deprecated
-        """
-        return self._values.get("extra_hash")
+        '''
+        result = self._values.get("extra_hash")
+        return typing.cast(typing.Optional[builtins.str], result)
 
-    def __eq__(self, rhs) -> bool:
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
@@ -176,35 +218,30 @@ class FingerprintOptions(CopyOptions):
 
 @jsii.enum(jsii_type="@aws-cdk/assets.FollowMode")
 class FollowMode(enum.Enum):
-    """Symlink follow mode.
+    '''(deprecated) Symlink follow mode.
 
-    deprecated
     :deprecated: see ``core.SymlinkFollowMode``
 
-    stability
     :stability: deprecated
-    """
+    '''
 
     NEVER = "NEVER"
-    """Never follow symlinks.
+    '''(deprecated) Never follow symlinks.
 
-    stability
     :stability: deprecated
-    """
+    '''
     ALWAYS = "ALWAYS"
-    """Materialize all symlinks, whether they are internal or external to the source directory.
+    '''(deprecated) Materialize all symlinks, whether they are internal or external to the source directory.
 
-    stability
     :stability: deprecated
-    """
+    '''
     EXTERNAL = "EXTERNAL"
-    """Only follows symlinks that are external to the source directory.
+    '''(deprecated) Only follows symlinks that are external to the source directory.
 
-    stability
     :stability: deprecated
-    """
+    '''
     BLOCK_EXTERNAL = "BLOCK_EXTERNAL"
-    """Forbids source from having any symlinks pointing outside of the source tree.
+    '''(deprecated) Forbids source from having any symlinks pointing outside of the source tree.
 
     This is the safest mode of operation as it ensures that copy operations
     won't materialize files from the user's file system. Internal symlinks are
@@ -212,66 +249,58 @@ class FollowMode(enum.Enum):
 
     If the copy operation runs into an external symlink, it will fail.
 
-    stability
     :stability: deprecated
-    """
+    '''
 
 
 @jsii.interface(jsii_type="@aws-cdk/assets.IAsset")
-class IAsset(jsii.compat.Protocol):
-    """Common interface for all assets.
+class IAsset(typing_extensions.Protocol):
+    '''(deprecated) Common interface for all assets.
 
-    deprecated
     :deprecated: use ``core.IAsset``
 
-    stability
     :stability: deprecated
-    """
+    '''
 
-    @builtins.staticmethod
-    def __jsii_proxy_class__():
-        return _IAssetProxy
-
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="sourceHash")
-    def source_hash(self) -> str:
-        """A hash of the source of this asset, which is available at construction time.
+    def source_hash(self) -> builtins.str:
+        '''(deprecated) A hash of the source of this asset, which is available at construction time.
 
         As this is a plain
         string, it can be used in construct IDs in order to enforce creation of a new resource when
         the content hash has changed.
 
-        stability
         :stability: deprecated
-        """
+        '''
         ...
 
 
 class _IAssetProxy:
-    """Common interface for all assets.
+    '''(deprecated) Common interface for all assets.
 
-    deprecated
     :deprecated: use ``core.IAsset``
 
-    stability
     :stability: deprecated
-    """
+    '''
 
-    __jsii_type__ = "@aws-cdk/assets.IAsset"
+    __jsii_type__: typing.ClassVar[str] = "@aws-cdk/assets.IAsset"
 
-    @builtins.property
+    @builtins.property # type: ignore[misc]
     @jsii.member(jsii_name="sourceHash")
-    def source_hash(self) -> str:
-        """A hash of the source of this asset, which is available at construction time.
+    def source_hash(self) -> builtins.str:
+        '''(deprecated) A hash of the source of this asset, which is available at construction time.
 
         As this is a plain
         string, it can be used in construct IDs in order to enforce creation of a new resource when
         the content hash has changed.
 
-        stability
         :stability: deprecated
-        """
-        return jsii.get(self, "sourceHash")
+        '''
+        return typing.cast(builtins.str, jsii.get(self, "sourceHash"))
+
+# Adding a "__jsii_proxy_class__(): typing.Type" function to the interface
+typing.cast(typing.Any, IAsset).__jsii_proxy_class__ = lambda : _IAssetProxy
 
 
 class Staging(
@@ -279,41 +308,41 @@ class Staging(
     metaclass=jsii.JSIIMeta,
     jsii_type="@aws-cdk/assets.Staging",
 ):
-    """Deprecated.
+    '''(deprecated) Deprecated.
 
-    deprecated
     :deprecated: use ``core.AssetStaging``
 
-    stability
     :stability: deprecated
-    """
+    '''
 
     def __init__(
         self,
         scope: aws_cdk.core.Construct,
-        id: str,
+        id: builtins.str,
         *,
-        source_path: str,
-        extra_hash: typing.Optional[str] = None,
-        exclude: typing.Optional[typing.List[str]] = None,
-        follow: typing.Optional["FollowMode"] = None,
+        source_path: builtins.str,
+        extra_hash: typing.Optional[builtins.str] = None,
+        exclude: typing.Optional[typing.Sequence[builtins.str]] = None,
+        follow: typing.Optional[FollowMode] = None,
+        ignore_mode: typing.Optional[aws_cdk.core.IgnoreMode] = None,
     ) -> None:
-        """
+        '''
         :param scope: -
         :param id: -
-        :param source_path: Local file or directory to stage.
-        :param extra_hash: Extra information to encode into the fingerprint (e.g. build instructions and other inputs). Default: - hash is only based on source content
-        :param exclude: Glob patterns to exclude from the copy. Default: nothing is excluded
-        :param follow: A strategy for how to handle symlinks. Default: Never
+        :param source_path: (deprecated) Local file or directory to stage.
+        :param extra_hash: (deprecated) Extra information to encode into the fingerprint (e.g. build instructions and other inputs). Default: - hash is only based on source content
+        :param exclude: (deprecated) Glob patterns to exclude from the copy. Default: nothing is excluded
+        :param follow: (deprecated) A strategy for how to handle symlinks. Default: Never
+        :param ignore_mode: (deprecated) The ignore behavior to use for exclude patterns. Default: - GLOB for file assets, DOCKER or GLOB for docker assets depending on whether the '
 
-        stability
         :stability: deprecated
-        """
+        '''
         props = StagingProps(
             source_path=source_path,
             extra_hash=extra_hash,
             exclude=exclude,
             follow=follow,
+            ignore_mode=ignore_mode,
         )
 
         jsii.create(Staging, self, [scope, id, props])
@@ -325,6 +354,7 @@ class Staging(
     name_mapping={
         "exclude": "exclude",
         "follow": "follow",
+        "ignore_mode": "ignoreMode",
         "extra_hash": "extraHash",
         "source_path": "sourcePath",
     },
@@ -333,83 +363,100 @@ class StagingProps(FingerprintOptions):
     def __init__(
         self,
         *,
-        exclude: typing.Optional[typing.List[str]] = None,
-        follow: typing.Optional["FollowMode"] = None,
-        extra_hash: typing.Optional[str] = None,
-        source_path: str,
+        exclude: typing.Optional[typing.Sequence[builtins.str]] = None,
+        follow: typing.Optional[FollowMode] = None,
+        ignore_mode: typing.Optional[aws_cdk.core.IgnoreMode] = None,
+        extra_hash: typing.Optional[builtins.str] = None,
+        source_path: builtins.str,
     ) -> None:
-        """Deprecated.
+        '''(deprecated) Deprecated.
 
-        :param exclude: Glob patterns to exclude from the copy. Default: nothing is excluded
-        :param follow: A strategy for how to handle symlinks. Default: Never
-        :param extra_hash: Extra information to encode into the fingerprint (e.g. build instructions and other inputs). Default: - hash is only based on source content
-        :param source_path: Local file or directory to stage.
+        :param exclude: (deprecated) Glob patterns to exclude from the copy. Default: nothing is excluded
+        :param follow: (deprecated) A strategy for how to handle symlinks. Default: Never
+        :param ignore_mode: (deprecated) The ignore behavior to use for exclude patterns. Default: - GLOB for file assets, DOCKER or GLOB for docker assets depending on whether the '
+        :param extra_hash: (deprecated) Extra information to encode into the fingerprint (e.g. build instructions and other inputs). Default: - hash is only based on source content
+        :param source_path: (deprecated) Local file or directory to stage.
 
-        deprecated
         :deprecated: use ``core.AssetStagingProps``
 
-        stability
         :stability: deprecated
-        """
-        self._values = {
+        '''
+        self._values: typing.Dict[str, typing.Any] = {
             "source_path": source_path,
         }
         if exclude is not None:
             self._values["exclude"] = exclude
         if follow is not None:
             self._values["follow"] = follow
+        if ignore_mode is not None:
+            self._values["ignore_mode"] = ignore_mode
         if extra_hash is not None:
             self._values["extra_hash"] = extra_hash
 
     @builtins.property
-    def exclude(self) -> typing.Optional[typing.List[str]]:
-        """Glob patterns to exclude from the copy.
+    def exclude(self) -> typing.Optional[typing.List[builtins.str]]:
+        '''(deprecated) Glob patterns to exclude from the copy.
 
-        default
         :default: nothing is excluded
 
-        stability
         :stability: deprecated
-        """
-        return self._values.get("exclude")
+        '''
+        result = self._values.get("exclude")
+        return typing.cast(typing.Optional[typing.List[builtins.str]], result)
 
     @builtins.property
-    def follow(self) -> typing.Optional["FollowMode"]:
-        """A strategy for how to handle symlinks.
+    def follow(self) -> typing.Optional[FollowMode]:
+        '''(deprecated) A strategy for how to handle symlinks.
 
-        default
         :default: Never
 
-        stability
+        :deprecated: use ``followSymlinks`` instead
+
         :stability: deprecated
-        """
-        return self._values.get("follow")
+        '''
+        result = self._values.get("follow")
+        return typing.cast(typing.Optional[FollowMode], result)
 
     @builtins.property
-    def extra_hash(self) -> typing.Optional[str]:
-        """Extra information to encode into the fingerprint (e.g. build instructions and other inputs).
+    def ignore_mode(self) -> typing.Optional[aws_cdk.core.IgnoreMode]:
+        '''(deprecated) The ignore behavior to use for exclude patterns.
 
-        default
+        :default:
+
+        - GLOB for file assets, DOCKER or GLOB for docker assets depending on whether the
+        '
+
+        :stability: deprecated
+        :aws-cdk: /aws-ecr-assets:dockerIgnoreSupport' flag is set.
+        '''
+        result = self._values.get("ignore_mode")
+        return typing.cast(typing.Optional[aws_cdk.core.IgnoreMode], result)
+
+    @builtins.property
+    def extra_hash(self) -> typing.Optional[builtins.str]:
+        '''(deprecated) Extra information to encode into the fingerprint (e.g. build instructions and other inputs).
+
         :default: - hash is only based on source content
 
-        stability
         :stability: deprecated
-        """
-        return self._values.get("extra_hash")
+        '''
+        result = self._values.get("extra_hash")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
-    def source_path(self) -> str:
-        """Local file or directory to stage.
+    def source_path(self) -> builtins.str:
+        '''(deprecated) Local file or directory to stage.
 
-        stability
         :stability: deprecated
-        """
-        return self._values.get("source_path")
+        '''
+        result = self._values.get("source_path")
+        assert result is not None, "Required property 'source_path' is missing"
+        return typing.cast(builtins.str, result)
 
-    def __eq__(self, rhs) -> bool:
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
 
-    def __ne__(self, rhs) -> bool:
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
         return not (rhs == self)
 
     def __repr__(self) -> str:
