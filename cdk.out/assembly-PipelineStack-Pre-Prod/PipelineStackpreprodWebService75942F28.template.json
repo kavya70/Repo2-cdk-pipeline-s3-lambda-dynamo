@@ -155,7 +155,7 @@
       "Properties": {
         "Code": {
           "S3Bucket": "cdk-hnb659fds-assets-402122568686-ap-south-1",
-          "S3Key": "cd70685cb56c33ea73f5f45980022248ee43511085b72c06d46bc9ccee0e1bb9.zip"
+          "S3Key": "218720c64d223afcdd2003c51349f6f63dd0f9e39368c76f3cae1c8d762b65c6.zip"
         },
         "Handler": "handler.handler",
         "Role": {
@@ -172,7 +172,7 @@
       ],
       "Metadata": {
         "aws:cdk:path": "PipelineStack/pre-prod/WebService/Handler/Resource",
-        "aws:asset:path": "asset.cd70685cb56c33ea73f5f45980022248ee43511085b72c06d46bc9ccee0e1bb9",
+        "aws:asset:path": "asset.218720c64d223afcdd2003c51349f6f63dd0f9e39368c76f3cae1c8d762b65c6",
         "aws:asset:property": "Code"
       }
     },
@@ -199,7 +199,7 @@
         "aws:cdk:path": "PipelineStack/pre-prod/WebService/Handler/AllowBucketNotificationsFromPipelineStackpreprodWebServicemybucketid801F0332"
       }
     },
-    "HandlerCurrentVersion93FB80BFd5e2acc1a0492f06435b4fd72eca4c06": {
+    "HandlerCurrentVersion93FB80BF3b89bffbe34c37f89787ff5879eccb38": {
       "Type": "AWS::Lambda::Version",
       "Properties": {
         "FunctionName": {
@@ -301,7 +301,7 @@
         },
         "FunctionVersion": {
           "Fn::GetAtt": [
-            "HandlerCurrentVersion93FB80BFd5e2acc1a0492f06435b4fd72eca4c06",
+            "HandlerCurrentVersion93FB80BF3b89bffbe34c37f89787ff5879eccb38",
             "Version"
           ]
         },

@@ -1286,7 +1286,7 @@
           ]
         },
         "Source": {
-          "BuildSpec": "{\n  \"version\": \"0.2\",\n  \"phases\": {\n    \"install\": {\n      \"commands\": \"npm install -g cdk-assets\"\n    },\n    \"build\": {\n      \"commands\": [\n        \"cdk-assets --path \\\"assembly-PipelineStack-pre-prod/PipelineStackpreprodWebService75942F28.assets.json\\\" --verbose publish \\\"cd70685cb56c33ea73f5f45980022248ee43511085b72c06d46bc9ccee0e1bb9:402122568686-ap-south-1\\\"\"\n      ]\n    }\n  }\n}",
+          "BuildSpec": "{\n  \"version\": \"0.2\",\n  \"phases\": {\n    \"install\": {\n      \"commands\": \"npm install -g cdk-assets\"\n    },\n    \"build\": {\n      \"commands\": [\n        \"cdk-assets --path \\\"assembly-PipelineStack-pre-prod/PipelineStackpreprodWebService75942F28.assets.json\\\" --verbose publish \\\"218720c64d223afcdd2003c51349f6f63dd0f9e39368c76f3cae1c8d762b65c6:402122568686-ap-south-1\\\"\"\n      ]\n    }\n  }\n}",
           "Type": "CODEPIPELINE"
         },
         "EncryptionKey": {
