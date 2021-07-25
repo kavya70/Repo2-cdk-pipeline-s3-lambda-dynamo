@@ -1,16 +1,17 @@
 import json
 import boto3
-import aws_cdk.aws_s3 as s3
 
 def handler(event, context):
     # TODO implement
     bucket = event['Records'][0]['s3']['bucket']['name']
     key = event['Records'][0]['s3']['object']['key']
     try:
+        s3 = boto3.client('s3')
         response = s3.get_object(Bucket=bucket, Key=key)
         csvcontent = response['Body'].read().split(b'\n')
         for line in csvcontent:
-            put_movie(line[0],line[1],line[2],line[3])
+            data = line.decode('utf8').strip().split(',')
+            put_movie(data[0],data[1],data[2],data[3])
     except Exception as e:
         print(e)
         print('Error getting object {} from bucket {}. Make sure they exist and your bucket is in the same region as this function.'.format(key, bucket))
@@ -24,16 +25,14 @@ def handler(event, context):
         'body': json.dumps('Hello from Lambda! Completed inserting data into db')
     }
 
-
-
-def put_movie(title, year, plot, rating, dynamodb=None):
+def put_movie(moviename, title, plot, rating, dynamodb=None):
     if not dynamodb:
         dynamodb = boto3.resource('dynamodb')
 
     table = dynamodb.Table('movieDetails')
     response = table.put_item(
        Item={
-            'movieName': title,
+            'movieName': moviename,
             'title': title,
             'info': {
                 'plot': plot,
@@ -41,4 +40,3 @@ def put_movie(title, year, plot, rating, dynamodb=None):
             }
         }
     )
-    return response
