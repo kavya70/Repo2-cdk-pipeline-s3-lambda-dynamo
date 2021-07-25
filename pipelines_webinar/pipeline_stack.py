@@ -24,7 +24,7 @@ class PipelineStack(core.Stack):
         output=source_artifact,
         oauth_token=core.SecretValue.secrets_manager('/my/github/token'),
         owner='kavya70',
-        repo='',
+        repo='Repo2-cdk-pipeline-s3-lambda-dynamo',
         trigger=cpactions.GitHubTrigger.POLL),
 
       synth_action=pipelines.SimpleSynthAction(

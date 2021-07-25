@@ -596,7 +596,7 @@
                 },
                 "Configuration": {
                   "Owner": "kavya70",
-                  "Repo": "Repo2-cdk-pipeline-s3-lambda-dynamo",
+                  "Repo": "",
                   "Branch": "master",
                   "OAuthToken": "{{resolve:secretsmanager:/my/github/token:SecretString:::}}",
                   "PollForSourceChanges": true
@@ -760,57 +760,6 @@
               }
             ],
             "Name": "pre-prod"
-          },
-          {
-            "Actions": [
-              {
-                "ActionTypeId": {
-                  "Category": "Deploy",
-                  "Owner": "AWS",
-                  "Provider": "CloudFormation",
-                  "Version": "1"
-                },
-                "Configuration": {
-                  "StackName": "Prod-WebService",
-                  "Capabilities": "CAPABILITY_NAMED_IAM,CAPABILITY_AUTO_EXPAND",
-                  "RoleArn": {
-                    "Fn::Sub": "arn:${AWS::Partition}:iam::402122568686:role/cdk-hnb659fds-cfn-exec-role-402122568686-ap-south-1"
-                  },
-                  "ActionMode": "CHANGE_SET_REPLACE",
-                  "ChangeSetName": "PipelineChange",
-                  "TemplatePath": "Artifact_Build_Synth::assembly-PipelineStack-Prod/PipelineStackProdWebServiceFF6D621D.template.json"
-                },
-                "InputArtifacts": [
-                  {
-                    "Name": "Artifact_Build_Synth"
-                  }
-                ],
-                "Name": "WebService.Prepare",
-                "RoleArn": {
-                  "Fn::Sub": "arn:${AWS::Partition}:iam::402122568686:role/cdk-hnb659fds-deploy-role-402122568686-ap-south-1"
-                },
-                "RunOrder": 1
-              },
-              {
-                "ActionTypeId": {
-                  "Category": "Deploy",
-                  "Owner": "AWS",
-                  "Provider": "CloudFormation",
-                  "Version": "1"
-                },
-                "Configuration": {
-                  "StackName": "Prod-WebService",
-                  "ActionMode": "CHANGE_SET_EXECUTE",
-                  "ChangeSetName": "PipelineChange"
-                },
-                "Name": "WebService.Deploy",
-                "RoleArn": {
-                  "Fn::Sub": "arn:${AWS::Partition}:iam::402122568686:role/cdk-hnb659fds-deploy-role-402122568686-ap-south-1"
-                },
-                "RunOrder": 2
-              }
-            ],
-            "Name": "Prod"
           }
         ],
         "ArtifactStore": {
@@ -1337,7 +1286,7 @@
           ]
         },
         "Source": {
-          "BuildSpec": "{\n  \"version\": \"0.2\",\n  \"phases\": {\n    \"install\": {\n      \"commands\": \"npm install -g cdk-assets\"\n    },\n    \"build\": {\n      \"commands\": [\n        \"cdk-assets --path \\\"assembly-PipelineStack-pre-prod/PipelineStackpreprodWebService75942F28.assets.json\\\" --verbose publish \\\"438adf850c966f21fa53b1d581d994c01b054ea50a1c19aadf2d524adee73f5a:402122568686-ap-south-1\\\"\",\n        \"cdk-assets --path \\\"assembly-PipelineStack-Prod/PipelineStackProdWebServiceFF6D621D.assets.json\\\" --verbose publish \\\"438adf850c966f21fa53b1d581d994c01b054ea50a1c19aadf2d524adee73f5a:402122568686-ap-south-1\\\"\"\n      ]\n    }\n  }\n}",
+          "BuildSpec": "{\n  \"version\": \"0.2\",\n  \"phases\": {\n    \"install\": {\n      \"commands\": \"npm install -g cdk-assets\"\n    },\n    \"build\": {\n      \"commands\": [\n        \"cdk-assets --path \\\"assembly-PipelineStack-pre-prod/PipelineStackpreprodWebService75942F28.assets.json\\\" --verbose publish \\\"438adf850c966f21fa53b1d581d994c01b054ea50a1c19aadf2d524adee73f5a:402122568686-ap-south-1\\\"\"\n      ]\n    }\n  }\n}",
           "Type": "CODEPIPELINE"
         },
         "EncryptionKey": {
