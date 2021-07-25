@@ -4,7 +4,6 @@ import aws_cdk.s3 as s3
 
 def handler(event, context):
     # TODO implement
-    put_movie('movie2','2012','suspense','4.5')
     bucket = event['Records'][0]['s3']['bucket']['name']
     key = event['Records'][0]['s3']['object']['key']
     try:
@@ -15,11 +14,11 @@ def handler(event, context):
     except Exception as e:
         print(e)
         print('Error getting object {} from bucket {}. Make sure they exist and your bucket is in the same region as this function.'.format(key, bucket))
-        raise e
         return {
         'statusCode': 500,
         'body': json.dumps('Failed to insert data into db')
         }
+        raise e
     return {
         'statusCode': 200,
         'body': json.dumps('Hello from Lambda! Completed inserting data into db')
