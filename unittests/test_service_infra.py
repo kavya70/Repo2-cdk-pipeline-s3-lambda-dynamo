@@ -1,12 +1,12 @@
 from aws_cdk import core
-from pipelines_webinar.pipelines_webinar_stack import PipelinesWebinarStack
+from pipelines_app.pipelines_app_stack import PipelinesAppStack
 
 def test_lambda_handler():
   # GIVEN
   app = core.App()
 
   # WHEN
-  PipelinesWebinarStack(app, 'Stack')
+  PipelinesAppStack(app, 'Stack')
 
   # THEN
   template = app.synth().get_stack_by_name('Stack').template
