@@ -9,6 +9,10 @@
 - Any commits into github triggers the deployment of code in aws infra
 
 
+> I had to choose Dynamo db for this usecase mainly to make the app entirely use serverless services. Also, it had no strict schema is the right choice to store a data in random data into a document store. 
+
+Also the application is bootstrapped with CDK and the CDK pipeline to build automated pipeline setup which can help us deploy the app after we push changes to github. Since it is easy to integrate the pipeline services with lamda,s3 and dynamo, the cdk pipeline was used to test the application deployment.
+
 ## Tech
 
 - [Python] - Application language for lambda!,CDK pipeline for CICD automation.
