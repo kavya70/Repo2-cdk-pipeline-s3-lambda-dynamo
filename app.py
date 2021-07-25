@@ -2,7 +2,7 @@
 
 from aws_cdk import core
 
-from pipelines_webinar.pipeline_stack import PipelineStack
+from pipelines_app.pipeline_stack import PipelineStack
 
 PIPELINE_ACCOUNT = '402122568686'
 
