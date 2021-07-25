@@ -596,7 +596,7 @@
                 },
                 "Configuration": {
                   "Owner": "kavya70",
-                  "Repo": "",
+                  "Repo": "Repo2-cdk-pipeline-s3-lambda-dynamo",
                   "Branch": "master",
                   "OAuthToken": "{{resolve:secretsmanager:/my/github/token:SecretString:::}}",
                   "PollForSourceChanges": true

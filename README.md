@@ -1,4 +1,5 @@
-# Repo1-cdk-factorial-rest-service
+# Repo2-cdk-pipeline-s3-lambda-dynamo
+
 ## _This repo has following components_
  _1. AWS lambda funtion, which gets notified on object creation of S3._
  _2. cdk pipeline written using python to automate complete CICD of the application._
