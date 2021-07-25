@@ -1,6 +1,6 @@
 import json
 import boto3
-import aws_cdk.s3 as s3
+import aws_cdk.aws_s3 as s3
 
 def handler(event, context):
     # TODO implement
