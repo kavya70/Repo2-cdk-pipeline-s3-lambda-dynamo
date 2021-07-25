@@ -6,7 +6,7 @@ with open("README.md") as fp:
 
 
 setuptools.setup(
-    name="pipelines_webinar",
+    name="pipelines_app",
     version="0.0.1",
 
     description="An empty CDK Python app",
@@ -15,8 +15,8 @@ setuptools.setup(
 
     author="author",
 
-    package_dir={"": "pipelines_webinar"},
-    packages=setuptools.find_packages(where="pipelines_webinar"),
+    package_dir={"": "pipelines_app"},
+    packages=setuptools.find_packages(where="pipelines_app"),
 
     install_requires=[
         "aws-cdk.core==1.56.0",
