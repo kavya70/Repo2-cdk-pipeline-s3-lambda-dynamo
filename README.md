@@ -37,7 +37,9 @@ For deployment into aws environment
  cdk docs        open CDK documentation
 ```
 
-> Note: CDK reference taken from 
+> Note: Application has CDK pipeline and need to be deployed using CLI(CDK deploy) for the pipeline creation. once deployed, it will poll for the changes in the git repo. Later all the stages in the pipeline will be triggered 
+
+> The csv_data_s3 has the file moviedata.csv that can be used to upload to s3 bucket (s3-lamda-dynamo) which triggers a lambda and populates the dynamo db(movieDetails)
 
 
 
