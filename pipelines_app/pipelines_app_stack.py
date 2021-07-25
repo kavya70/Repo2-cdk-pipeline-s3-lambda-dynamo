@@ -14,7 +14,7 @@ import aws_cdk.aws_dynamodb as dynamodb
 
  
 
-class PipelinesWebinarStack(core.Stack):
+class PipelinesAppStack(core.Stack):
 
     def __init__(self, scope: core.Construct, id: str, **kwargs) -> None:
         super().__init__(scope, id, **kwargs)
