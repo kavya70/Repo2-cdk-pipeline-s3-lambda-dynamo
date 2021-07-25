@@ -1,0 +1,729 @@
+{
+  "version": "5.0.0",
+  "artifacts": {
+    "PipelineStackProdWebServiceFF6D621D.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "PipelineStackProdWebServiceFF6D621D.assets.json",
+        "requiresBootstrapStackVersion": 3
+      }
+    },
+    "PipelineStackProdWebServiceFF6D621D": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://402122568686/ap-south-1",
+      "properties": {
+        "templateFile": "PipelineStackProdWebServiceFF6D621D.template.json",
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::402122568686:role/cdk-hnb659fds-deploy-role-402122568686-ap-south-1",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::402122568686:role/cdk-hnb659fds-cfn-exec-role-402122568686-ap-south-1",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-402122568686-ap-south-1/33f03fe069b52250bd196861362a7158f69fe882d9d43b05e6bc71e1ef57f18b",
+        "requiresBootstrapStackVersion": 3,
+        "stackName": "Prod-WebService"
+      },
+      "dependencies": [
+        "PipelineStackProdWebServiceFF6D621D.assets"
+      ],
+      "metadata": {
+        "/PipelineStack/Prod/WebService/my-bucket-id/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "mybucketidBE83F1B1",
+            "trace": [
+              "new Bucket (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-s3/lib/bucket.js:389:26)",
+              "obj._wrapSandboxCode (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7922:49)",
+              "Kernel._wrapSandboxCode (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:8395:20)",
+              "Kernel._create (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7922:26)",
+              "Kernel.create (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7666:21)",
+              "KernelHost.processRequest (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7446:28)",
+              "KernelHost.run (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7384:14)",
+              "Immediate.setImmediate [as _onImmediate] (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7387:37)",
+              "runCallback (timers.js:705:18)",
+              "tryOnImmediate (timers.js:676:5)",
+              "processImmediate (timers.js:658:5)"
+            ]
+          }
+        ],
+        "/PipelineStack/Prod/WebService/my-bucket-id/Notifications/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "mybucketidNotifications8CA240D4",
+            "trace": [
+              "BucketNotifications.createResourceOnce (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-s3/lib/notifications-resource/notifications-resource.js:83:29)",
+              "BucketNotifications.addNotification (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-s3/lib/notifications-resource/notifications-resource.js:39:31)",
+              "Bucket.addEventNotification (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-s3/lib/bucket.js:538:28)",
+              "_wrapSandboxCode (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7746:51)",
+              "Kernel._wrapSandboxCode (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:8395:20)",
+              "ret._ensureSync (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7746:25)",
+              "Kernel._ensureSync (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:8371:20)",
+              "Kernel.invoke (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7745:26)",
+              "KernelHost.processRequest (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7446:28)",
+              "KernelHost.run (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7384:14)",
+              "Immediate.setImmediate [as _onImmediate] (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7387:37)",
+              "runCallback (timers.js:705:18)",
+              "tryOnImmediate (timers.js:676:5)",
+              "processImmediate (timers.js:658:5)"
+            ]
+          }
+        ],
+        "/PipelineStack/Prod/WebService/Handler/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "HandlerServiceRoleFCDC14AE",
+            "trace": [
+              "new Role (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-iam/lib/role.js:42:22)",
+              "new Function (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-lambda/lib/function.js:62:35)",
+              "obj._wrapSandboxCode (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7922:49)",
+              "Kernel._wrapSandboxCode (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:8395:20)",
+              "Kernel._create (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7922:26)",
+              "Kernel.create (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7666:21)",
+              "KernelHost.processRequest (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7446:28)",
+              "KernelHost.run (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7384:14)",
+              "Immediate.setImmediate [as _onImmediate] (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7387:37)",
+              "runCallback (timers.js:705:18)",
+              "tryOnImmediate (timers.js:676:5)",
+              "processImmediate (timers.js:658:5)"
+            ]
+          }
+        ],
+        "/PipelineStack/Prod/WebService/Handler/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "HandlerServiceRoleDefaultPolicyCBD0CC91",
+            "trace": [
+              "new Policy (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-iam/lib/policy.js:31:26)",
+              "Role.addToPrincipalPolicy (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-iam/lib/role.js:164:34)",
+              "Function.addToPrincipal (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-iam/lib/grant.js:69:65)",
+              "Function.addToPrincipalOrResource (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-iam/lib/grant.js:39:30)",
+              "Bucket.grant (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-s3/lib/bucket.js:296:29)",
+              "Bucket.grantRead (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-s3/lib/bucket.js:182:21)",
+              "_wrapSandboxCode (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7746:51)",
+              "Kernel._wrapSandboxCode (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:8395:20)",
+              "ret._ensureSync (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7746:25)",
+              "Kernel._ensureSync (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:8371:20)",
+              "Kernel.invoke (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7745:26)",
+              "KernelHost.processRequest (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7446:28)",
+              "KernelHost.run (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7384:14)",
+              "Immediate.setImmediate [as _onImmediate] (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7387:37)",
+              "runCallback (timers.js:705:18)",
+              "tryOnImmediate (timers.js:676:5)",
+              "processImmediate (timers.js:658:5)"
+            ]
+          }
+        ],
+        "/PipelineStack/Prod/WebService/Handler/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "Handler886CB40B",
+            "trace": [
+              "new Function (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-lambda/lib/function.js:106:26)",
+              "obj._wrapSandboxCode (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7922:49)",
+              "Kernel._wrapSandboxCode (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:8395:20)",
+              "Kernel._create (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7922:26)",
+              "Kernel.create (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7666:21)",
+              "KernelHost.processRequest (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7446:28)",
+              "KernelHost.run (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7384:14)",
+              "Immediate.setImmediate [as _onImmediate] (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7387:37)",
+              "runCallback (timers.js:705:18)",
+              "tryOnImmediate (timers.js:676:5)",
+              "processImmediate (timers.js:658:5)"
+            ]
+          }
+        ],
+        "/PipelineStack/Prod/WebService/Handler/AllowBucketNotificationsFromPipelineStackProdWebServicemybucketidD632429A": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "HandlerAllowBucketNotificationsFromPipelineStackProdWebServicemybucketidD632429A4279C8A0",
+            "trace": [
+              "Function.addPermission (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-lambda/lib/function-base.js:24:9)",
+              "LambdaDestination.bind (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-s3-notifications/lib/lambda.js:17:21)",
+              "BucketNotifications.addNotification (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-s3/lib/notifications-resource/notifications-resource.js:42:36)",
+              "Bucket.addEventNotification (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-s3/lib/bucket.js:538:28)",
+              "_wrapSandboxCode (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7746:51)",
+              "Kernel._wrapSandboxCode (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:8395:20)",
+              "ret._ensureSync (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7746:25)",
+              "Kernel._ensureSync (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:8371:20)",
+              "Kernel.invoke (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7745:26)",
+              "KernelHost.processRequest (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7446:28)",
+              "KernelHost.run (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7384:14)",
+              "Immediate.setImmediate [as _onImmediate] (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7387:37)",
+              "runCallback (timers.js:705:18)",
+              "tryOnImmediate (timers.js:676:5)",
+              "processImmediate (timers.js:658:5)"
+            ]
+          }
+        ],
+        "/PipelineStack/Prod/WebService/Handler/CurrentVersion/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "HandlerCurrentVersion93FB80BF6448d1aae68a8583368ca8333e3c596f",
+            "trace": [
+              "new Version (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-lambda/lib/lambda-version.js:30:25)",
+              "Function.get currentVersion [as currentVersion] (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-lambda/lib/function.js:188:32)",
+              "_wrapSandboxCode (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7717:140)",
+              "Kernel._wrapSandboxCode (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:8395:20)",
+              "value._ensureSync (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7717:109)",
+              "Kernel._ensureSync (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:8371:20)",
+              "Kernel.get (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7717:28)",
+              "KernelHost.processRequest (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7446:28)",
+              "KernelHost.run (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7384:14)",
+              "Immediate.setImmediate [as _onImmediate] (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7387:37)",
+              "runCallback (timers.js:705:18)",
+              "tryOnImmediate (timers.js:676:5)",
+              "processImmediate (timers.js:658:5)"
+            ]
+          }
+        ],
+        "/PipelineStack/Prod/WebService/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Role/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleB6FB88EC",
+            "trace": [
+              "new Role (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-iam/lib/role.js:42:22)",
+              "new NotificationsResourceHandler (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-s3/lib/notifications-resource/notifications-resource-handler.js:26:22)",
+              "Function.singleton (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-s3/lib/notifications-resource/notifications-resource-handler.js:75:22)",
+              "BucketNotifications.createResourceOnce (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-s3/lib/notifications-resource/notifications-resource.js:82:94)",
+              "BucketNotifications.addNotification (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-s3/lib/notifications-resource/notifications-resource.js:39:31)",
+              "Bucket.addEventNotification (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-s3/lib/bucket.js:538:28)",
+              "_wrapSandboxCode (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7746:51)",
+              "Kernel._wrapSandboxCode (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:8395:20)",
+              "ret._ensureSync (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7746:25)",
+              "Kernel._ensureSync (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:8371:20)",
+              "Kernel.invoke (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7745:26)",
+              "KernelHost.processRequest (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7446:28)",
+              "KernelHost.run (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7384:14)",
+              "Immediate.setImmediate [as _onImmediate] (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7387:37)",
+              "runCallback (timers.js:705:18)",
+              "tryOnImmediate (timers.js:676:5)",
+              "processImmediate (timers.js:658:5)"
+            ]
+          }
+        ],
+        "/PipelineStack/Prod/WebService/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Role/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleDefaultPolicy2CF63D36",
+            "trace": [
+              "new Policy (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-iam/lib/policy.js:31:26)",
+              "Role.addToPrincipalPolicy (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-iam/lib/role.js:164:34)",
+              "Role.addToPolicy (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-iam/lib/role.js:171:21)",
+              "new NotificationsResourceHandler (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-s3/lib/notifications-resource/notifications-resource-handler.js:33:14)",
+              "Function.singleton (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-s3/lib/notifications-resource/notifications-resource-handler.js:75:22)",
+              "BucketNotifications.createResourceOnce (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-s3/lib/notifications-resource/notifications-resource.js:82:94)",
+              "BucketNotifications.addNotification (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-s3/lib/notifications-resource/notifications-resource.js:39:31)",
+              "Bucket.addEventNotification (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-s3/lib/bucket.js:538:28)",
+              "_wrapSandboxCode (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7746:51)",
+              "Kernel._wrapSandboxCode (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:8395:20)",
+              "ret._ensureSync (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7746:25)",
+              "Kernel._ensureSync (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:8371:20)",
+              "Kernel.invoke (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7745:26)",
+              "KernelHost.processRequest (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7446:28)",
+              "KernelHost.run (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7384:14)",
+              "Immediate.setImmediate [as _onImmediate] (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7387:37)",
+              "runCallback (timers.js:705:18)",
+              "tryOnImmediate (timers.js:676:5)",
+              "processImmediate (timers.js:658:5)"
+            ]
+          }
+        ],
+        "/PipelineStack/Prod/WebService/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BucketNotificationsHandler050a0587b7544547bf325f094a3db8347ECC3691",
+            "trace": [
+              "new NotificationsResourceHandler (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-s3/lib/notifications-resource/notifications-resource-handler.js:49:26)",
+              "Function.singleton (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-s3/lib/notifications-resource/notifications-resource-handler.js:75:22)",
+              "BucketNotifications.createResourceOnce (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-s3/lib/notifications-resource/notifications-resource.js:82:94)",
+              "BucketNotifications.addNotification (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-s3/lib/notifications-resource/notifications-resource.js:39:31)",
+              "Bucket.addEventNotification (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-s3/lib/bucket.js:538:28)",
+              "_wrapSandboxCode (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7746:51)",
+              "Kernel._wrapSandboxCode (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:8395:20)",
+              "ret._ensureSync (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7746:25)",
+              "Kernel._ensureSync (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:8371:20)",
+              "Kernel.invoke (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7745:26)",
+              "KernelHost.processRequest (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7446:28)",
+              "KernelHost.run (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7384:14)",
+              "Immediate.setImmediate [as _onImmediate] (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7387:37)",
+              "runCallback (timers.js:705:18)",
+              "tryOnImmediate (timers.js:676:5)",
+              "processImmediate (timers.js:658:5)"
+            ]
+          }
+        ],
+        "/PipelineStack/Prod/WebService/HandlerAlias/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "HandlerAlias736CE376",
+            "trace": [
+              "new Alias (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-lambda/lib/alias.js:19:23)",
+              "obj._wrapSandboxCode (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7922:49)",
+              "Kernel._wrapSandboxCode (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:8395:20)",
+              "Kernel._create (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7922:26)",
+              "Kernel.create (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7666:21)",
+              "KernelHost.processRequest (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7446:28)",
+              "KernelHost.run (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7384:14)",
+              "Immediate.setImmediate [as _onImmediate] (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7387:37)",
+              "runCallback (timers.js:705:18)",
+              "tryOnImmediate (timers.js:676:5)",
+              "processImmediate (timers.js:658:5)"
+            ]
+          }
+        ],
+        "/PipelineStack/Prod/WebService/Gateway/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "Gateway43CB3636",
+            "trace": [
+              "new RestApi (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/restapi.js:204:26)",
+              "new LambdaRestApi (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/lambda-api.js:18:9)",
+              "obj._wrapSandboxCode (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7922:49)",
+              "Kernel._wrapSandboxCode (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:8395:20)",
+              "Kernel._create (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7922:26)",
+              "Kernel.create (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7666:21)",
+              "KernelHost.processRequest (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7446:28)",
+              "KernelHost.run (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7384:14)",
+              "Immediate.setImmediate [as _onImmediate] (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7387:37)",
+              "runCallback (timers.js:705:18)",
+              "tryOnImmediate (timers.js:676:5)",
+              "processImmediate (timers.js:658:5)"
+            ]
+          }
+        ],
+        "/PipelineStack/Prod/WebService/Gateway/CloudWatchRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GatewayCloudWatchRole34305E06",
+            "trace": [
+              "new Role (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-iam/lib/role.js:42:22)",
+              "LambdaRestApi.configureCloudWatchRole (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/restapi.js:114:22)",
+              "new RestApi (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/restapi.js:220:18)",
+              "new LambdaRestApi (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/lambda-api.js:18:9)",
+              "obj._wrapSandboxCode (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7922:49)",
+              "Kernel._wrapSandboxCode (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:8395:20)",
+              "Kernel._create (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7922:26)",
+              "Kernel.create (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7666:21)",
+              "KernelHost.processRequest (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7446:28)",
+              "KernelHost.run (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7384:14)",
+              "Immediate.setImmediate [as _onImmediate] (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7387:37)",
+              "runCallback (timers.js:705:18)",
+              "tryOnImmediate (timers.js:676:5)",
+              "processImmediate (timers.js:658:5)"
+            ]
+          }
+        ],
+        "/PipelineStack/Prod/WebService/Gateway/Account": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GatewayAccount6D7AA49C",
+            "trace": [
+              "LambdaRestApi.configureCloudWatchRole (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/restapi.js:118:26)",
+              "new RestApi (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/restapi.js:220:18)",
+              "new LambdaRestApi (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/lambda-api.js:18:9)",
+              "obj._wrapSandboxCode (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7922:49)",
+              "Kernel._wrapSandboxCode (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:8395:20)",
+              "Kernel._create (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7922:26)",
+              "Kernel.create (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7666:21)",
+              "KernelHost.processRequest (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7446:28)",
+              "KernelHost.run (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7384:14)",
+              "Immediate.setImmediate [as _onImmediate] (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7387:37)",
+              "runCallback (timers.js:705:18)",
+              "tryOnImmediate (timers.js:676:5)",
+              "processImmediate (timers.js:658:5)"
+            ]
+          }
+        ],
+        "/PipelineStack/Prod/WebService/Gateway/Deployment/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GatewayDeployment880EB8C282e417ceef8d32f4b297d97e6a8f1a56",
+            "trace": [
+              "new Deployment (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/deployment.js:41:25)",
+              "LambdaRestApi.configureDeployment (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/restapi.js:126:38)",
+              "new RestApi (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/restapi.js:222:14)",
+              "new LambdaRestApi (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/lambda-api.js:18:9)",
+              "obj._wrapSandboxCode (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7922:49)",
+              "Kernel._wrapSandboxCode (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:8395:20)",
+              "Kernel._create (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7922:26)",
+              "Kernel.create (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7666:21)",
+              "KernelHost.processRequest (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7446:28)",
+              "KernelHost.run (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7384:14)",
+              "Immediate.setImmediate [as _onImmediate] (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7387:37)",
+              "runCallback (timers.js:705:18)",
+              "tryOnImmediate (timers.js:676:5)",
+              "processImmediate (timers.js:658:5)"
+            ]
+          }
+        ],
+        "/PipelineStack/Prod/WebService/Gateway/DeploymentStage.prod/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GatewayDeploymentStageprod62BC6904",
+            "trace": [
+              "new Stage (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/stage.js:48:26)",
+              "LambdaRestApi.configureDeployment (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/restapi.js:134:36)",
+              "new RestApi (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/restapi.js:222:14)",
+              "new LambdaRestApi (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/lambda-api.js:18:9)",
+              "obj._wrapSandboxCode (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7922:49)",
+              "Kernel._wrapSandboxCode (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:8395:20)",
+              "Kernel._create (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7922:26)",
+              "Kernel.create (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7666:21)",
+              "KernelHost.processRequest (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7446:28)",
+              "KernelHost.run (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7384:14)",
+              "Immediate.setImmediate [as _onImmediate] (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7387:37)",
+              "runCallback (timers.js:705:18)",
+              "tryOnImmediate (timers.js:676:5)",
+              "processImmediate (timers.js:658:5)"
+            ]
+          }
+        ],
+        "/PipelineStack/Prod/WebService/Gateway/Endpoint": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GatewayEndpoint4DF49EE0",
+            "trace": [
+              "LambdaRestApi.configureDeployment (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/restapi.js:138:13)",
+              "new RestApi (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/restapi.js:222:14)",
+              "new LambdaRestApi (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/lambda-api.js:18:9)",
+              "obj._wrapSandboxCode (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7922:49)",
+              "Kernel._wrapSandboxCode (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:8395:20)",
+              "Kernel._create (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7922:26)",
+              "Kernel.create (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7666:21)",
+              "KernelHost.processRequest (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7446:28)",
+              "KernelHost.run (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7384:14)",
+              "Immediate.setImmediate [as _onImmediate] (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7387:37)",
+              "runCallback (timers.js:705:18)",
+              "tryOnImmediate (timers.js:676:5)",
+              "processImmediate (timers.js:658:5)"
+            ]
+          }
+        ],
+        "/PipelineStack/Prod/WebService/Gateway/Default/{proxy+}/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "Gatewayproxy441946D2",
+            "trace": [
+              "new Resource (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/resource.js:174:26)",
+              "new ProxyResource (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/resource.js:218:9)",
+              "RootResource.addProxy (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/resource.js:21:16)",
+              "new LambdaRestApi (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/lambda-api.js:24:23)",
+              "obj._wrapSandboxCode (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7922:49)",
+              "Kernel._wrapSandboxCode (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:8395:20)",
+              "Kernel._create (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7922:26)",
+              "Kernel.create (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7666:21)",
+              "KernelHost.processRequest (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7446:28)",
+              "KernelHost.run (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7384:14)",
+              "Immediate.setImmediate [as _onImmediate] (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7387:37)",
+              "runCallback (timers.js:705:18)",
+              "tryOnImmediate (timers.js:676:5)",
+              "processImmediate (timers.js:658:5)"
+            ]
+          }
+        ],
+        "/PipelineStack/Prod/WebService/Gateway/Default/{proxy+}/ANY/ApiPermission.PipelineStackProdWebServiceGatewayBB63AEBE.ANY..{proxy+}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GatewayproxyANYApiPermissionPipelineStackProdWebServiceGatewayBB63AEBEANYproxyC56365B4",
+            "trace": [
+              "Alias.addPermission (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-lambda/lib/function-base.js:24:9)",
+              "LambdaIntegration.bind (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/integrations/lambda.js:33:22)",
+              "new Method (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/method.js:33:40)",
+              "ProxyResource.addMethod (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/resource.js:18:16)",
+              "ProxyResource.addMethod (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/resource.js:238:22)",
+              "new ProxyResource (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/resource.js:226:35)",
+              "RootResource.addProxy (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/resource.js:21:16)",
+              "new LambdaRestApi (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/lambda-api.js:24:23)",
+              "obj._wrapSandboxCode (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7922:49)",
+              "Kernel._wrapSandboxCode (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:8395:20)",
+              "Kernel._create (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7922:26)",
+              "Kernel.create (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7666:21)",
+              "KernelHost.processRequest (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7446:28)",
+              "KernelHost.run (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7384:14)",
+              "Immediate.setImmediate [as _onImmediate] (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7387:37)",
+              "runCallback (timers.js:705:18)",
+              "tryOnImmediate (timers.js:676:5)",
+              "processImmediate (timers.js:658:5)"
+            ]
+          }
+        ],
+        "/PipelineStack/Prod/WebService/Gateway/Default/{proxy+}/ANY/ApiPermission.Test.PipelineStackProdWebServiceGatewayBB63AEBE.ANY..{proxy+}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GatewayproxyANYApiPermissionTestPipelineStackProdWebServiceGatewayBB63AEBEANYproxyB781B661",
+            "trace": [
+              "Alias.addPermission (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-lambda/lib/function-base.js:24:9)",
+              "LambdaIntegration.bind (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/integrations/lambda.js:40:26)",
+              "new Method (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/method.js:33:40)",
+              "ProxyResource.addMethod (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/resource.js:18:16)",
+              "ProxyResource.addMethod (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/resource.js:238:22)",
+              "new ProxyResource (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/resource.js:226:35)",
+              "RootResource.addProxy (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/resource.js:21:16)",
+              "new LambdaRestApi (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/lambda-api.js:24:23)",
+              "obj._wrapSandboxCode (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7922:49)",
+              "Kernel._wrapSandboxCode (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:8395:20)",
+              "Kernel._create (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7922:26)",
+              "Kernel.create (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7666:21)",
+              "KernelHost.processRequest (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7446:28)",
+              "KernelHost.run (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7384:14)",
+              "Immediate.setImmediate [as _onImmediate] (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7387:37)",
+              "runCallback (timers.js:705:18)",
+              "tryOnImmediate (timers.js:676:5)",
+              "processImmediate (timers.js:658:5)"
+            ]
+          }
+        ],
+        "/PipelineStack/Prod/WebService/Gateway/Default/{proxy+}/ANY/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GatewayproxyANYCE067C19",
+            "trace": [
+              "new Method (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/method.js:49:26)",
+              "ProxyResource.addMethod (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/resource.js:18:16)",
+              "ProxyResource.addMethod (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/resource.js:238:22)",
+              "new ProxyResource (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/resource.js:226:35)",
+              "RootResource.addProxy (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/resource.js:21:16)",
+              "new LambdaRestApi (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/lambda-api.js:24:23)",
+              "obj._wrapSandboxCode (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7922:49)",
+              "Kernel._wrapSandboxCode (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:8395:20)",
+              "Kernel._create (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7922:26)",
+              "Kernel.create (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7666:21)",
+              "KernelHost.processRequest (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7446:28)",
+              "KernelHost.run (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7384:14)",
+              "Immediate.setImmediate [as _onImmediate] (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7387:37)",
+              "runCallback (timers.js:705:18)",
+              "tryOnImmediate (timers.js:676:5)",
+              "processImmediate (timers.js:658:5)"
+            ]
+          }
+        ],
+        "/PipelineStack/Prod/WebService/Gateway/Default/ANY/ApiPermission.PipelineStackProdWebServiceGatewayBB63AEBE.ANY..": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GatewayANYApiPermissionPipelineStackProdWebServiceGatewayBB63AEBEANYC4DEA85D",
+            "trace": [
+              "Alias.addPermission (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-lambda/lib/function-base.js:24:9)",
+              "LambdaIntegration.bind (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/integrations/lambda.js:33:22)",
+              "new Method (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/method.js:33:40)",
+              "RootResource.addMethod (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/resource.js:18:16)",
+              "ProxyResource.addMethod (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/resource.js:235:37)",
+              "new ProxyResource (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/resource.js:226:35)",
+              "RootResource.addProxy (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/resource.js:21:16)",
+              "new LambdaRestApi (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/lambda-api.js:24:23)",
+              "obj._wrapSandboxCode (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7922:49)",
+              "Kernel._wrapSandboxCode (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:8395:20)",
+              "Kernel._create (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7922:26)",
+              "Kernel.create (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7666:21)",
+              "KernelHost.processRequest (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7446:28)",
+              "KernelHost.run (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7384:14)",
+              "Immediate.setImmediate [as _onImmediate] (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7387:37)",
+              "runCallback (timers.js:705:18)",
+              "tryOnImmediate (timers.js:676:5)",
+              "processImmediate (timers.js:658:5)"
+            ]
+          }
+        ],
+        "/PipelineStack/Prod/WebService/Gateway/Default/ANY/ApiPermission.Test.PipelineStackProdWebServiceGatewayBB63AEBE.ANY..": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GatewayANYApiPermissionTestPipelineStackProdWebServiceGatewayBB63AEBEANY1887BEEC",
+            "trace": [
+              "Alias.addPermission (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-lambda/lib/function-base.js:24:9)",
+              "LambdaIntegration.bind (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/integrations/lambda.js:40:26)",
+              "new Method (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/method.js:33:40)",
+              "RootResource.addMethod (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/resource.js:18:16)",
+              "ProxyResource.addMethod (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/resource.js:235:37)",
+              "new ProxyResource (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/resource.js:226:35)",
+              "RootResource.addProxy (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/resource.js:21:16)",
+              "new LambdaRestApi (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/lambda-api.js:24:23)",
+              "obj._wrapSandboxCode (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7922:49)",
+              "Kernel._wrapSandboxCode (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:8395:20)",
+              "Kernel._create (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7922:26)",
+              "Kernel.create (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7666:21)",
+              "KernelHost.processRequest (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7446:28)",
+              "KernelHost.run (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7384:14)",
+              "Immediate.setImmediate [as _onImmediate] (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7387:37)",
+              "runCallback (timers.js:705:18)",
+              "tryOnImmediate (timers.js:676:5)",
+              "processImmediate (timers.js:658:5)"
+            ]
+          }
+        ],
+        "/PipelineStack/Prod/WebService/Gateway/Default/ANY/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GatewayANY8DB43F89",
+            "trace": [
+              "new Method (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/method.js:49:26)",
+              "RootResource.addMethod (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/resource.js:18:16)",
+              "ProxyResource.addMethod (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/resource.js:235:37)",
+              "new ProxyResource (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/resource.js:226:35)",
+              "RootResource.addProxy (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/resource.js:21:16)",
+              "new LambdaRestApi (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-apigateway/lib/lambda-api.js:24:23)",
+              "obj._wrapSandboxCode (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7922:49)",
+              "Kernel._wrapSandboxCode (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:8395:20)",
+              "Kernel._create (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7922:26)",
+              "Kernel.create (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7666:21)",
+              "KernelHost.processRequest (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7446:28)",
+              "KernelHost.run (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7384:14)",
+              "Immediate.setImmediate [as _onImmediate] (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7387:37)",
+              "runCallback (timers.js:705:18)",
+              "tryOnImmediate (timers.js:676:5)",
+              "processImmediate (timers.js:658:5)"
+            ]
+          }
+        ],
+        "/PipelineStack/Prod/WebService/FailureAlarm/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "FailureAlarm93B41FAF",
+            "trace": [
+              "new Alarm (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-cloudwatch/lib/alarm.js:99:23)",
+              "obj._wrapSandboxCode (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7922:49)",
+              "Kernel._wrapSandboxCode (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:8395:20)",
+              "Kernel._create (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7922:26)",
+              "Kernel.create (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7666:21)",
+              "KernelHost.processRequest (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7446:28)",
+              "KernelHost.run (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7384:14)",
+              "Immediate.setImmediate [as _onImmediate] (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7387:37)",
+              "runCallback (timers.js:705:18)",
+              "tryOnImmediate (timers.js:676:5)",
+              "processImmediate (timers.js:658:5)"
+            ]
+          }
+        ],
+        "/PipelineStack/Prod/WebService/DeploymentGroup/Application/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DeploymentGroupApplication7B89ABEB",
+            "trace": [
+              "new LambdaApplication (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-codedeploy/lib/lambda/application.js:17:26)",
+              "new LambdaDeploymentGroup (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-codedeploy/lib/lambda/deployment-group.js:18:49)",
+              "obj._wrapSandboxCode (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7922:49)",
+              "Kernel._wrapSandboxCode (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:8395:20)",
+              "Kernel._create (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7922:26)",
+              "Kernel.create (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7666:21)",
+              "KernelHost.processRequest (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7446:28)",
+              "KernelHost.run (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7384:14)",
+              "Immediate.setImmediate [as _onImmediate] (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7387:37)",
+              "runCallback (timers.js:705:18)",
+              "tryOnImmediate (timers.js:676:5)",
+              "processImmediate (timers.js:658:5)"
+            ]
+          }
+        ],
+        "/PipelineStack/Prod/WebService/DeploymentGroup/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DeploymentGroupServiceRoleA00955F3",
+            "trace": [
+              "new Role (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-iam/lib/role.js:42:22)",
+              "new LambdaDeploymentGroup (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-codedeploy/lib/lambda/deployment-group.js:20:35)",
+              "obj._wrapSandboxCode (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7922:49)",
+              "Kernel._wrapSandboxCode (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:8395:20)",
+              "Kernel._create (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7922:26)",
+              "Kernel.create (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7666:21)",
+              "KernelHost.processRequest (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7446:28)",
+              "KernelHost.run (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7384:14)",
+              "Immediate.setImmediate [as _onImmediate] (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7387:37)",
+              "runCallback (timers.js:705:18)",
+              "tryOnImmediate (timers.js:676:5)",
+              "processImmediate (timers.js:658:5)"
+            ]
+          }
+        ],
+        "/PipelineStack/Prod/WebService/DeploymentGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DeploymentGroup6D277AF0",
+            "trace": [
+              "new LambdaDeploymentGroup (/private/var/folders/ky/tm9q05bd6313xngf9k76xxf40000gn/T/jsii-kernel-VoZrAv/node_modules/@aws-cdk/aws-codedeploy/lib/lambda/deployment-group.js:25:26)",
+              "obj._wrapSandboxCode (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7922:49)",
+              "Kernel._wrapSandboxCode (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:8395:20)",
+              "Kernel._create (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7922:26)",
+              "Kernel.create (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7666:21)",
+              "KernelHost.processRequest (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7446:28)",
+              "KernelHost.run (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7384:14)",
+              "Immediate.setImmediate [as _onImmediate] (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7387:37)",
+              "runCallback (timers.js:705:18)",
+              "tryOnImmediate (timers.js:676:5)",
+              "processImmediate (timers.js:658:5)"
+            ]
+          }
+        ],
+        "/PipelineStack/Prod/WebService/Url": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "Url",
+            "trace": [
+              "obj._wrapSandboxCode (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7922:49)",
+              "Kernel._wrapSandboxCode (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:8395:20)",
+              "Kernel._create (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7922:26)",
+              "Kernel.create (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7666:21)",
+              "KernelHost.processRequest (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7446:28)",
+              "KernelHost.run (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7384:14)",
+              "Immediate.setImmediate [as _onImmediate] (/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/jsii/_embedded/jsii/jsii-runtime.js:7387:37)",
+              "runCallback (timers.js:705:18)",
+              "tryOnImmediate (timers.js:676:5)",
+              "processImmediate (timers.js:658:5)"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "runtime": {
+    "libraries": {
+      "@aws-cdk/cloud-assembly-schema": "1.56.0",
+      "@aws-cdk/cx-api": "1.56.0",
+      "@aws-cdk/core": "1.56.0",
+      "@aws-cdk/region-info": "1.56.0",
+      "@aws-cdk/aws-iam": "1.56.0",
+      "@aws-cdk/aws-events": "1.56.0",
+      "@aws-cdk/aws-kms": "1.56.0",
+      "@aws-cdk/aws-s3": "1.56.0",
+      "@aws-cdk/aws-codepipeline": "1.56.0",
+      "@aws-cdk/aws-cloudwatch": "1.56.0",
+      "@aws-cdk/aws-codeguruprofiler": "1.56.0",
+      "@aws-cdk/aws-logs": "1.56.0",
+      "@aws-cdk/aws-ssm": "1.56.0",
+      "@aws-cdk/aws-ec2": "1.56.0",
+      "@aws-cdk/aws-efs": "1.56.0",
+      "@aws-cdk/assets": "1.56.0",
+      "@aws-cdk/aws-s3-assets": "1.56.0",
+      "@aws-cdk/aws-sqs": "1.56.0",
+      "@aws-cdk/aws-lambda": "1.56.0",
+      "@aws-cdk/aws-sns": "1.56.0",
+      "@aws-cdk/aws-cloudformation": "1.56.0",
+      "@aws-cdk/aws-codecommit": "1.56.0",
+      "@aws-cdk/custom-resources": "1.56.0",
+      "@aws-cdk/aws-ecr": "1.56.0",
+      "@aws-cdk/aws-ecr-assets": "1.56.0",
+      "@aws-cdk/aws-sam": "1.56.0",
+      "@aws-cdk/aws-secretsmanager": "1.56.0",
+      "@aws-cdk/aws-codebuild": "1.56.0",
+      "@aws-cdk/aws-autoscaling-common": "1.56.0",
+      "@aws-cdk/aws-elasticloadbalancing": "1.56.0",
+      "@aws-cdk/aws-route53": "1.56.0",
+      "@aws-cdk/aws-certificatemanager": "1.56.0",
+      "@aws-cdk/aws-elasticloadbalancingv2": "1.56.0",
+      "@aws-cdk/aws-autoscaling": "1.56.0",
+      "@aws-cdk/aws-codedeploy": "1.56.0",
+      "@aws-cdk/aws-applicationautoscaling": "1.56.0",
+      "@aws-cdk/aws-sns-subscriptions": "1.56.0",
+      "@aws-cdk/aws-autoscaling-hooktargets": "1.56.0",
+      "@aws-cdk/aws-apigateway": "1.56.0",
+      "@aws-cdk/aws-cloudfront": "1.56.0",
+      "@aws-cdk/aws-cognito": "1.56.0",
+      "@aws-cdk/aws-route53-targets": "1.56.0",
+      "@aws-cdk/aws-servicediscovery": "1.56.0",
+      "@aws-cdk/aws-ecs": "1.56.0",
+      "@aws-cdk/aws-batch": "1.56.0",
+      "@aws-cdk/aws-kinesis": "1.56.0",
+      "@aws-cdk/aws-stepfunctions": "1.56.0",
+      "@aws-cdk/aws-events-targets": "1.56.0",
+      "@aws-cdk/aws-servicecatalog": "1.56.0",
+      "@aws-cdk/aws-codepipeline-actions": "1.56.0",
+      "@aws-cdk/pipelines": "1.56.0",
+      "@aws-cdk/aws-s3-notifications": "1.56.0",
+      "@aws-cdk/aws-dynamodb": "1.56.0",
+      "jsii-runtime": "Python/3.7.7"
+    }
+  }
+}

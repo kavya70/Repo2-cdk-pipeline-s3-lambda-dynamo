@@ -1,0 +1,34 @@
+{
+  "version": "5.0.0",
+  "files": {
+    "cb9ecaea9725ff4d1f10236caef694ea1681a40319b1ff2f7af0f7f9bab6133e": {
+      "source": {
+        "path": "asset.cb9ecaea9725ff4d1f10236caef694ea1681a40319b1ff2f7af0f7f9bab6133e",
+        "packaging": "zip"
+      },
+      "destinations": {
+        "402122568686-ap-south-1": {
+          "bucketName": "cdk-hnb659fds-assets-402122568686-ap-south-1",
+          "objectKey": "cb9ecaea9725ff4d1f10236caef694ea1681a40319b1ff2f7af0f7f9bab6133e.zip",
+          "region": "ap-south-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::402122568686:role/cdk-hnb659fds-file-publishing-role-402122568686-ap-south-1"
+        }
+      }
+    },
+    "e745b7a9cf93f132f05fea3ec55ae60154f81a09375bfef672206825e3276a34": {
+      "source": {
+        "path": "CDKPipelineStackPreProdWebService3AE84BF0.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "402122568686-ap-south-1": {
+          "bucketName": "cdk-hnb659fds-assets-402122568686-ap-south-1",
+          "objectKey": "e745b7a9cf93f132f05fea3ec55ae60154f81a09375bfef672206825e3276a34",
+          "region": "ap-south-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::402122568686:role/cdk-hnb659fds-file-publishing-role-402122568686-ap-south-1"
+        }
+      }
+    }
+  },
+  "dockerImages": {}
+}

@@ -1,0 +1,20 @@
+{
+  "version": "5.0.0",
+  "files": {
+    "67abe4e41492ce99e59bc0053e29545ee92262f1c72f14567cb4e0a329b46396": {
+      "source": {
+        "path": "CDKPipelineStack.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "402122568686-ap-south-1": {
+          "bucketName": "cdk-hnb659fds-assets-402122568686-ap-south-1",
+          "objectKey": "67abe4e41492ce99e59bc0053e29545ee92262f1c72f14567cb4e0a329b46396",
+          "region": "ap-south-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::402122568686:role/cdk-hnb659fds-file-publishing-role-402122568686-ap-south-1"
+        }
+      }
+    }
+  },
+  "dockerImages": {}
+}

@@ -1,0 +1,34 @@
+{
+  "version": "5.0.0",
+  "files": {
+    "323257c8da2c9e8186350141841e2a6828b7b34e70f882b5df84c41314d3a9da": {
+      "source": {
+        "path": "asset.323257c8da2c9e8186350141841e2a6828b7b34e70f882b5df84c41314d3a9da",
+        "packaging": "zip"
+      },
+      "destinations": {
+        "402122568686-ap-south-1": {
+          "bucketName": "cdk-hnb659fds-assets-402122568686-ap-south-1",
+          "objectKey": "323257c8da2c9e8186350141841e2a6828b7b34e70f882b5df84c41314d3a9da.zip",
+          "region": "ap-south-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::402122568686:role/cdk-hnb659fds-file-publishing-role-402122568686-ap-south-1"
+        }
+      }
+    },
+    "db6a55a6d2bce6302c4eee99514865c3105ab311074b4e1cf5d1543ac2e877e9": {
+      "source": {
+        "path": "PipelineStackPreProdWebService366DDB3C.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "402122568686-ap-south-1": {
+          "bucketName": "cdk-hnb659fds-assets-402122568686-ap-south-1",
+          "objectKey": "db6a55a6d2bce6302c4eee99514865c3105ab311074b4e1cf5d1543ac2e877e9",
+          "region": "ap-south-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::402122568686:role/cdk-hnb659fds-file-publishing-role-402122568686-ap-south-1"
+        }
+      }
+    }
+  },
+  "dockerImages": {}
+}
